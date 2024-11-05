@@ -2,10 +2,32 @@ import { Flowbite } from 'flowbite-react';
 
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}", Flowbite.content()],
+  darkMode:'class',
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}","./node_modules/flowbite/**/*.js"],
   theme: {
-    extend: {},
+    colors:{
+     
+    },
+    screens:{
+      sm: '480px',
+      md: '768px',
+      lg: '976px',
+      xl: '1440px',
+    },
+    fontFamily:{
+      sans: ['Graphik', 'sans-serif'],
+      serif: ['Merriweather', 'serif'],
+    },
+    extend:{
+      spacing: {
+        '128': '32rem',
+        '144': '36rem',
+      },
+      borderRadius: {
+        '4xl': '2rem',
+      }
+    }
   },
-  plugins: [Flowbite.plugins()],
+  plugins: [require('flowbite/plugin')],
 }
 
