@@ -6,7 +6,8 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}","./node_modules/flowbite/**/*.js"],
   theme: {
     colors:{
-     
+     primary:'#D27E2C',
+     secondary:'#02A750'
     },
     screens:{
       sm: '480px',
