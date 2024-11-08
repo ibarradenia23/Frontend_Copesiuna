@@ -3,10 +3,12 @@ import Navbar from '../../../common/components/Navbar'
 
 const Home = () => {
   return ( 
-    <div>
+    <main>
         <Navbar/>
-        <p>Home</p>
-    </div>
+        <section className='max-w-screen-xl mx-auto p-4'>
+          <h3>Hello home</h3>
+        </section>
+    </main>
   )
 }
 

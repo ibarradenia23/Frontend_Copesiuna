@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { ToogleThemeButton } from "./ToogleTheme";
 
 const Navbar = () => {
@@ -8,11 +8,12 @@ const Navbar = () => {
   // Estado para el menu de navegacion
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // Función para manejar el clic en el botón de la foto
+  // Función para manejar el click en el botón de la foto
   const toggleDropdown = () => {
     setIsDropdownOpen((prev) => !prev);
   };
 
+  //Fincion para manejar el click en el menu
   const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
   };
