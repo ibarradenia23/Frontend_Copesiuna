@@ -12,15 +12,17 @@ function App() {
   const [moonPosition, setMoonPosition] = useState(-100);
   const [cloudPosition, setCloudPosition] = useState(0);
 
+  const savedTheme = localStorage.getItem("color-theme");
+
   useEffect(() => {
-    const savedTheme = localStorage.getItem("theme");
+    
     const initialDarkMode = savedTheme === "dark";
     setIsDarkMode(initialDarkMode);
     if (initialDarkMode) {
       document.documentElement.classList.add("dark");
     }
     updateCelestialPositions(initialDarkMode);
-  }, []);
+  }, [savedTheme]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -57,8 +59,55 @@ function App() {
   };
 
   return (
-    <>
-      <div className="w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
+    <div
+      className={`min-h-screen flex items-center justify-center overflow-hidden ${
+        isDarkMode ? "bg-gray-900" : "bg-[#F4E0D0]"
+      } transition-colors duration-1000 z-0`}
+    >
+      <div className="absolute inset-0 overflow-hidden">
+        {/* Sol */}
+        <div
+          className="absolute w-20 h-20 bg-[#D27E2C] rounded-full transition-all duration-1000 ease-in-out"
+          style={{
+            top: "10%",
+            left: "10%",
+            transform: `translateY(${sunPosition}vh)`,
+            boxShadow: isDarkMode
+              ? "none"
+              : "0 0 60px 30px rgba(210, 126, 44, 0.3)",
+          }}
+        />
+        {/* Luna */}
+        <div
+          className="absolute w-16 h-16 bg-gray-200 rounded-full transition-all duration-1000 ease-in-out"
+          style={{
+            top: "10%",
+            right: "10%",
+            transform: `translateY(${moonPosition}vh)`,
+            boxShadow: isDarkMode
+              ? "0 0 20px 10px rgba(255, 255, 255, 0.2)"
+              : "none",
+          }}
+        />
+        {/* Nubes */}
+        <Cloud
+          className="absolute text-white text-opacity-80 transition-all duration-100 ease-linear"
+          style={{
+            top: "20%",
+            left: `${cloudPosition}%`,
+            fontSize: "100px",
+          }}
+        />
+        <Cloud
+          className="absolute text-white text-opacity-80 transition-all duration-100 ease-linear"
+          style={{
+            top: "40%",
+            left: `${(cloudPosition + 50) % 100}%`,
+            fontSize: "80px",
+          }}
+        />
+      </div>
+      <div className="z-50 w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
         <form className="space-y-6" action="#">
           <div className="flex justify-between">
             <h5 className="text-xl font-medium text-gray-900 dark:text-white">
@@ -69,8 +118,8 @@ function App() {
 
           <div>
             <label
-              for="email"
-              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              htmlFor="email"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
               Your email
             </label>
@@ -85,8 +134,8 @@ function App() {
           </div>
           <div>
             <label
-              for="password"
-              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              htmlFor="password"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
               Your password
             </label>
@@ -111,7 +160,7 @@ function App() {
                 />
               </div>
               <label
-                for="remember"
+                htmlFor="remember"
                 className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
               >
                 Remember me
@@ -119,29 +168,21 @@ function App() {
             </div>
             <a
               href="#"
-              className="ms-auto text-sm text-blue-700 hover:underline dark:text-blue-500"
+              className="ms-auto text-sm text-primary hover:underline dark:text-primary"
             >
               Lost Password?
             </a>
           </div>
           <button
             type="submit"
-            className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            className="w-full text-white bg-primary hover:bg-[#8C541D] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary dark:hover:bg-[#8C541D] dark:focus:ring-blue-800"
           >
             Login to your account
           </button>
-          <div className="text-sm font-medium text-gray-500 dark:text-gray-300">
-            Not registered?{" "}
-            <a
-              href="#"
-              className="text-blue-700 hover:underline dark:text-blue-500"
-            >
-              Create account
-            </a>
-          </div>
+         
         </form>
       </div>
-    </>
+    </div>
   );
 }
 
