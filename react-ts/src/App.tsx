@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
-import { Moon, Sun, Cloud, Eye, EyeOff } from "lucide-react";
+import { Cloud, Eye, EyeOff } from "lucide-react";
+import { useForm } from 'react-hook-form'
 
 import { ToogleThemeButton } from "./common/components/ToogleTheme";
+import { LoginFormInputs } from "./modules/auth/models";
 
 function App() {
-  const [email, setEmail] = useState("");
+  const { register, handleSubmit, formState: { errors } } = useForm<LoginFormInputs>();
+
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -14,8 +17,8 @@ function App() {
 
   const savedTheme = localStorage.getItem("color-theme");
 
+  //Manejar el estado del fondo, dependiendo del estado del tema
   useEffect(() => {
-    
     const initialDarkMode = savedTheme === "dark";
     setIsDarkMode(initialDarkMode);
     if (initialDarkMode) {
@@ -41,21 +44,15 @@ function App() {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Inicio de sesión con:", email, password);
-  };
-
+  //Menejar la visibilidad de la contraseña
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
-  const handleThemeToggle = () => {
-    const newDarkMode = !isDarkMode;
-    setIsDarkMode(newDarkMode);
-    updateCelestialPositions(newDarkMode);
-    localStorage.setItem("theme", newDarkMode ? "dark" : "light");
-    document.documentElement.classList.toggle("dark", newDarkMode);
+  //manejador del envio del formulario
+  const onSubmit = (data: LoginFormInputs) => {
+    console.log(data); // Imprimir los datos en la consola
+    // Aquí puedes agregar la lógica para manejar el inicio de sesión
   };
 
   return (
@@ -108,7 +105,7 @@ function App() {
         />
       </div>
       <div className="z-50 w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
-        <form className="space-y-6" action="#">
+        <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
           <div className="flex justify-between">
             <h5 className="text-xl font-medium text-gray-900 dark:text-white">
               Sign in to our platform
@@ -125,13 +122,14 @@ function App() {
             </label>
             <input
               type="email"
-              name="email"
               id="email"
+              {...register('email', { required: 'Este campo es obligatorio', pattern: { value: /^\S+@\S+$/i, message: 'Formato de correo inválido' } })}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
               placeholder="name@company.com"
               required
             />
           </div>
+          {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
           <div>
             <label
               htmlFor="password"
@@ -139,14 +137,33 @@ function App() {
             >
               Your password
             </label>
-            <input
-              type="password"
-              name="password"
-              id="password"
-              placeholder="••••••••"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-              required
-            />
+            <div className="relative">
+                <input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  {...register('password', { required: 'Este campo es obligatorio', minLength: { value: 6, message: 'La contraseña debe tener al menos 6 caracteres' } })}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                />
+                <button
+                  type="button"
+                  className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                  onClick={togglePasswordVisibility}
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-4 w-4 text-[#D27E2C] dark:text-primary" />
+                  ) : (
+                    <Eye className="h-4 w-4 text-[#D27E2C] dark:text-primary" />
+                  )}
+                  <span className="sr-only">
+                    {showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                  </span>
+                </button>
+              </div>
+              {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>}
+
           </div>
           <div className="flex items-start">
             <div className="flex items-start">
@@ -156,7 +173,7 @@ function App() {
                   type="checkbox"
                   value=""
                   className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800"
-                  required
+                 
                 />
               </div>
               <label
@@ -179,7 +196,6 @@ function App() {
           >
             Login to your account
           </button>
-         
         </form>
       </div>
     </div>
