@@ -4,9 +4,12 @@ import { useForm } from 'react-hook-form'
 
 import { ToogleThemeButton } from "./common/components/ToogleTheme";
 import { LoginFormInputs } from "./modules/auth/models";
+import { useLogin } from "./modules/auth/hooks/useLogin";
+import Spiner from "./common/components/Spiner";
 
 function App() {
   const { register, handleSubmit, formState: { errors } } = useForm<LoginFormInputs>();
+  
 
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -16,6 +19,8 @@ function App() {
   const [cloudPosition, setCloudPosition] = useState(0);
 
   const savedTheme = localStorage.getItem("color-theme");
+
+  const { mutate: login, isLoading, isError } = useLogin();
 
   //Manejar el estado del fondo, dependiendo del estado del tema
   useEffect(() => {
@@ -49,10 +54,13 @@ function App() {
     setShowPassword(!showPassword);
   };
 
+
+
   //manejador del envio del formulario
   const onSubmit = (data: LoginFormInputs) => {
     console.log(data); // Imprimir los datos en la consola
     // Aquí puedes agregar la lógica para manejar el inicio de sesión
+    login(data);
   };
 
   return (
@@ -190,11 +198,15 @@ function App() {
               Lost Password?
             </a>
           </div>
+          {isError && <p>Error en el inicio de sesión. Inténtalo de nuevo.</p>}
           <button
             type="submit"
             className="w-full text-white bg-primary hover:bg-[#8C541D] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary dark:hover:bg-[#8C541D] dark:focus:ring-blue-800"
           >
-            Login to your account
+            {
+              isLoading ? <Spiner/> :  'Login to your account'
+            }
+           
           </button>
         </form>
       </div>
