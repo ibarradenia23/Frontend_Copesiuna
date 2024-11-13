@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ToogleThemeButton } from "./ToogleTheme";
+import Logo from '../../../public/iconocacao.png'
 
 const Navbar = () => {
   // Estado para controlar la visibilidad del menú de usuario
@@ -26,12 +27,12 @@ const Navbar = () => {
           className="flex items-center space-x-3 rtl:space-x-reverse"
         >
           <img
-            src="https://flowbite.com/docs/images/logo.svg"
+            src={Logo}
             className="h-8"
             alt="Flowbite Logo"
           />
-          <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
-            Flowbite
+          <span className="self-center text-2xl font-semibold whitespace-nowrap text-[#C52024]">
+            Cope<span className="text-secondary">siuna</span>
           </span>
         </a>
         <div className="flex relative items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse gap-4">
