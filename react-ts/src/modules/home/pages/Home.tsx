@@ -1,10 +1,8 @@
-import React from "react";
+
 import Navbar from "../../../common/components/Navbar";
 import {
   CalendarDays,
   Clipboard,
-  FileSpreadsheet,
-  BarChart3,
   Leaf,
   Sprout,
 } from "lucide-react";
@@ -33,18 +31,18 @@ const Home = () => {
         <div className="flex items-center justify-between space-y-2">
           <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
           <div className="flex items-center space-x-2">
-            <button className="bg-[#D27E2C] hover:bg-[#B26A1F] text-white focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none">
+            <button className="bg-primary hover:bg-[#016F35] text-white focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none">
               Descargar Reporte
             </button>
           </div>
         </div>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          <div className="border-l-4 border-[#D27E2C] p-6 bg-white border rounded-lg shadow dark:bg-gray-800 ">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mt-2">
+          <div className="border-l-4 border-primary p-6 bg-white border rounded-lg shadow dark:bg-gray-800 ">
             <div className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <p className="text-sm font-medium text-[#D27E2C]">
+              <p className="text-sm font-medium text-primary">
                 Bitacoras de suelo
               </p>
-              <Clipboard className="h-4 w-4 text-[#D27E2C]" />
+              <Clipboard className="h-4 w-4 text-primary" />
             </div>
             <div>
               <div className="text-2xl font-bold text-gray-900 dark:text-white">
@@ -55,12 +53,12 @@ const Home = () => {
               </p>
             </div>
           </div>
-          <div className="border-l-4 border-[#D27E2C] p-6 bg-white border rounded-lg shadow dark:bg-gray-800 ">
+          <div className="border-l-4 border-primary p-6 bg-white border rounded-lg shadow dark:bg-gray-800 ">
             <div className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <p className="text-sm font-medium text-[#D27E2C]">
+              <p className="text-sm font-medium text-primary">
                 Estimaciones de Cosecha
               </p>
-              <Sprout className="h-4 w-4 text-[#D27E2C]" />
+              <Sprout className="h-4 w-4 text-primary" />
             </div>
             <div>
               <div className="text-2xl font-bold text-gray-900 dark:text-white">
@@ -71,12 +69,12 @@ const Home = () => {
               </p>
             </div>
           </div>
-          <div className="border-l-4 border-[#D27E2C] p-6 bg-white border rounded-lg shadow dark:bg-gray-800 ">
+          <div className="border-l-4 border-primary p-6 bg-white border rounded-lg shadow dark:bg-gray-800 ">
             <div className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <p className="text-sm font-medium text-[#D27E2C]">
+              <p className="text-sm font-medium text-primary">
                 Parcelas analizadas
               </p>
-              <Leaf className="h-4 w-4 text-[#D27E2C]" />
+              <Leaf className="h-4 w-4 text-primary" />
             </div>
             <div>
               <div className="text-2xl font-bold text-gray-900 dark:text-white">
@@ -87,12 +85,12 @@ const Home = () => {
               </p>
             </div>
           </div>
-          <div className="border-l-4 border-[#D27E2C] p-6 bg-white border rounded-lg shadow dark:bg-gray-800">
+          <div className="border-l-4 border-primary p-6 bg-white border rounded-lg shadow dark:bg-gray-800">
             <div className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <p className="text-sm font-medium text-[#D27E2C]">
+              <p className="text-sm font-medium text-primary">
                 Proxima cochecha estimada
               </p>
-              <CalendarDays className="h-4 w-4 text-[#D27E2C]" />
+              <CalendarDays className="h-4 w-4 text-primary" />
             </div>
             <div>
               <div className="text-2xl font-bold text-gray-900 dark:text-white">
@@ -117,7 +115,7 @@ const Home = () => {
                   <XAxis dataKey="nutriente" />
                   <YAxis />
                   <Tooltip />
-                  <Bar dataKey="valor" fill="#D27E2C" />
+                  <Bar dataKey="valor" fill="#02A750" />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -146,7 +144,7 @@ const Home = () => {
                   <div className="ml-auto font-medium text-gray-900 dark:text-white mr-2">+12%</div>
                   <div className="w-20 bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
                     <div
-                      className="bg-secondary h-2.5 rounded-full"
+                      className="bg-primary h-2.5 rounded-full"
                       style={{ width: "45%" }}
                     ></div>
                   </div>
@@ -164,7 +162,7 @@ const Home = () => {
                   <div className="ml-auto font-medium text-gray-900 dark:text-white mr-2">+7%</div>
                   <div className="w-20 bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
                     <div
-                      className="bg-secondary h-2.5 rounded-full"
+                      className="bg-primary h-2.5 rounded-full"
                       style={{ width: "45%" }}
                     ></div>
                   </div>
@@ -182,7 +180,7 @@ const Home = () => {
                   <div className="ml-auto font-medium text-gray-900 dark:text-white mr-2">-2%</div>
                   <div className="w-20 bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
                     <div
-                      className="bg-secondary h-2.5 rounded-full"
+                      className="bg-primary h-2.5 rounded-full"
                       style={{ width: "45%" }}
                     ></div>
                   </div>

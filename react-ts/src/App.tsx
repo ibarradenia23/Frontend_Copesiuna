@@ -66,7 +66,7 @@ function App() {
   return (
     <div
       className={`min-h-screen flex items-center justify-center overflow-hidden ${
-        isDarkMode ? "bg-gray-900" : "bg-[#F4E0D0]"
+        isDarkMode ? "bg-gray-900" : "bg-[#d0f4df]"
       } transition-colors duration-1000 z-0`}
     >
       <div className="absolute inset-0 overflow-hidden">
@@ -153,7 +153,7 @@ function App() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                 />
                 <button
                   type="button"
@@ -161,9 +161,9 @@ function App() {
                   onClick={togglePasswordVisibility}
                 >
                   {showPassword ? (
-                    <EyeOff className="h-4 w-4 text-[#D27E2C] dark:text-primary" />
+                    <EyeOff className="h-4 w-4 text-primary dark:text-primary" />
                   ) : (
-                    <Eye className="h-4 w-4 text-[#D27E2C] dark:text-primary" />
+                    <Eye className="h-4 w-4 text-primary dark:text-primary" />
                   )}
                   <span className="sr-only">
                     {showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
@@ -201,7 +201,7 @@ function App() {
           {isError && <p>Error en el inicio de sesión. Inténtalo de nuevo.</p>}
           <button
             type="submit"
-            className="w-full text-white bg-primary hover:bg-[#8C541D] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary dark:hover:bg-[#8C541D] dark:focus:ring-blue-800"
+            className="w-full text-white bg-primary hover:bg-[#016F35] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary dark:hover:bg-[#016F35] dark:focus:ring-blue-800"
           >
             {
               isLoading ? <Spiner/> :  'Login to your account'
