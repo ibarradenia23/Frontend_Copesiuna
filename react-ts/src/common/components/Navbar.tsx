@@ -1,8 +1,12 @@
 import { useState } from "react";
 import { ToogleThemeButton } from "./ToogleTheme";
 import Logo from '/iconocacao.png'
+import { useLocation } from "react-router-dom";
 
 const Navbar = () => {
+  //Saber la ruta en la que me encuentro
+  const location = useLocation();
+
   // Estado para controlar la visibilidad del menú de usuario
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -138,8 +142,8 @@ const Navbar = () => {
           <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
             <li>
               <a
-                href="/"
-                className="block py-2 px-3 text-white bg-primary rounded md:bg-transparent md:text-primary md:p-0 md:dark:text-primary"
+                href="/home"
+                className={`block py-2 px-3 md:p-0  ${location.pathname === '/home' ? 'text-primary dark:text-primary': 'text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-primary  dark:text-white md:dark:hover:text-primary dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700'}`}
                 aria-current="page"
               >
                 Home
@@ -148,7 +152,7 @@ const Navbar = () => {
             <li>
               <a
                 href="/cosechas"
-                className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-primary md:p-0 dark:text-white md:dark:hover:text-primary dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                className={`block py-2 px-3 md:p-0  ${location.pathname === '/cosechas' ? 'text-primary dark:text-primary': 'text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-primary  dark:text-white md:dark:hover:text-primary dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700'}`}
               >
                 Cosechas
               </a>
@@ -156,15 +160,15 @@ const Navbar = () => {
             <li>
               <a
                 href="/suelos"
-                className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-primary md:p-0 dark:text-white md:dark:hover:text-primary dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                className={`block py-2 px-3 md:p-0  ${location.pathname === '/suelos' ? 'text-primary dark:text-primary': 'text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-primary  dark:text-white md:dark:hover:text-primary dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700'}`}
               >
                 Suelos
               </a>
             </li>
             <li>
               <a
-                href="/productor"
-                className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-primary md:p-0 dark:text-white md:dark:hover:text-primary dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                href="/productores"
+                className={`block py-2 px-3 md:p-0  ${location.pathname === '/productores' ? 'text-primary dark:text-primary': 'text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-primary  dark:text-white md:dark:hover:text-primary dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700'}`}
               >
                 Productor
               </a>
@@ -172,7 +176,7 @@ const Navbar = () => {
             <li>
               <a
                 href="/ajustes"
-                className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-primary md:p-0 dark:text-white md:dark:hover:text-primary dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                className={`block py-2 px-3 md:p-0  ${location.pathname === '/ajustes' ? 'text-primary dark:text-primary': 'text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-primary  dark:text-white md:dark:hover:text-primary dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700'}`}
               >
                 Ajustes
               </a>
