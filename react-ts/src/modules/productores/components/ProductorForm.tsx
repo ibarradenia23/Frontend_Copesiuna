@@ -1,5 +1,7 @@
 import { useForm } from "react-hook-form";
 import { ProductorInterface } from "../models";
+import { useEffect, useState } from "react";
+import Toast from "../../../common/components/Toast";
 
 const ProductorForm = () => {
   const {
@@ -8,12 +10,37 @@ const ProductorForm = () => {
     formState: { errors },
   } = useForm<ProductorInterface>();
 
+  //Estado para manejar el toast
+  const [toast, setToast] = useState<{ type: 'success' | 'error' | 'warning'; message: string; visible: boolean }>({
+    type: 'success', // Valor por defecto
+    message: '',
+    visible: false,
+  });
+
   //Manejador del envio del formulario
   const onSubmit = (data: ProductorInterface) => {
     console.log(data);
+    setToast({ type: 'success', message: 'Productor creado exitosamente.', visible: true });
   };
 
-  return (
+  const closeToast = () => {
+    setToast({ ...toast, visible: false });
+  };
+
+  useEffect(() => {
+    if (toast.visible) {
+      const timer = setTimeout(() => {
+        closeToast();
+      }, 3000); // Duración del toast en milisegundos (3 segundos)
+
+      return () => clearTimeout(timer); // Limpiar el temporizador al desmontar
+    }
+  }, [toast.visible]);
+
+
+
+  return (<section>
+     {toast.visible && <Toast type={toast.type} message={toast.message} onClose={closeToast} />}
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="mb-6 space-y-6">
         <div className="">
@@ -84,6 +111,8 @@ const ProductorForm = () => {
         Add new product
       </button>
     </form>
+  </section>
+    
   );
 };
 
