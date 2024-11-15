@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import  { useState } from 'react'
 import Navbar from '../../../common/components/Navbar'
 import Modal from '../../../common/components/Modal';
 import ProductorForm from '../components/ProductorForm';
+import CardProductor from '../components/CardProductor';
 
 const Productores = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -27,6 +28,11 @@ const Productores = () => {
           <Modal isOpen={isModalOpen} onClose={handleCloseModal} title='Crea un nuevo Productor'>
             <ProductorForm/>
           </Modal>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-2">
+          <CardProductor/>
+          <CardProductor/>
+          <CardProductor/>
         </div>
          </section>
     </main>
