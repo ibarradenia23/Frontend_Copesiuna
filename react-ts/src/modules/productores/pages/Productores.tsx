@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import Navbar from '../../../common/components/Navbar'
 import Modal from '../../../common/components/Modal';
+import ProductorForm from '../components/ProductorForm';
 
 const Productores = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -23,7 +24,9 @@ const Productores = () => {
               Agregar productor
             </button>
           </div>
-          <Modal isOpen={isModalOpen} onClose={handleCloseModal} title='Productor'/>
+          <Modal isOpen={isModalOpen} onClose={handleCloseModal} title='Crea un nuevo Productor'>
+            <ProductorForm/>
+          </Modal>
         </div>
          </section>
     </main>
