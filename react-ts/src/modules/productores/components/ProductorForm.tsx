@@ -1,17 +1,69 @@
+import { useForm } from "react-hook-form";
+import { ProductorInterface } from "../models";
+
 const ProductorForm = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ProductorInterface>();
+
+  //Manejador del envio del formulario
+  const onSubmit = (data: ProductorInterface) => {
+    console.log(data);
+  };
+
   return (
-    <form>
-      <div className="mb-4 space-y-6">
-      <div className="">
-      <label
-              htmlFor="nombre"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Nombre completo
-            </label>
-            <input type="text" id="nombre" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-[#016F35] block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" 
-            placeholder="Juan Perez"/>
-      </div>
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <div className="mb-6 space-y-6">
+        <div className="">
+          <label
+            htmlFor="nombre"
+            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >
+            Nombre completo
+          </label>
+          <input
+            type="text"
+            id="nombre"
+            {...register('nombre',{required:'Este campo es obligatorio',minLength: { value: 6, message: 'El nombre debe tener al menos 6 caracteres' }})}
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-[#016F35] block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+            placeholder="Juan Perez"
+          />        
+          {errors.nombre && <p className="text-red-500 text-xs mt-1">{errors.nombre.message}</p>}
+        </div>
+        <div className="">
+          <label
+            htmlFor="direccion"
+            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >
+            Direccion
+          </label>
+          <input
+            type="text"
+            id="direccion"
+            {...register('direccion',{required:'Este campo es obligatorio',minLength: { value: 6, message: 'La direccion debe tener al menos 6 caracteres' }})}
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-[#016F35] block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+            placeholder="El hormiguero"
+          />
+          {errors.direccion && <p className="text-red-500 text-xs mt-1">{errors.direccion.message}</p>}
+        </div>
+        <div className="">
+          <label
+            htmlFor="cedula"
+            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >
+            Cedula
+          </label>
+          <input
+            type="text"
+            id="cedula"
+            {...register('cedula',{required:'Este campo es obligatorio',minLength: { value: 10, message: 'La cedula debe tener al menos 10 caracteres' }})}
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-[#016F35] block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+            placeholder="xxx-xxxxxx-xxxx"
+          />
+          {errors.cedula && <p className="text-red-500 text-xs mt-1">{errors.cedula.message}</p>}
+        </div>
       </div>
       <button
         type="submit"

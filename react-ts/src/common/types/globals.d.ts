@@ -8,9 +8,15 @@ export interface ServiceResponse {
   error?: string;
 }
 
-interface ModalProps {
+export interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   title?: string;
   children?: React.ReactNode;
+}
+
+export interface ToastProps {
+  type: 'success' | 'error' | 'warning';
+  message: string;
+  onClose: () => void;
 }
