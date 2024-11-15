@@ -24,6 +24,10 @@ export const routes:Paths[] = [
     {
         path:'/ajustes',
         element:()=>import('../../modules/ajustes/pages/Ajustes')
-    }
+    },
+    {
+        path:'/users',
+        element:()=>import('../../modules/users/pages/Users')
+    },
 ]
    
