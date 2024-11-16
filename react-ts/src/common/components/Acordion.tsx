@@ -17,7 +17,7 @@ const Accordion: React.FC<AccordionProps> = ({ title, children }) => {
   return (
     <div className=" rounded-lg mb-4 ">
       <div
-        className="flex justify-between items-center p-4 cursor-pointer rounded-lg"
+        className="flex justify-between items-center py-4 cursor-pointer rounded-lg"
         onClick={toggleAccordion}
       >
         <h2 className="flex text-lg font-medium align-middle text-gray-900 dark:text-white"> <Tractor className="mr-2 h-5 w-5" />{title}</h2>
@@ -34,7 +34,7 @@ const Accordion: React.FC<AccordionProps> = ({ title, children }) => {
           </svg>
         </span>
       </div>
-      {isOpen && <div className="p-4 border-t dark:border-gray-600">{children}</div>}
+      {isOpen && <div className="pt-4 border-t dark:border-gray-600">{children}</div>}
     </div>
   );
 };

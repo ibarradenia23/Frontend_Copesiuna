@@ -108,7 +108,7 @@ const ProductorForm = () => {
             clip-rule="evenodd"
           ></path>
         </svg>
-        Add new product
+        Agregar producto nuevo
       </button>
     </form>
   </section>
