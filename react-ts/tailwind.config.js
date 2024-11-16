@@ -7,7 +7,9 @@ export default {
   theme: {
     colors:{
      primary:'#02A750',
-     secondary:'#D27E2C'
+     secondary:'#D27E2C',
+     error:'#C52024',
+     warning:'#D27E2C'
     },
     screens:{
       sm: '480px',

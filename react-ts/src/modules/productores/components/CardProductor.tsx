@@ -36,7 +36,7 @@ const CardProductor = () => {
         <div className="border-t dark:border-gray-600">
           <Accordion title="Parcelas y cultivos">
             <CardParcela />
-            <button className="text-white inline-flex items-center bg-primary hover:bg-[#016F35] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary dark:hover:bg-[#016F35] dark:focus:ring-primary w-full justify-center">
+            <button className="text-white inline-flex items-center bg-primary hover:bg-[#016F35] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary dark:hover:bg-[#016F35] dark:focus:ring-primary w-full justify-center mt-4">
           {" "}
           <svg
             className="me-1 -ms-1 w-5 h-5"
@@ -57,12 +57,12 @@ const CardProductor = () => {
        
       </div>
       <div className="border-t dark:border-gray-600 mt-2 flex justify-end gap-4 pt-6">
-        <button className="inline-flex">
+        <button className="inline-flex text-white items-center bg-warning hover:bg-[#8C541D] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-sm px-5 py-2.5 text-center dark:bg-warning dark:hover:bg-[#8C541D] dark:focus:ring-warning">
           {" "}
           <Pencil className="h-4 w-4 mr-2" />
           Editar
         </button>
-        <button className="inline-flex">
+        <button className="inline-flex text-white items-center bg-error hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-sm px-5 py-2.5 text-center dark:bg-error dark:hover:bg-red-900 dark:focus:ring-error">
           {" "}
           <Trash2 className="h-4 w-4 mr-2" />
           Eliminar

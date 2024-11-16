@@ -1,17 +1,21 @@
 import { MapPin, Pencil, Tractor, Trash2 } from "lucide-react";
 import React from "react";
 import CultivoItem from "./CultivoItem";
+import Tooltip from "../../../common/components/Tooltip";
 
 const CardParcela = () => {
   return (
     <div className="p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 ">
-      <div className="header-card flex justify-between">
+      <div className="header-card flex justify-between align-middle mb-2">
         <h4>Parcela Norte</h4>
-        <div className="btones">
-          <button className="mr-2">
+        <div className="btones flex gap-2">
+          <Tooltip content="Editar Parcela">
+          <button className=" items-center  font-medium rounded-lg text-sm p-2.5 text-center w-full justify-center text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
             <Pencil className="h-4 w-4" />
           </button>
-          <button>
+          </Tooltip>
+          
+          <button className=" items-center  font-medium rounded-lg text-sm p-2.5 text-center w-full justify-center text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100  dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
             <Trash2 className="h-4 w-4" />
           </button>
         </div>
