@@ -37,8 +37,6 @@ const ProductorForm = () => {
     }
   }, [toast.visible]);
 
-
-
   return (<section>
      {toast.visible && <Toast type={toast.type} message={toast.message} onClose={closeToast} />}
     <form onSubmit={handleSubmit(onSubmit)}>

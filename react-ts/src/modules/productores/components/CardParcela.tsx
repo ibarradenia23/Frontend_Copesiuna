@@ -1,9 +1,21 @@
 import { MapPin, Pencil, Tractor, Trash2 } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
 import CultivoItem from "./CultivoItem";
 import Tooltip from "../../../common/components/Tooltip";
+import Modal from "../../../common/components/Modal";
+import CultivoForm from "./CultivoForm";
 
 const CardParcela = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <div className="p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 ">
       <div className="header-card flex justify-between align-middle mb-2">
@@ -33,7 +45,7 @@ const CardParcela = () => {
         <CultivoItem/>
         <CultivoItem/>
       </div>
-      <button  className=" inline-flex items-center  font-medium rounded-lg text-sm px-5 py-2.5 text-center mt-4 w-full justify-center text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"> <svg
+      <button  className=" inline-flex items-center  font-medium rounded-lg text-sm px-5 py-2.5 text-center mt-4 w-full justify-center text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700" onClick={handleOpenModal}> <svg
           className="me-1 -ms-1 w-5 h-5"
           fill="currentColor"
           viewBox="0 0 20 20"
@@ -45,6 +57,9 @@ const CardParcela = () => {
             clip-rule="evenodd"
           ></path>
         </svg> Agregar cultivo de cacao</button>
+        <Modal isOpen={isModalOpen} onClose={handleCloseModal} title="Crea un nuevo cultivo">
+          <CultivoForm/>
+        </Modal>
     </div>
   );
 };
