@@ -24,7 +24,7 @@ export const useCrearProductor = () => {
 // Hook para actualizar un productor
 export const useActualizarProductor = () => {
     return useMutation({
-        mutationFn: (data: { id: string; nombre: string; direccion: string; cedula: string }) =>
+        mutationFn: (data: { id: number; nombre: string; direccion: string; cedula: string }) =>
             actualizarProductor(data.id, data.nombre, data.direccion, data.cedula), // Asegúrate de llamar correctamente
         onSuccess: (data: ServiceResponse) => {
             console.log('Productor actualizado con éxito:', data);

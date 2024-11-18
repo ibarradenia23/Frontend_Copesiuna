@@ -1,14 +1,27 @@
 import { useForm } from "react-hook-form";
 import { ProductorInterface } from "../models";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Toast from "../../../common/components/Toast";
+import { useActualizarProductor, useCrearProductor } from "../hooks/useProductor";
 
-const ProductorForm = () => {
+interface ProductorPropsInterface {
+  productor?:ProductorInterface;
+}
+
+const ProductorForm:React.FC<ProductorPropsInterface> = ({productor}) => {
   const {
     register,
+    setValue,
     handleSubmit,
     formState: { errors },
   } = useForm<ProductorInterface>();
+
+  //Estado para decidir si crear o editar
+  const [isEditing, setIsEditing] = useState(false);
+
+  // Usamos el hook para crear un productor
+  const { mutate: crearProductor, isError: isErrorCrear, isSuccess: isSuccessCrear, error: errorCrear, reset: resetCrear } = useCrearProductor();
+    const { mutate: editarProductor, isError: isErrorEditar, isSuccess: isSuccessEditar, error: errorEditar, reset: resetEditar } = useActualizarProductor();
 
   //Estado para manejar el toast
   const [toast, setToast] = useState<{ type: 'success' | 'error' | 'warning'; message: string; visible: boolean }>({
@@ -17,11 +30,45 @@ const ProductorForm = () => {
     visible: false,
   });
 
+  useEffect(() => {
+    if (productor) {
+        setIsEditing(true);
+        setValue('nombre', productor.nombre);
+        setValue('direccion', productor.direccion);
+        setValue('cedula', productor.cedula);
+        resetEditar();
+    } else {
+        setIsEditing(false);
+        resetCrear(); // Resetea el estado de creación
+    }
+}, [productor, setValue, resetCrear]);
+
   //Manejador del envio del formulario
-  const onSubmit = (data: ProductorInterface) => {
-    console.log(data);
-    setToast({ type: 'success', message: 'Productor creado exitosamente.', visible: true });
-  };
+  const onSubmit = async (data: ProductorInterface) => {
+    if (isEditing && productor && productor.id) {
+        editarProductor({ id: productor.id, ...data });
+    } else {
+        crearProductor(data);
+    }
+};
+
+  useEffect(() => {
+    if (isSuccessCrear) {
+      setToast({ type: 'success', message: 'Productor creado exitosamente.', visible: true });
+    }
+
+    if (isErrorCrear) {
+      setToast({ type: 'error', message: 'Error al crear el productor: ' + (errorCrear as Error).message, visible: true });
+    }
+
+    if (isSuccessEditar) {
+      setToast({ type: 'warning', message: 'Productor editado exitosamente.', visible: true });
+    }
+
+    if (isErrorEditar){
+      setToast({ type: 'error', message: 'Error al crear el productor: ' + (errorEditar as Error).message, visible: true });
+    }
+  }, [isSuccessCrear, isErrorCrear, isSuccessEditar,isErrorEditar]);
 
   const closeToast = () => {
     setToast({ ...toast, visible: false });
