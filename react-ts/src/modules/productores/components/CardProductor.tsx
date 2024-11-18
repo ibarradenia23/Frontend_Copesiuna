@@ -5,9 +5,11 @@ import CardParcela from "./CardParcela";
 import { useState } from "react";
 import Modal from "../../../common/components/Modal";
 import ParcelaForm from "./ParcelaForm";
+import ProductorForm from "./ProductorForm";
 
 const CardProductor = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalProductorOpen, setIsModalProductorOpen] = useState(false);
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -16,6 +18,20 @@ const CardProductor = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
+  const handleOpenProductorModal = () => {
+    setIsModalProductorOpen(true);
+  };
+
+  const handleCloseProductorModal = () => {
+    setIsModalProductorOpen(false);
+  };
+
+  const productorprueba = {
+    id:1,
+    nombre: 'Maynor Padilla',
+    direccion: 'El wasimito',
+    cedula: '234-456677-4657'
+  }
 
   return (
     <div className=" p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
@@ -70,9 +86,14 @@ const CardProductor = () => {
         <Modal isOpen={isModalOpen} onClose={handleCloseModal} title='Crea una nueva parcela'>
             <ParcelaForm/>
           </Modal>
+        <Modal isOpen={isModalProductorOpen} onClose={handleCloseProductorModal} title='Actualiza este productor'>
+            <ProductorForm productor={productorprueba}/>
+          </Modal>
       </div>
       <div className="border-t dark:border-gray-600 mt-2 flex justify-end gap-4 pt-6">
-        <button className="inline-flex text-white items-center bg-warning hover:bg-[#8C541D] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-sm px-5 py-2.5 text-center dark:bg-warning dark:hover:bg-[#8C541D] dark:focus:ring-warning">
+        <button className="inline-flex text-white items-center bg-warning hover:bg-[#8C541D] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-sm px-5 py-2.5 text-center dark:bg-warning dark:hover:bg-[#8C541D] dark:focus:ring-warning" 
+        onClick={handleOpenProductorModal}>
+
           {" "}
           <Pencil className="h-4 w-4 mr-2" />
           Editar
