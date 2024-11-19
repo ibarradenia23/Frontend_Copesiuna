@@ -2,10 +2,12 @@ import { Fingerprint, MapPinHouse, Pencil, Trash2 } from "lucide-react";
 import ImagenTemporal from "../../../../public/profile.jpg";
 import Accordion from "../../../common/components/Acordion";
 import CardParcela from "./CardParcela";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "../../../common/components/Modal";
 import ParcelaForm from "./ParcelaForm";
 import ProductorForm from "./ProductorForm";
+import { useEliminarProductor } from "../hooks/useProductor";
+import Toast from "../../../common/components/Toast";
 
 const CardProductor = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -26,6 +28,16 @@ const CardProductor = () => {
     setIsModalProductorOpen(false);
   };
 
+  const [toast, setToast] = useState<{
+    type: "success" | "error" | "warning";
+    message: string;
+    visible: boolean;
+  }>({
+    type: "success", // Valor por defecto
+    message: "",
+    visible: false,
+  });
+
   const productorprueba = {
     id:1,
     nombre: 'Maynor Padilla',
@@ -33,8 +45,48 @@ const CardProductor = () => {
     cedula: '234-456677-4657'
   }
 
+  const { mutate: eliminarProductor, isError, isSuccess, error } = useEliminarProductor();
+
+  const handleEliminar = (id: number) => {
+      if (window.confirm("¿Estás seguro de que deseas eliminar este productor?")) {
+          eliminarProductor(id);
+      }
+  };
+
+  useEffect(()=>{
+   if(isSuccess){
+    setToast({
+      type: "warning",
+        message: "Productor se ah eliminado exitosamente.",
+        visible: true,
+    })
+   } 
+   if(isError){
+    setToast({
+      type: "error",
+        message: "Error al eliminar productor",
+        visible: true,
+    })
+   }
+  },[isSuccess,isError,error]);
+
+  const closeToast = () => {
+    setToast({ ...toast, visible: false });
+  };
+
+  useEffect(() => {
+    if (toast.visible) {
+      const timer = setTimeout(() => {
+        closeToast();
+      }, 3000); // Duración del toast en milisegundos (3 segundos)
+
+      return () => clearTimeout(timer); // Limpiar el temporizador al desmontar
+    }
+  }, [toast.visible]);
+
   return (
     <div className=" p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+      <Toast type={toast.type} message={toast.message} onClose={closeToast}/>
       <div className="pb-2">
         <div className="flex items-center space-x-4">
           <img
@@ -98,7 +150,7 @@ const CardProductor = () => {
           <Pencil className="h-4 w-4 mr-2" />
           Editar
         </button>
-        <button className="inline-flex text-white items-center bg-error hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-sm px-5 py-2.5 text-center dark:bg-error dark:hover:bg-red-900 dark:focus:ring-error">
+        <button onClick={()=>handleEliminar(1)} className="inline-flex text-white items-center bg-error hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-sm px-5 py-2.5 text-center dark:bg-error dark:hover:bg-red-900 dark:focus:ring-error">
           {" "}
           <Trash2 className="h-4 w-4 mr-2" />
           Eliminar

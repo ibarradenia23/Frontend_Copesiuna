@@ -61,16 +61,16 @@ export const actualizarProductor = async (
 };
 
 export const eliminarProductor = async (
-  id: string
+  id: number
 ): Promise<ServiceResponse> => {
   try {
     const response = await Manager.delete(`/productores/delete/${id}`);
     return { data: response.data };
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
-      return { error: error.response?.data?.message || "Error desconocido" };
+        throw new Error(error.response?.data?.message || "Error desconocido");
     } else {
-      return { error: "Error inesperado" };
+        throw new Error("Error inesperado");
     }
   }
 };

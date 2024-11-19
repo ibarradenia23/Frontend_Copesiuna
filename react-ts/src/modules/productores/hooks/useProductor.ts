@@ -38,7 +38,7 @@ export const useActualizarProductor = () => {
 // Hook para eliminar un productor
 export const useEliminarProductor = () => {
     return useMutation({
-        mutationFn: (id: string) => eliminarProductor(id),
+        mutationFn: (id: number) => eliminarProductor(id),
         onSuccess: (data: ServiceResponse) => {
             console.log('Productor eliminado con éxito:', data);
         },
