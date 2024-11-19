@@ -3,9 +3,11 @@ import Navbar from '../../../common/components/Navbar'
 import Modal from '../../../common/components/Modal';
 import ProductorForm from '../components/ProductorForm';
 import CardProductor from '../components/CardProductor';
+import { useObtenerProductores } from '../hooks/useProductor';
 
 const Productores = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { data: productores, isLoading, isError, error } = useObtenerProductores();
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -14,6 +16,7 @@ const Productores = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
+  
   return (
     <main className="bg-white border-gray-200 dark:bg-gray-900">
          <Navbar />

@@ -86,7 +86,7 @@ const CardProductor = () => {
 
   return (
     <div className=" p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-      <Toast type={toast.type} message={toast.message} onClose={closeToast}/>
+     {toast.visible && <Toast type={toast.type} message={toast.message} onClose={closeToast}/>}
       <div className="pb-2">
         <div className="flex items-center space-x-4">
           <img
