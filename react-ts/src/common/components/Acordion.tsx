@@ -15,12 +15,12 @@ const Accordion: React.FC<AccordionProps> = ({ title, children }) => {
   };
 
   return (
-    <div className=" rounded-lg mb-4 ">
+    <div className=" rounded-lg">
       <div
         className="flex justify-between items-center py-4 cursor-pointer rounded-lg"
         onClick={toggleAccordion}
       >
-        <h2 className="flex text-lg font-medium align-middle text-gray-900 dark:text-white"> <Tractor className="mr-2 h-5 w-5" />{title}</h2>
+        <h2 className="flex text-lg align-middle text-gray-900 dark:text-white items-center hover:underline"> <Tractor className="mr-2 h-5 w-5" />{title}</h2>
         <span className={`transform transition-transform ${isOpen ? 'rotate-90' : ''}`}>
           <svg
           

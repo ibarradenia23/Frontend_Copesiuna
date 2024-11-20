@@ -98,17 +98,17 @@ const CardProductor = () => {
             <h3 className="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">
               Mariana Melendez
             </h3>
-            <p className="font-normal text-gray-500 dark:text-gray-400">
+            <p className="font-normal text-gray-900 dark:text-white">
               ID: 1
             </p>
           </div>
         </div>
         <div className="">
-          <div className="flex items-center mb-2 text-sm text-gray-600 mt-2">
+          <div className="flex items-center mb-2 text-sm text-gray-700 dark:text-gray-400 mt-2">
             <MapPinHouse className="mr-2 h-4 w-4" />
             <span>Marco antonio somarriba</span>
           </div>
-          <div className="flex items-center mb-4 text-sm text-gray-600">
+          <div className="flex items-center mb-4 text-sm text-gray-700 dark:text-gray-400 ">
             <Fingerprint className="mr-2 h-4 w-4" />
             <span>611-120306-1015G</span>
           </div>
@@ -142,7 +142,7 @@ const CardProductor = () => {
             <ProductorForm productor={productorprueba}/>
           </Modal>
       </div>
-      <div className="border-t dark:border-gray-600 mt-2 flex justify-end gap-4 pt-6">
+      <div className="border-t dark:border-gray-600 flex justify-end gap-4 pt-6">
         <button className="inline-flex text-white items-center bg-warning hover:bg-[#8C541D] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-sm px-5 py-2.5 text-center dark:bg-warning dark:hover:bg-[#8C541D] dark:focus:ring-warning" 
         onClick={handleOpenProductorModal}>
 
