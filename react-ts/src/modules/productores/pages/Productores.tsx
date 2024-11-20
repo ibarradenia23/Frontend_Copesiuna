@@ -28,16 +28,16 @@ const Productores = () => {
               Agregar productor
             </button>
           </div>
-          <Modal isOpen={isModalOpen} onClose={handleCloseModal} title='Crea un nuevo Productor'>
-            <ProductorForm/>
-          </Modal>
+          
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-2">
           <CardProductor/>
           <CardProductor/>
           <CardProductor/>
           <CardProductor/>
-        </div>
+        </div><Modal isOpen={isModalOpen} onClose={handleCloseModal} title='Crea un nuevo Productor'>
+            <ProductorForm/>
+          </Modal>
          </section>
     </main>
   )
