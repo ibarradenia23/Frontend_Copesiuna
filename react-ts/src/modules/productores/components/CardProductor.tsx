@@ -57,7 +57,7 @@ const CardProductor = () => {
    if(isSuccess){
     setToast({
       type: "warning",
-        message: "Productor se ah eliminado exitosamente.",
+        message: "Productor se ha eliminado exitosamente.",
         visible: true,
     })
    } 
