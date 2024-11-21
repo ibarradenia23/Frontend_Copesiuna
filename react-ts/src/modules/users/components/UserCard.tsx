@@ -1,9 +1,77 @@
 import { MailCheck, Pencil, Phone, Trash2 } from "lucide-react";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import Toast from "../../../common/components/Toast";
+import Modal from "../../../common/components/Modal";
+import UserForm from "./UserForm";
+import { useEliminarUsuario } from "../hooks/useUser";
 
 const UserCard = () => {
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [toast, setToast] = useState<{
+        type: "success" | "error" | "warning";
+        message: string;
+        visible: boolean;
+      }>({
+        type: "success", // Valor por defecto
+        message: "",
+        visible: false,
+      });
+    
+    const closeToast = () => {
+        setToast({ ...toast, visible: false });
+      };
+
+      const handleOpenModal = () => {
+        setIsModalOpen(true);
+      };
+    
+      const handleCloseModal = () => {
+        setIsModalOpen(false);
+      };
+
+      const userprueba = {
+        id:1,
+        nombre: 'Maynor ',
+        apellido: 'Padilla',
+        telefono:'74638363',
+        email:'ejemplo@gmail.com',
+        password:'........'
+      }
+
+      const { mutate: eliminarUsuario, isError, isSuccess, error } = useEliminarUsuario();
+
+      useEffect(()=>{
+        if(isSuccess){
+         setToast({
+           type: "warning",
+             message: "Usuario se ha eliminado exitosamente.",
+             visible: true,
+         })
+        } 
+        if(isError){
+         setToast({
+           type: "error",
+             message: "Error al eliminar usuario",
+             visible: true,
+         })
+        }
+       },[isSuccess,isError,error]);
+
+      const handleEliminar = (id: number) => {
+        if (window.confirm("¿Estás seguro de que deseas eliminar este usuario?")) {
+            eliminarUsuario(id);
+        }
+    };
+
+
+
   return (
     <div className=" p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+        {toast.visible && <Toast type={toast.type} message={toast.message} onClose={closeToast}/>}
+        <Modal isOpen={isModalOpen} onClose={handleCloseModal} title='Actualiza este usuario'>
+            <UserForm user={userprueba}/>
+          </Modal>
       <div className="pb-2">
         <div className="flex space-x-4 align-middle items-center ">
           <div className="relative w-12 h-12 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
@@ -35,14 +103,14 @@ const UserCard = () => {
           </div>
         </div>
         <div className="flex justify-end gap-4 pt-6">
-        <button className="inline-flex text-white items-center bg-warning hover:bg-[#8C541D] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-sm px-5 py-2.5 text-center dark:bg-warning dark:hover:bg-[#8C541D] dark:focus:ring-warning" 
+        <button className="inline-flex text-white items-center bg-warning hover:bg-[#8C541D] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-sm px-5 py-2.5 text-center dark:bg-warning dark:hover:bg-[#8C541D] dark:focus:ring-warning" onClick={handleOpenModal}
         >
 
           {" "}
           <Pencil className="h-4 w-4 mr-2" />
           Editar
         </button>
-        <button  className="inline-flex text-white items-center bg-error hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-sm px-5 py-2.5 text-center dark:bg-error dark:hover:bg-red-900 dark:focus:ring-error">
+        <button onClick={()=>handleEliminar(1)} className="inline-flex text-white items-center bg-error hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-sm px-5 py-2.5 text-center dark:bg-error dark:hover:bg-red-900 dark:focus:ring-error">
           {" "}
           <Trash2 className="h-4 w-4 mr-2" />
           Eliminar
