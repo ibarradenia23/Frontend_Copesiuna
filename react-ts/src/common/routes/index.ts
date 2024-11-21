@@ -22,8 +22,8 @@ export const routes:Paths[] = [
         element:()=>import('../../modules/productores/pages/Productores')
     },
     {
-        path:'/ajustes',
-        element:()=>import('../../modules/ajustes/pages/Ajustes')
+        path:'/cultivos_parcelas',
+        element:()=>import('../../modules/ajustes/pages/Cultivos_Parcelas')
     },
     {
         path:'/users',

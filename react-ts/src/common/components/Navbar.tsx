@@ -175,10 +175,10 @@ const Navbar = () => {
             </li>
             <li>
               <a
-                href="/ajustes"
-                className={`block py-2 px-3 md:p-0  ${location.pathname === '/ajustes' ? 'text-primary dark:text-primary': 'text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-primary  dark:text-white md:dark:hover:text-primary dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700'}`}
+                href="/cultivos_parcelas"
+                className={`block py-2 px-3 md:p-0  ${location.pathname === '/cultivos_parcelas' ? 'text-primary dark:text-primary': 'text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-primary  dark:text-white md:dark:hover:text-primary dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700'}`}
               >
-                Ajustes
+                Cultivos y parcelas
               </a>
             </li>
             <li>
