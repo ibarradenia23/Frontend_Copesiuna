@@ -2,7 +2,7 @@ import { useState } from "react";
 import Modal from "../../../common/components/Modal";
 import Navbar from "../../../common/components/Navbar";
 import UserForm from "../components/UserForm";
-import UserCard from "../components/userCard";
+import UserCard from "../components/UserCard";
 
 const Users = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
