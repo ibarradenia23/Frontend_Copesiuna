@@ -1,19 +1,36 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { UserInterface } from "../models";
 import { useForm } from "react-hook-form";
 import Toast from "../../../common/components/Toast";
 import { Pencil } from "lucide-react";
+import { useActualizarUsuarios, useCrearUsuario } from "../hooks/useUser";
 
 interface UserPropsInterface {
   user?: UserInterface;
 }
-const UserForm: React.FC<UserPropsInterface> = () => {
+const UserForm: React.FC<UserPropsInterface> = ({user}) => {
   const {
     register,
     setValue,
     handleSubmit,
     formState: { errors },
   } = useForm<UserInterface>();
+
+  // Usamos el hook para crear un usuario
+  const {
+    mutate: crearUsuario,
+    isError: isErrorCrear,
+    isSuccess: isSuccessCrear,
+    error: errorCrear,
+    reset: resetCrear,
+  } = useCrearUsuario();
+  const {
+    mutate: editarUsuario,
+    isError: isErrorEditar,
+    isSuccess: isSuccessEditar,
+    error: errorEditar,
+    reset: resetEditar,
+  } = useActualizarUsuarios();
 
   //Estado para manejar el toast
   const [toast, setToast] = useState<{
@@ -33,12 +50,72 @@ const UserForm: React.FC<UserPropsInterface> = () => {
   //Estado para decidir si crear o editar
   const [isEditing, setIsEditing] = useState(false);
 
+  useEffect(() => {
+    if (user) {
+      setIsEditing(true);
+      setValue("nombre", user.nombre);
+      setValue("apellido", user.apellido);
+      setValue("telefono", user.telefono);
+      setValue("email", user.email);
+      setValue("password", user.password);
+      resetEditar();
+    } else {
+      setIsEditing(false);
+      resetCrear(); // Resetea el estado de creación
+    }
+  }, [user, setValue, resetCrear]);
+
+  //Manejador del envio del formulario
+  const onSubmit = async (data: UserInterface) => {
+    if (isEditing && user && user.id) {
+      editarUsuario({ id: user.id, ...data });
+    } else {
+      crearUsuario(data);
+    }
+  };
+
+  useEffect(() => {
+    if (isSuccessCrear) {
+      setToast({
+        type: "success",
+        message: "Usuario creado exitosamente.",
+        visible: true,
+      });
+    }
+
+    if (isErrorCrear) {
+      setToast({
+        type: "error",
+        message:
+          "Error al crear el usuario: " + (errorCrear as Error).message,
+        visible: true,
+      });
+    }
+
+    if (isSuccessEditar) {
+      setToast({
+        type: "warning",
+        message: "Usuario editado exitosamente.",
+        visible: true,
+      });
+    }
+
+    if (isErrorEditar) {
+      setToast({
+        type: "error",
+        message:
+          "Error al editar el usuario: " + (errorEditar as Error).message,
+        visible: true,
+      });
+    }
+  }, [isSuccessCrear, isErrorCrear, isSuccessEditar, isErrorEditar]);
+
   return (
     <section>
       {toast.visible && (
         <Toast type={toast.type} message={toast.message} onClose={closeToast} />
       )}
-      <form>
+      <form onSubmit={handleSubmit(onSubmit)}>
       <div className="mb-6 space-y-6">
       <div className="">
             <label

@@ -10,8 +10,8 @@ export const useObtenerUduarios =()=>{
 // Hook para crear un usuario
 export const useCrearUsuario = () => {
     return useMutation({
-        mutationFn: (data: { nombre: string; apellido: string; telefono: string; email:string; contraseña:string; }) =>
-            crearUser(data.nombre,data.apellido,data.telefono,data.email,data.contraseña),
+        mutationFn: (data: { nombre: string; apellido: string; telefono: string; email:string; password:string; }) =>
+            crearUser(data.nombre,data.apellido,data.telefono,data.email,data.password),
         onSuccess: (data: ServiceResponse) => {
             console.log('Usuario creado con éxito:', data);
         },
@@ -24,8 +24,8 @@ export const useCrearUsuario = () => {
 // Hook para actualizar usuarios
 export const useActualizarUsuarios = () => {
     return useMutation({
-        mutationFn: (data: { id:number; nombre: string; apellido: string; telefono: string; email:string; contraseña:string; }) =>
-            actualizarUser(data.id,data.nombre,data.apellido,data.telefono,data.email,data.contraseña),
+        mutationFn: (data: { id:number; nombre: string; apellido: string; telefono: string; email:string; password:string; }) =>
+            actualizarUser(data.id,data.nombre,data.apellido,data.telefono,data.email,data.password),
         onSuccess: (data: ServiceResponse) => {
             console.log('Usuario actualizado con éxito:', data);
         },

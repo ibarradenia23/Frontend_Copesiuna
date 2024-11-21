@@ -104,11 +104,11 @@ const CardProductor = () => {
           </div>
         </div>
         <div className="">
-          <div className="flex items-center mb-2 text-sm text-gray-700 dark:text-gray-400 mt-2">
+          <div className="flex items-center mb-2 text-md text-gray-700 dark:text-gray-400 mt-2">
             <MapPinHouse className="mr-2 h-4 w-4" />
             <span>Marco antonio somarriba</span>
           </div>
-          <div className="flex items-center mb-4 text-sm text-gray-700 dark:text-gray-400 ">
+          <div className="flex items-center mb-4 text-md text-gray-700 dark:text-gray-400 ">
             <Fingerprint className="mr-2 h-4 w-4" />
             <span>611-120306-1015G</span>
           </div>
