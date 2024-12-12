@@ -111,7 +111,7 @@ const UserForm: React.FC<UserPropsInterface> = ({user}) => {
   }, [isSuccessCrear, isErrorCrear, isSuccessEditar, isErrorEditar]);
 
   return (
-    <section>
+    <section>                                              b,
       {toast.visible && (
         <Toast type={toast.type} message={toast.message} onClose={closeToast} />
       )}

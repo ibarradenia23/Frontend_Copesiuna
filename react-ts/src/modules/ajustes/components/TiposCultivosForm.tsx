@@ -64,12 +64,67 @@ const TiposCultivosForm: React.FC<TiposCultivosPropsInterface> = ({tipoCultivo})
     }
   }, [tipoCultivo, setValue, resetCrear]);
 
+  //Manejador del envio del formulario
+  const onSubmit = async (data: TiposCultivosInterface) => {
+    if (isEditing && tipoCultivo && tipoCultivo.id) {
+      editarTipoCultivo({ id: tipoCultivo.id, ...data });
+    } else {
+      crearTipoCultivo(data);
+    }
+  };
+
+  useEffect(() => {
+    if (isSuccessCrear) {
+      setToast({
+        type: "success",
+        message: "Tipo de cultivo creado exitosamente.",
+        visible: true,
+      });
+    }
+
+    if (isErrorCrear) {
+      setToast({
+        type: "error",
+        message:
+          "Error al crear tipo de cultivo: " + (errorCrear as Error).message,
+        visible: true,
+      });
+    }
+
+    if (isSuccessEditar) {
+      setToast({
+        type: "warning",
+        message: "Tipo de cultivo editado exitosamente.",
+        visible: true,
+      });
+    }
+
+    if (isErrorEditar) {
+      setToast({
+        type: "error",
+        message:
+          "Error al editar el tipo de cultivo: " + (errorEditar as Error).message,
+        visible: true,
+      });
+    }
+  }, [isSuccessCrear, isErrorCrear, isSuccessEditar, isErrorEditar]);
+
+  useEffect(() => {
+      if (toast.visible) {
+        const timer = setTimeout(() => {
+          closeToast();
+        }, 3000); // Duración del toast en milisegundos (3 segundos)
+  
+        return () => clearTimeout(timer); // Limpiar el temporizador al desmontar
+      }
+    }, [toast.visible]);
+
   return (
     <section>
         {toast.visible && (
         <Toast type={toast.type} message={toast.message} onClose={closeToast} />
       )}
-        <form>
+        <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-6 space-y-6">
         <div className="">
             <label
