@@ -2,10 +2,15 @@ import { useState } from "react";
 import { ToogleThemeButton } from "./ToogleTheme";
 import Logo from '/iconocacao.png'
 import { useLocation } from "react-router-dom";
+import useAuth from "../../modules/auth/hooks/useAuth";
+import { useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
   //Saber la ruta en la que me encuentro
   const location = useLocation();
+  const {logout} = useAuth();
+  const navigate = useNavigate();
+
 
   // Estado para controlar la visibilidad del menú de usuario
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -22,6 +27,13 @@ const Navbar = () => {
   const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
   };
+
+  const handleLogout =()=>{
+    if (window.confirm("¿Estás seguro de que deseas eliminar esta parcela?")){
+      logout();
+      navigate('/');
+    }
+  }
 
   return (
     <nav className="bg-white border-gray-200 dark:bg-gray-900">
@@ -98,8 +110,8 @@ const Navbar = () => {
                 </li>
                 <li>
                   <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                    
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white cursor-pointer" onClick={handleLogout}
                   >
                     Sign out
                   </a>

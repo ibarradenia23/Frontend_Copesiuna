@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Cloud, Eye, EyeOff } from "lucide-react";
+import { Cloud, Eye, EyeOff,ShieldAlert } from "lucide-react";
 import { useForm } from 'react-hook-form'
 
 import { ToogleThemeButton } from "./common/components/ToogleTheme";
@@ -17,10 +17,11 @@ function App() {
   const [sunPosition, setSunPosition] = useState(0);
   const [moonPosition, setMoonPosition] = useState(-100);
   const [cloudPosition, setCloudPosition] = useState(0);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const savedTheme = localStorage.getItem("color-theme");
 
-  const { mutate: login, isLoading, isError } = useLogin();
+  const { mutate: login, isLoading, isError, error } = useLogin();
 
   //Manejar el estado del fondo, dependiendo del estado del tema
   useEffect(() => {
@@ -58,10 +59,18 @@ function App() {
 
   //manejador del envio del formulario
   const onSubmit = (data: LoginFormInputs) => {
+    setErrorMessage("");
     console.log(data); // Imprimir los datos en la consola
     // Aquí puedes agregar la lógica para manejar el inicio de sesión
     login(data);
   };
+
+  useEffect(() => {
+    if (isError || error) {
+      // Captura el mensaje de error y actualiza el estado
+      setErrorMessage(error.message || "Error en el inicio de sesión. Inténtalo de nuevo.");
+    }
+  }, [isError, error]);
 
   return (
     <div
@@ -113,14 +122,13 @@ function App() {
         />
       </div>
       <div className="z-50 w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
-        <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
-          <div className="flex justify-between">
+      <div className="flex justify-between mb-4">
             <h5 className="text-xl font-medium text-gray-900 dark:text-white">
               Sign in to our platform
             </h5>
             <ToogleThemeButton />
           </div>
-
+        <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
           <div>
             <label
               htmlFor="email"
@@ -198,7 +206,7 @@ function App() {
               Lost Password?
             </a>
           </div>
-          {isError && <p>Error en el inicio de sesión. Inténtalo de nuevo.</p>}
+          {errorMessage && <p className="text-red-500 text-sm mt-1 flex items-center gap-2"><ShieldAlert/> {errorMessage}</p>}
           <button
             type="submit"
             className="w-full text-white bg-primary hover:bg-[#016F35] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary dark:hover:bg-[#016F35] dark:focus:ring-blue-800"

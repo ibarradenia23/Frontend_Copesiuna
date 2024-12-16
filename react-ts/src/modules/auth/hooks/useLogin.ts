@@ -11,14 +11,14 @@ export const useLogin = () => {
   const [token, setToken] = useRecoilState(authTokenState);
   const navigate = useNavigate();
 
-  return useMutation({
+  return useMutation<LoginResponse, Error, { email: string; password: string }>({
     mutationFn: (data: { email: string; password: string }) =>
       LoginService(data.email, data.password),
     onSuccess: (data: LoginResponse) => {
-      if (data.token) {
+      if (data.data.Access_token) {
         // Almacenar el token en localStorage
-        localStorage.setItem("authToken", data.token);
-        setToken(data.token);
+        localStorage.setItem("authToken", data.data?.Access_token);
+        setToken(data.data.Access_token);
         initializeToken(); // Inicializar el token después del login
         console.log("Inicio de sesión exitoso:", data);
 
@@ -28,6 +28,7 @@ export const useLogin = () => {
       }
     },
     onError: (error) => {
+      return error.message || "Error desconocido";
       console.error("Error en el inicio de sesión:", error);
     },
   });

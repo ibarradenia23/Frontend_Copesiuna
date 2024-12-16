@@ -6,6 +6,14 @@ export interface LoginFormInputs {
 
 //Para la respuesta del servicio
 export interface LoginResponse {
-    token?: string; 
+    data: {
+        Usuario:[],
+        Access_token: string;
+    }; 
     error?: string; 
 };
+
+interface ApiError {
+    message: string; // Mensaje de error que esperas del servidor
+   
+  }
