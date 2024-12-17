@@ -11,10 +11,11 @@ import Toast from "../../../common/components/Toast";
 import { ProductorInterface } from "../models";
 
 interface ProductorProps {
-  productor:ProductorInterface
+  productor:ProductorInterface,
+  onSave:()=>void;
 }
 
-const CardProductor:React.FC<ProductorProps> = ({productor}) => {
+const CardProductor:React.FC<ProductorProps> = ({productor,onSave}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalProductorOpen, setIsModalProductorOpen] = useState(false);
   const [productorSelect,setProductorSelect] = useState({
@@ -56,6 +57,7 @@ const CardProductor:React.FC<ProductorProps> = ({productor}) => {
   const handleEliminar = (id: number) => {
       if (window.confirm("¿Estás seguro de que deseas eliminar este productor?")) {
           eliminarProductor(id);
+          onSave()
       }
   };
 
@@ -145,18 +147,18 @@ const CardProductor:React.FC<ProductorProps> = ({productor}) => {
             <ParcelaForm/>
           </Modal>
         <Modal isOpen={isModalProductorOpen} onClose={handleCloseProductorModal} title='Actualiza este productor'>
-            <ProductorForm productor={productorSelect}/>
+            <ProductorForm onSave={onSave}  productor={productorSelect}/>
           </Modal>
       </div>
       <div className="border-t dark:border-gray-600 flex justify-end gap-4 pt-6">
         <button className="inline-flex text-white items-center bg-warning hover:bg-[#8C541D] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-sm px-5 py-2.5 text-center dark:bg-warning dark:hover:bg-[#8C541D] dark:focus:ring-warning" 
-        onClick={()=>handleOpenProductorModal(productor.id,productor.nombre,productor.apellido,productor.direccion,productor.cedula)}>
+        onClick={()=>handleOpenProductorModal(productor.id ?? 0,productor.nombre,productor.apellido,productor.direccion,productor.cedula)}>
 
           {" "}
           <Pencil className="h-4 w-4 mr-2" />
           Editar
         </button>
-        <button onClick={()=>handleEliminar(productor.id)} className="inline-flex text-white items-center bg-error hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-sm px-5 py-2.5 text-center dark:bg-error dark:hover:bg-red-900 dark:focus:ring-error">
+        <button onClick={()=>handleEliminar(productor.id ?? 0)} className="inline-flex text-white items-center bg-error hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-sm px-5 py-2.5 text-center dark:bg-error dark:hover:bg-red-900 dark:focus:ring-error">
           {" "}
           <Trash2 className="h-4 w-4 mr-2" />
           Eliminar

@@ -5,10 +5,13 @@ import ProductorForm from '../components/ProductorForm';
 import CardProductor from '../components/CardProductor';
 import { useObtenerProductores } from '../hooks/useProductor';
 import { ProductorInterface } from '../models';
+import { CirclePlus } from 'lucide-react';
+import Loading from '../../../common/components/Loading';
+import NoData from '../../../common/components/noData';
 
 const Productores = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { data: productoresResponse, isLoading, isError, error } = useObtenerProductores();
+  const { data: productoresResponse, isLoading } = useObtenerProductores();
   const [productores,setProductores] = useState<ProductorInterface[]>([])
 
   const handleOpenModal = () => {
@@ -19,10 +22,14 @@ const Productores = () => {
     setIsModalOpen(false);
   };
 
+  const traerProductores =()=>{
+    const productores = productoresResponse?.data as ProductorInterface[];
+     setProductores(productores);
+  }
+
   useEffect(()=>{
-     console.log("los productores son",productoresResponse);
-     setProductores(productoresResponse?.data)
-  },[productoresResponse])
+     traerProductores();
+  },[productoresResponse]);
   
   
   return (
@@ -32,20 +39,23 @@ const Productores = () => {
          <div className="flex items-center justify-between space-y-2">
           <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">Gestion de productores</h2>
           <div className="flex items-center space-x-2">
-            <button className="bg-primary hover:bg-[#016F35] text-white focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none" onClick={handleOpenModal}>
-              Agregar productor
+            <button className="bg-primary hover:bg-[#016F35] text-white focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none inline-flex items-center gap-2" onClick={handleOpenModal}>
+            <CirclePlus /> Agregar productor
             </button>
           </div>
           
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-2">
           {
-            productores && productores.map((productor)=>(
-              <CardProductor key={productor.id} productor={productor}/>
+            isLoading ?? <Loading/>
+          }
+          {
+            productores && productores.length < 1 ? <NoData/> : productores.map((productor)=>(
+              <CardProductor onSave={traerProductores} key={productor.id} productor={productor}/>
             ))
           }
         </div><Modal isOpen={isModalOpen} onClose={handleCloseModal} title='Crea un nuevo Productor'>
-            <ProductorForm/>
+            <ProductorForm onSave={traerProductores}/>
           </Modal>
          </section>
     </main>

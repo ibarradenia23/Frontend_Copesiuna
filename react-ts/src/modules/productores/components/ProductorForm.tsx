@@ -10,9 +10,10 @@ import { Pencil } from "lucide-react";
 
 interface ProductorPropsInterface {
   productor?: ProductorInterface;
+  onSave:()=>void;
 }
 
-const ProductorForm: React.FC<ProductorPropsInterface> = ({ productor }) => {
+const ProductorForm: React.FC<ProductorPropsInterface> = ({ productor,onSave }) => {
   const {
     register,
     setValue,
@@ -69,8 +70,10 @@ const ProductorForm: React.FC<ProductorPropsInterface> = ({ productor }) => {
     console.log(data);
     if (isEditing && productor && productor.id) {
       editarProductor({ id: productor.id, ...data });
+      onSave();
     } else {
       crearProductor(data);
+      onSave();
     }
   };
 
