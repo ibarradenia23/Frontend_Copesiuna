@@ -4,7 +4,7 @@ import Manager from "../../../common/api/manager";
 
 export const obtenerProductores = async (): Promise<ServiceResponse> => {
   try {
-    const response = await Manager.get("/productores/findall");
+    const response = await Manager.get("/api/productores/findall");
     return { data: response.data };
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
@@ -17,12 +17,14 @@ export const obtenerProductores = async (): Promise<ServiceResponse> => {
 
 export const crearProductor = async (
   nombre: string,
+  apellido:string,
   direccion: string,
   cedula: string
 ): Promise<ServiceResponse> => {
   try {
-    const response = await Manager.post("/productores/create", {
+    const response = await Manager.post("/api/productores/create", {
       nombre,
+      apellido,
       direccion,
       cedula,
     });
@@ -40,12 +42,14 @@ export const crearProductor = async (
 export const actualizarProductor = async (
   id: number,
   nombre: string,
+  apellido:string,
   direccion: string,
   cedula: string
 ): Promise<ServiceResponse> => {
   try {
-    const response = await Manager.put(`/productores/update/${id}`, {
+    const response = await Manager.patch(`/api/productores/update/${id}`, {
       nombre,
+      apellido,
       direccion,
       cedula,
     });
@@ -64,7 +68,7 @@ export const eliminarProductor = async (
   id: number
 ): Promise<ServiceResponse> => {
   try {
-    const response = await Manager.delete(`/productores/delete/${id}`);
+    const response = await Manager.delete(`/api/productores/delete/${id}`);
     return { data: response.data };
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {

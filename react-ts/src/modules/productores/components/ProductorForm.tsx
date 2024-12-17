@@ -54,6 +54,7 @@ const ProductorForm: React.FC<ProductorPropsInterface> = ({ productor }) => {
     if (productor) {
       setIsEditing(true);
       setValue("nombre", productor.nombre);
+      setValue("apellido",productor.apellido);
       setValue("direccion", productor.direccion);
       setValue("cedula", productor.cedula);
       resetEditar();
@@ -65,6 +66,7 @@ const ProductorForm: React.FC<ProductorPropsInterface> = ({ productor }) => {
 
   //Manejador del envio del formulario
   const onSubmit = async (data: ProductorInterface) => {
+    console.log(data);
     if (isEditing && productor && productor.id) {
       editarProductor({ id: productor.id, ...data });
     } else {
@@ -147,11 +149,37 @@ const ProductorForm: React.FC<ProductorPropsInterface> = ({ productor }) => {
                 },
               })}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-[#016F35] block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-              placeholder="Juan Perez"
+              placeholder="Juan Alverto"
             />
             {errors.nombre && (
               <p className="text-red-500 text-xs mt-1">
                 {errors.nombre.message}
+              </p>
+            )}
+          </div>
+          <div className="">
+            <label
+              htmlFor="apellido"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Apellido
+            </label>
+            <input
+              type="text"
+              id="apellido"
+              {...register("apellido", {
+                required: "Este campo es obligatorio",
+                minLength: {
+                  value: 6,
+                  message: "El apellido debe tener al menos 6 caracteres",
+                },
+              })}
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-[#016F35] block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+              placeholder="Perez Perez"
+            />
+            {errors.apellido && (
+              <p className="text-red-500 text-xs mt-1">
+                {errors.apellido.message}
               </p>
             )}
           </div>
@@ -228,7 +256,7 @@ const ProductorForm: React.FC<ProductorPropsInterface> = ({ productor }) => {
               <path
                 fill-rule="evenodd"
                 d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                clip-rule="evenodd"
+                clipRule="evenodd"
               ></path>
             </svg>
           )}

@@ -1,13 +1,15 @@
-import  { useState } from 'react'
+import  { useEffect, useState } from 'react'
 import Navbar from '../../../common/components/Navbar'
 import Modal from '../../../common/components/Modal';
 import ProductorForm from '../components/ProductorForm';
 import CardProductor from '../components/CardProductor';
 import { useObtenerProductores } from '../hooks/useProductor';
+import { ProductorInterface } from '../models';
 
 const Productores = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { data: productores, isLoading, isError, error } = useObtenerProductores();
+  const { data: productoresResponse, isLoading, isError, error } = useObtenerProductores();
+  const [productores,setProductores] = useState<ProductorInterface[]>([])
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -16,6 +18,12 @@ const Productores = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
+
+  useEffect(()=>{
+     console.log("los productores son",productoresResponse);
+     setProductores(productoresResponse?.data)
+  },[productoresResponse])
+  
   
   return (
     <main className="bg-white border-gray-200 dark:bg-gray-900">
@@ -31,10 +39,11 @@ const Productores = () => {
           
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-2">
-          <CardProductor/>
-          <CardProductor/>
-          <CardProductor/>
-          <CardProductor/>
+          {
+            productores && productores.map((productor)=>(
+              <CardProductor key={productor.id} productor={productor}/>
+            ))
+          }
         </div><Modal isOpen={isModalOpen} onClose={handleCloseModal} title='Crea un nuevo Productor'>
             <ProductorForm/>
           </Modal>

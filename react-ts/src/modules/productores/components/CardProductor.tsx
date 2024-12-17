@@ -2,16 +2,28 @@ import { Fingerprint, MapPinHouse, Pencil, Trash2 } from "lucide-react";
 import ImagenTemporal from "../../../../public/profile.jpg";
 import Accordion from "../../../common/components/Acordion";
 import CardParcela from "./CardParcela";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "../../../common/components/Modal";
 import ParcelaForm from "./ParcelaForm";
 import ProductorForm from "./ProductorForm";
 import { useEliminarProductor } from "../hooks/useProductor";
 import Toast from "../../../common/components/Toast";
+import { ProductorInterface } from "../models";
 
-const CardProductor = () => {
+interface ProductorProps {
+  productor:ProductorInterface
+}
+
+const CardProductor:React.FC<ProductorProps> = ({productor}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalProductorOpen, setIsModalProductorOpen] = useState(false);
+  const [productorSelect,setProductorSelect] = useState({
+    id:0,
+    nombre: '',
+    apellido:'',
+    direccion: '',
+    cedula: ''
+  })
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -20,7 +32,8 @@ const CardProductor = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
-  const handleOpenProductorModal = () => {
+  const handleOpenProductorModal = (id:number,nombre:string,apellido:string,direccion:string,cedula:string) => {
+    setProductorSelect({id,nombre,apellido,direccion,cedula});
     setIsModalProductorOpen(true);
   };
 
@@ -37,13 +50,6 @@ const CardProductor = () => {
     message: "",
     visible: false,
   });
-
-  const productorprueba = {
-    id:1,
-    nombre: 'Maynor Padilla',
-    direccion: 'El wasimito',
-    cedula: '234-456677-4657'
-  }
 
   const { mutate: eliminarProductor, isError, isSuccess, error } = useEliminarProductor();
 
@@ -96,21 +102,21 @@ const CardProductor = () => {
           />
           <div>
             <h3 className="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">
-              Mariana Melendez
+              {productor.nombre} {productor.apellido}
             </h3>
             <p className="font-normal text-gray-900 dark:text-white">
-              ID: 1
+              ID: {productor.id}
             </p>
           </div>
         </div>
         <div className="">
           <div className="flex items-center mb-2 text-md text-gray-700 dark:text-gray-400 mt-2">
             <MapPinHouse className="mr-2 h-4 w-4" />
-            <span>Marco antonio somarriba</span>
+            <span>{productor.direccion}</span>
           </div>
           <div className="flex items-center mb-4 text-md text-gray-700 dark:text-gray-400 ">
             <Fingerprint className="mr-2 h-4 w-4" />
-            <span>611-120306-1015G</span>
+            <span>{productor.cedula}</span>
           </div>
         </div>
 
@@ -128,7 +134,7 @@ const CardProductor = () => {
             <path
               fill-rule="evenodd"
               d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-              clip-rule="evenodd"
+              clipRule="evenodd"
             ></path>
           </svg>{" "}
           Agregar parcela
@@ -139,18 +145,18 @@ const CardProductor = () => {
             <ParcelaForm/>
           </Modal>
         <Modal isOpen={isModalProductorOpen} onClose={handleCloseProductorModal} title='Actualiza este productor'>
-            <ProductorForm productor={productorprueba}/>
+            <ProductorForm productor={productorSelect}/>
           </Modal>
       </div>
       <div className="border-t dark:border-gray-600 flex justify-end gap-4 pt-6">
         <button className="inline-flex text-white items-center bg-warning hover:bg-[#8C541D] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-sm px-5 py-2.5 text-center dark:bg-warning dark:hover:bg-[#8C541D] dark:focus:ring-warning" 
-        onClick={handleOpenProductorModal}>
+        onClick={()=>handleOpenProductorModal(productor.id,productor.nombre,productor.apellido,productor.direccion,productor.cedula)}>
 
           {" "}
           <Pencil className="h-4 w-4 mr-2" />
           Editar
         </button>
-        <button onClick={()=>handleEliminar(1)} className="inline-flex text-white items-center bg-error hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-sm px-5 py-2.5 text-center dark:bg-error dark:hover:bg-red-900 dark:focus:ring-error">
+        <button onClick={()=>handleEliminar(productor.id)} className="inline-flex text-white items-center bg-error hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-sm px-5 py-2.5 text-center dark:bg-error dark:hover:bg-red-900 dark:focus:ring-error">
           {" "}
           <Trash2 className="h-4 w-4 mr-2" />
           Eliminar

@@ -10,8 +10,8 @@ export const useObtenerProductores = () => {
 // Hook para crear un productor
 export const useCrearProductor = () => {
     return useMutation({
-        mutationFn: (data: { nombre: string; direccion: string; cedula: string }) =>
-            crearProductor(data.nombre,data.direccion,data.cedula),
+        mutationFn: (data: { nombre: string; apellido:string; direccion: string; cedula: string }) =>
+            crearProductor(data.nombre,data.apellido,data.direccion,data.cedula),
         onSuccess: (data: ServiceResponse) => {
             console.log('Productor creado con éxito:', data);
         },
@@ -24,8 +24,8 @@ export const useCrearProductor = () => {
 // Hook para actualizar un productor
 export const useActualizarProductor = () => {
     return useMutation({
-        mutationFn: (data: { id: number; nombre: string; direccion: string; cedula: string }) =>
-            actualizarProductor(data.id, data.nombre, data.direccion, data.cedula), // Asegúrate de llamar correctamente
+        mutationFn: (data: { id: number; apellido:string; nombre: string; direccion: string; cedula: string }) =>
+            actualizarProductor(data.id, data.nombre, data.apellido, data.direccion, data.cedula), // Asegúrate de llamar correctamente
         onSuccess: (data: ServiceResponse) => {
             console.log('Productor actualizado con éxito:', data);
         },
