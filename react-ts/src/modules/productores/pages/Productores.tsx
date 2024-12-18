@@ -7,7 +7,7 @@ import { useObtenerProductores } from '../hooks/useProductor';
 import { ProductorInterface } from '../models';
 import { CirclePlus } from 'lucide-react';
 import Loading from '../../../common/components/Loading';
-import NoData from '../../../common/components/noData';
+import NoData from '../../../common/components/NoData';
 
 const Productores = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -30,7 +30,6 @@ const Productores = () => {
   useEffect(()=>{
      traerProductores();
   },[productoresResponse]);
-  
   
   return (
     <main className="bg-white border-gray-200 dark:bg-gray-900">

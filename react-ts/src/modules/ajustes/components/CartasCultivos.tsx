@@ -2,8 +2,9 @@ import { CirclePlus, Clock, Pencil, Sprout, Trash2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import Modal from "../../../common/components/Modal";
 import TiposCultivosForm from "./TiposCultivosForm";
-import { useEliminarTipoCultivo } from "../hooks/useTiposCutivos";
+import { useEliminarTipoCultivo, useObtenerTiposCultivos } from "../hooks/useTiposCutivos";
 import Toast from "../../../common/components/Toast";
+import { TiposCultivosInterface } from "../models";
 
 const CartasCultivos = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -17,6 +18,11 @@ const CartasCultivos = () => {
     message: "",
     visible: false,
   });
+  const [tipoCultivoEdit,setTipoCultivoEdit] = useState({
+    id:0,
+    cultivo:'',
+    edad:''
+  })
 
   const closeToast = () => {
     setToast({ ...toast, visible: false });
@@ -37,12 +43,19 @@ const CartasCultivos = () => {
     setIsModalOpenEdit(false);
   };
 
-  const cultivoPrueba = {
-    cultivo:'Cacao trinitario',
-    edad:'2 años'
+  const {data:tiposCultivosResponse,/*isLoading*/} = useObtenerTiposCultivos();
+  const {mutate: eliminarTiposCultivos,isError,isSuccess,error} = useEliminarTipoCultivo();
+  const [tiposCultivosD,setTiposCultivosD] = useState<TiposCultivosInterface[]>([]);
+
+  const traerTiposCultivos =()=>{
+    const tiposCultivos = tiposCultivosResponse?.data as TiposCultivosInterface[];
+    console.log(tiposCultivos);
+    setTiposCultivosD(tiposCultivos);
   }
 
-  const {mutate: eliminarTiposCultivos,isError,isSuccess,error} = useEliminarTipoCultivo();
+  useEffect(()=>{
+   traerTiposCultivos();
+  },[tiposCultivosResponse]);
 
   useEffect(()=>{
     if(isSuccess){
@@ -77,6 +90,11 @@ const CartasCultivos = () => {
     }
   }, [toast.visible]);
 
+  const handleEdit=(id:number,cultivo:string,edad:string)=>{
+     setTipoCultivoEdit({id,cultivo,edad});
+     handleOpenModalEdit();
+  }
+
   return (
     <div className="p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 min-h-128">
       {toast.visible && <Toast type={toast.type} message={toast.message} onClose={closeToast}/>}
@@ -89,31 +107,35 @@ const CartasCultivos = () => {
         </button>
       </div>
       <div className="contenedorcartas mt-4">
-        <div className="p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 flex justify-between items-center">
+       {
+        tiposCultivosD && tiposCultivosD.map((tipoCultivo)=>(
+           <div className="p-6 mb-4 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 flex justify-between items-center">
           <div className="">
             <h4 className="text-[1.2rem] font-bold text-gray-900 dark:text-white">
-              Parcela Norte
+              {tipoCultivo.cultivo}
             </h4>
             <span className="flex text-gray-700 dark:text-gray-400 items-center">
-              <Clock className="inline mr-1 h-4 w-4" /> Edad: 1 año
+              <Clock className="inline mr-1 h-4 w-4" /> Edad: {tipoCultivo.edad}
             </span>
           </div>
           <div className="btones flex gap-2">
-            <button className=" items-center  font-medium rounded-lg text-sm p-2.5 text-center w-full justify-center text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700" onClick={handleOpenModalEdit}>
+            <button onClick={()=>handleEdit(tipoCultivo.id ?? 0,tipoCultivo.cultivo,tipoCultivo.edad)} className=" items-center  font-medium rounded-lg text-sm p-2.5 text-center w-full justify-center text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
               <Pencil className="h-4 w-4" />
             </button>
 
-            <button onClick={()=>handleEliminar(1)} className=" items-center  font-medium rounded-lg text-sm p-2.5 text-center w-full justify-center text-white bg-error hover:bg-red-900 focus:ring-4 focus:ring-gray-100   dark:bg-error dark:hover:bg-red-900 dark:focus:ring-error">
+            <button onClick={()=>handleEliminar(tipoCultivo.id ?? 0)} className=" items-center  font-medium rounded-lg text-sm p-2.5 text-center w-full justify-center text-white bg-error hover:bg-red-900 focus:ring-4 focus:ring-gray-100   dark:bg-error dark:hover:bg-red-900 dark:focus:ring-error">
               <Trash2 className="h-4 w-4" />
             </button>
           </div>
         </div>
+        ))}
+      
       </div>
       <Modal isOpen={isModalOpen} title="Crea un tipo de cultivo" onClose={handleCloseModal}>
         <TiposCultivosForm />
       </Modal>
       <Modal isOpen={isModalOpenEdit} title="Edita un tipo de cultivo" onClose={handleCloseModalEdit}>
-        <TiposCultivosForm tipoCultivo={cultivoPrueba}/>
+        <TiposCultivosForm tipoCultivo={tipoCultivoEdit}/>
       </Modal>
     </div>
   );

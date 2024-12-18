@@ -4,6 +4,7 @@ import {
   CalendarDays,
   Clipboard,
   Leaf,
+  Printer,
   Sprout,
 } from "lucide-react";
 import {
@@ -38,8 +39,8 @@ const Home = () => {
         <div className="flex items-center justify-between space-y-2">
           <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">Dashboard</h2>
           <div className="flex items-center space-x-2">
-            <button className="bg-primary hover:bg-[#016F35] text-white focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none">
-              Descargar Reporte
+            <button className="bg-primary hover:bg-[#016F35] text-white focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none flex align-middle items-center gap-2">
+              <Printer/> Descargar Reporte
             </button>
           </div>
         </div>

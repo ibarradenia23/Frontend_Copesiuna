@@ -4,7 +4,7 @@ import Manager from "../../../common/api/manager";
 
 export const obtenerTiposParcelas = async(): Promise<ServiceResponse> => {
     try {
-        const response = await Manager.get("/tipoparcelas/findall");
+        const response = await Manager.get("/api/tipoparcelas/findall");
         return {data:response.data};
     } catch (error:unknown) {
         if (axios.isAxiosError(error)) {
@@ -17,7 +17,7 @@ export const obtenerTiposParcelas = async(): Promise<ServiceResponse> => {
 
 export const crearTiposParcelas = async(descripcion:string): Promise<ServiceResponse> => {
     try {
-        const response = await Manager.post("/tipoparcelas/create",{descripcion});
+        const response = await Manager.post("/api/tipoparcelas/create",{descripcion});
         return {data:response.data};
     } catch (error:unknown) {
         if (axios.isAxiosError(error)) {
@@ -30,7 +30,7 @@ export const crearTiposParcelas = async(descripcion:string): Promise<ServiceResp
 
 export const actualizarTiposParcelas = async(id:number,descripcion:string): Promise<ServiceResponse> => {
     try {
-        const response = await Manager.put(`/tipoparcelas/create/${id}`,{descripcion});
+        const response = await Manager.put(`/api/tipoparcelas/create/${id}`,{descripcion});
         return {data:response.data};
     } catch (error:unknown) {
         if (axios.isAxiosError(error)) {
@@ -45,7 +45,7 @@ export const eliminarTiposParcelas = async (
     id: number
   ): Promise<ServiceResponse> => {
     try {
-      const response = await Manager.delete(`/tipoparcelas/delete/${id}`);
+      const response = await Manager.delete(`/api/tipoparcelas/delete/${id}`);
       return { data: response.data };
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
