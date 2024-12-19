@@ -8,14 +8,15 @@ import ParcelaForm from "./ParcelaForm";
 import ProductorForm from "./ProductorForm";
 import { useEliminarProductor } from "../hooks/useProductor";
 import Toast from "../../../common/components/Toast";
-import { ProductorInterface } from "../models";
+import { ParcelaCompletaInterface, ProductorInterface } from "../models";
 
 interface ProductorProps {
   productor:ProductorInterface,
   onSave:()=>void;
+  parcelas:ParcelaCompletaInterface[]
 }
 
-const CardProductor:React.FC<ProductorProps> = ({productor,onSave}) => {
+const CardProductor:React.FC<ProductorProps> = ({productor,onSave,parcelas}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalProductorOpen, setIsModalProductorOpen] = useState(false);
   const [productorSelect,setProductorSelect] = useState({
@@ -25,6 +26,7 @@ const CardProductor:React.FC<ProductorProps> = ({productor,onSave}) => {
     direccion: '',
     cedula: ''
   })
+  const parcelasDelProductor = parcelas.filter((parcela) => parcela.productor?.id === productor.id);
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -124,7 +126,12 @@ const CardProductor:React.FC<ProductorProps> = ({productor,onSave}) => {
 
         <div className="border-t dark:border-gray-600">
           <Accordion title="Parcelas y cultivos">
-            <CardParcela />
+            {
+              parcelasDelProductor.map((parcelas)=>(
+                <CardParcela parcela={parcelas} key={parcelas.id}/>
+              ))
+            }
+            
             <button className="text-white inline-flex items-center bg-primary hover:bg-[#016F35] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary dark:hover:bg-[#016F35] dark:focus:ring-primary w-full justify-center mt-4" onClick={handleOpenModal}>
           {" "}
           <svg
@@ -144,7 +151,7 @@ const CardProductor:React.FC<ProductorProps> = ({productor,onSave}) => {
           </Accordion>
         </div>
         <Modal isOpen={isModalOpen} onClose={handleCloseModal} title='Crea una nueva parcela'>
-            <ParcelaForm/>
+            <ParcelaForm idProductor={productor.id ?? 0}/>
           </Modal>
         <Modal isOpen={isModalProductorOpen} onClose={handleCloseProductorModal} title='Actualiza este productor'>
             <ProductorForm onSave={onSave}  productor={productorSelect}/>

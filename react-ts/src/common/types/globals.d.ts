@@ -1,3 +1,5 @@
+import { ParcelaCompletaInterface } from "../../modules/productores/models";
+
 export interface Paths {
   path: string;
   element: () => Promise<{ default: React.ComponentType<> }>;
@@ -5,6 +7,11 @@ export interface Paths {
 
 export interface ServiceResponse {
   data?: unknown;
+  error?: string;
+}
+
+export interface ServiceResponseParcelas {
+  data:ParcelaCompletaInterface[];
   error?: string;
 }
 

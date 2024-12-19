@@ -4,12 +4,16 @@ import React, { useEffect, useState } from "react";
 import Toast from "../../../common/components/Toast";
 import { useActualizarParcela, useCreateParcela } from "../hooks/useParcela";
 import { Pencil } from "lucide-react";
+import { useObtenerTiposParcelas } from "../../ajustes/hooks/useTiposParcelas";
+import { useObtenerTiposCultivos } from "../../ajustes/hooks/useTiposCutivos";
+import { TiposCultivosInterface, TiposParcelaInterface } from "../../ajustes/models";
 
 interface ParcelaPropsInterface {
   parcela?: ParcelaInterface;
+  idProductor?:number;
 }
 
-const ParcelaForm: React.FC<ParcelaPropsInterface> = ({parcela}) => {
+const ParcelaForm: React.FC<ParcelaPropsInterface> = ({parcela,idProductor}) => {
   const {
     register,
     setValue,
@@ -19,6 +23,17 @@ const ParcelaForm: React.FC<ParcelaPropsInterface> = ({parcela}) => {
 
    //Estado para decidir si crear o editar
    const [isEditing, setIsEditing] = useState(false);
+   const [tiposParecelaData,setTipoParcelaData] = useState<TiposParcelaInterface[]>([]);
+   const [tiposCultivosData,setTiposCultivosData] = useState<TiposCultivosInterface[]>([]);
+   const {data:tiposParcelaResponse} = useObtenerTiposParcelas();
+   const {data:tiposCultivossResponse} = useObtenerTiposCultivos();
+   
+   useEffect(()=>{
+    const tiposParcelas = tiposParcelaResponse?.data as TiposParcelaInterface[];
+    const tiposCultivos =  tiposCultivossResponse?.data as TiposCultivosInterface[];
+    setTipoParcelaData(tiposParcelas);
+    setTiposCultivosData(tiposCultivos);
+   },[tiposCultivossResponse,tiposParcelaResponse]);
 
    // Usamos el hook para crear una parcela
   const {
@@ -63,11 +78,26 @@ const ParcelaForm: React.FC<ParcelaPropsInterface> = ({parcela}) => {
   },[parcela,setValue,resetCrear]);
 
   const onSubmit = (data: ParcelaInterface) => {
+
    if(isEditing && parcela && parcela.id){
-    editarParcela({id:parcela.id,...data});
+    const newDataEdit ={
+      id:parcela.id,
+      descripcion:data.descripcion,
+      tamaño_parcela:data.tamaño_parcela
+    }
+    editarParcela(newDataEdit);
    }
    else {
-    crearParcela(data);
+    const newData ={
+      descripcion:data.descripcion,
+      tamaño_parcela:data.tamaño_parcela,
+      productorId:idProductor ?? 0,
+      cultivoId:Number(data.cultivoId),
+      tipoParcelaId:Number(data.tipoParcelaId)
+    }
+    console.log("Form enviado",newData);
+    
+    crearParcela(newData);
    }
   };
 
@@ -130,21 +160,29 @@ const ParcelaForm: React.FC<ParcelaPropsInterface> = ({parcela}) => {
         <div className="mb-6 space-y-6">
           <div className="">
             <label
-              htmlFor="countries"
+              htmlFor="parcelas"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
               Tipo de parcela
             </label>
             <select
-              id="countries"
+            disabled={isEditing}
+              id="tiposParcelas"
+              {...register("tipoParcelaId",{ required: "Este campo es obligatorio" })}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             >
               <option selected>Elige una tipo</option>
-              <option value="US">Secano</option>
-              <option value="CA">Regadio</option>
-              <option value="FR">Otra</option>
-              <option value="DE">Otra</option>
+              {tiposParecelaData?.map((tipoP)=>(
+                 <option key={tipoP.id} value={tipoP.id}>
+                 {tipoP.descripcion}
+               </option>
+              ))}
             </select>
+            {errors.tipoParcelaId&& (
+              <p className="text-red-500 text-xs mt-1">
+                {errors.tipoParcelaId.message}
+              </p>
+            )}
           </div>
           <div className="">
           <label
@@ -154,15 +192,23 @@ const ParcelaForm: React.FC<ParcelaPropsInterface> = ({parcela}) => {
               Tipo de cultivo
             </label>
             <select
-              id="countries"
+            disabled={isEditing}
+              id="tiposCultivos"
+              {...register("cultivoId",{required: "Este campo es obligatorio"})}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             >
                <option selected>Elige una tipo</option>
-              <option value="US">Criollo</option>
-              <option value="CA">Forastero</option>
-              <option value="FR">CCN-51</option>
-              <option value="DE">ICS-95</option>
+              {tiposCultivosData?.map((tipoC)=>(
+                <option key={tipoC.id} value={tipoC.id}>
+                {tipoC.cultivo}
+              </option>
+              ))}
             </select>
+            {errors.cultivoId && (
+              <p className="text-red-500 text-xs mt-1">
+                {errors.cultivoId.message}
+              </p>
+            )}
           </div>
           <div className="">
             <label

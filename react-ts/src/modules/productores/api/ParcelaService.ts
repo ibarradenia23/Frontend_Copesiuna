@@ -1,10 +1,10 @@
 import axios from "axios";
-import { ServiceResponse } from "../../../common/types/globals";
+import { ServiceResponse, ServiceResponseParcelas } from "../../../common/types/globals";
 import Manager from "../../../common/api/manager";
 
-export const obtenerParcelas = async():Promise<ServiceResponse> =>{
+export const obtenerParcelas = async():Promise<ServiceResponseParcelas> =>{
     try {
-        const response = await Manager.get("/parcelas/findall");
+        const response = await Manager.get("/api/parcelas/findall");
         return {data: response.data}
     } catch (error) {
         if (axios.isAxiosError(error)) {
@@ -15,10 +15,10 @@ export const obtenerParcelas = async():Promise<ServiceResponse> =>{
     }
 }
 
-export const createParcela = async(descripcion:string,tamaño_parcela:string,id_productor:number,id_cultivo:number,id_tipo_parcela:number): Promise<ServiceResponse> => {
+export const createParcela = async(descripcion:string,tamaño_parcela:string,productorId:number,cultivoId:number,tipoParcelaId:number): Promise<ServiceResponse> => {
     try {
-        const response = await Manager.post("/parcelas/create",{
-            descripcion,tamaño_parcela,id_productor,id_cultivo,id_tipo_parcela
+        const response = await Manager.post("/api/parcelas/create",{
+            descripcion,tamaño_parcela,productorId,cultivoId,tipoParcelaId
         });
         return {data: response.data}
     } catch (error) {
@@ -31,10 +31,10 @@ export const createParcela = async(descripcion:string,tamaño_parcela:string,id_
     }
 }
 
-export const actualizarParcela = async(id:number,descripcion:string,tamaño_parcela:string,id_productor:number,id_cultivo:number,id_tipo_parcela:number): Promise<ServiceResponse> => {
+export const actualizarParcela = async(id:number,descripcion:string,tamaño_parcela:string): Promise<ServiceResponse> => {
     try {
-        const response = await Manager.put(`/parcelas/update/${id}`,{
-            descripcion,tamaño_parcela,id_productor,id_cultivo,id_tipo_parcela
+        const response = await Manager.patch(`/api/parcelas/update/${id}`,{
+            descripcion,tamaño_parcela
         });
         return {data: response.data}
     } catch (error) {
@@ -51,7 +51,7 @@ export const eliminarParcela = async (
     id: number
   ): Promise<ServiceResponse> => {
     try {
-      const response = await Manager.delete(`/parcelas/delete/${id}`);
+      const response = await Manager.delete(`/api/parcelas/delete/${id}`);
       return { data: response.data };
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {

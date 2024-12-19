@@ -1,15 +1,15 @@
 import { useMutation,useQuery } from "@tanstack/react-query";
-import { ServiceResponse } from "../../../common/types/globals";
+import { ServiceResponse, ServiceResponseParcelas } from "../../../common/types/globals";
 import { actualizarParcela, createParcela, eliminarParcela, obtenerParcelas } from "../api/ParcelaService";
 
 export const useObtenerParcelas =()=>{
-    return useQuery(['parcelas'],obtenerParcelas);
+    return useQuery<ServiceResponseParcelas,Error>(['parcelas'],obtenerParcelas);
 }
 
 export const useCreateParcela =()=>{
     return useMutation({
-        mutationFn: (data:{descripcion:string; tamaño_parcela:string; id_productor:number; id_cultivo:number; id_tipo_parcela:number}) =>
-            createParcela(data.descripcion, data.tamaño_parcela, data.id_productor, data.id_cultivo,data.id_tipo_parcela),
+        mutationFn: (data:{descripcion:string; tamaño_parcela:string; productorId:number; cultivoId:number; tipoParcelaId:number}) =>
+            createParcela(data.descripcion, data.tamaño_parcela, data.productorId, data.cultivoId,data.tipoParcelaId),
         onSuccess: (data:ServiceResponse) => {
             console.log("parcela creada con exito",data);
         },
@@ -20,8 +20,8 @@ export const useCreateParcela =()=>{
 }
 export const useActualizarParcela =()=>{
     return useMutation({
-        mutationFn: (data:{id:number, descripcion:string; tamaño_parcela:string; id_productor:number; id_cultivo:number; id_tipo_parcela:number}) =>
-            actualizarParcela(data.id, data.descripcion, data.tamaño_parcela, data.id_productor, data.id_cultivo,data.id_tipo_parcela),
+        mutationFn: (data:{id:number, descripcion:string; tamaño_parcela:string;}) =>
+            actualizarParcela(data.id, data.descripcion, data.tamaño_parcela),
         onSuccess: (data:ServiceResponse) => {
             console.log("parcela editada con exito",data);
         },

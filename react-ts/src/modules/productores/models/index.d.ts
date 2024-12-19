@@ -1,3 +1,5 @@
+import { TiposCultivosInterface, TiposParcelaInterface } from "../../ajustes/models";
+
 export interface ProductorInterface {
     id?:number;
     nombre:string;
@@ -12,11 +14,17 @@ export interface ParcelaInterface {
     id?:number;
     descripcion:string;
     tamaño_parcela:string;
-    id_productor:number;
-    id_cultivo:number;
-    id_tipo_parcela:number;
+    productorId:number;
+    cultivoId:number;
+    tipoParcelaId:number;
     fecha_create?:Date;
     fecha_update?:Date;
+}
+
+export interface ParcelaCompletaInterface extends ParcelaInterface {
+  productor: ProductorInterface;
+  cultivo:TiposCultivosInterface;
+  tipo:TiposParcelaInterface;
 }
 
 export interface CultivoInterface {

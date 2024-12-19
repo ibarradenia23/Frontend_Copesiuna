@@ -34,7 +34,7 @@ const Accordion: React.FC<AccordionProps> = ({ title, children }) => {
           </svg>
         </span>
       </div>
-      {isOpen && <div className="pt-4 border-t dark:border-gray-600">{children}</div>}
+      {isOpen && <div className="pt-4 border-t dark:border-gray-600 flex flex-col gap-4">{children}</div>}
     </div>
   );
 };

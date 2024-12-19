@@ -4,15 +4,20 @@ import Modal from '../../../common/components/Modal';
 import ProductorForm from '../components/ProductorForm';
 import CardProductor from '../components/CardProductor';
 import { useObtenerProductores } from '../hooks/useProductor';
-import { ProductorInterface } from '../models';
+import { ParcelaCompletaInterface, ProductorInterface } from '../models';
 import { CirclePlus } from 'lucide-react';
 import Loading from '../../../common/components/Loading';
 import NoData from '../../../common/components/NoData';
+import { useObtenerParcelas } from '../hooks/useParcela';
 
 const Productores = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { data: productoresResponse, isLoading } = useObtenerProductores();
   const [productores,setProductores] = useState<ProductorInterface[]>([])
+
+  //Extraer todas las parcelas
+  const { data: serviceResponse } = useObtenerParcelas();
+  const parcelasArray: ParcelaCompletaInterface[] = serviceResponse?.data || [];
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -49,8 +54,8 @@ const Productores = () => {
             isLoading ?? <Loading/>
           }
           {
-            productores && productores.length < 1 ? <NoData/> : productores.map((productor)=>(
-              <CardProductor onSave={traerProductores} key={productor.id} productor={productor}/>
+            productores && productores.length < 1 ? <NoData/> : productores?.map((productor)=>(
+              <CardProductor parcelas={parcelasArray} onSave={traerProductores} key={productor.id} productor={productor}/>
             ))
           }
         </div><Modal isOpen={isModalOpen} onClose={handleCloseModal} title='Crea un nuevo Productor'>
