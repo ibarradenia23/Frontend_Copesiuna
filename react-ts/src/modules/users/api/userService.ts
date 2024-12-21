@@ -4,7 +4,7 @@ import Manager from "../../../common/api/manager";
 
 export const obtenerUsers = async (): Promise<ServiceResponse> => {
     try {
-      const response = await Manager.get("/users/findall");
+      const response = await Manager.get("/api/users/findall");
       return { data: response.data };
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
@@ -23,7 +23,7 @@ export const obtenerUsers = async (): Promise<ServiceResponse> => {
     password:string
   ): Promise<ServiceResponse> => {
     try {
-      const response = await Manager.post("/users/create", {
+      const response = await Manager.post("/api/users/create", {
         nombre,
         apellido,
         telefono,
@@ -49,7 +49,7 @@ export const obtenerUsers = async (): Promise<ServiceResponse> => {
     password:string
   ): Promise<ServiceResponse> => {
     try {
-      const response = await Manager.put(`/users/update/${id}`, {
+      const response = await Manager.put(`/api/users/update/${id}`, {
         nombre,
         apellido,
         telefono,
@@ -70,7 +70,7 @@ export const obtenerUsers = async (): Promise<ServiceResponse> => {
     id: number
   ): Promise<ServiceResponse> => {
     try {
-      const response = await Manager.delete(`/users/delete/${id}`);
+      const response = await Manager.delete(`/api/users/delete/${id}`);
       return { data: response.data };
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {

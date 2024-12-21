@@ -70,6 +70,7 @@ const UserForm: React.FC<UserPropsInterface> = ({user}) => {
     if (isEditing && user && user.id) {
       editarUsuario({ id: user.id, ...data });
     } else {
+      console.log("El formulario es",data);
       crearUsuario(data);
     }
   };
@@ -111,7 +112,7 @@ const UserForm: React.FC<UserPropsInterface> = ({user}) => {
   }, [isSuccessCrear, isErrorCrear, isSuccessEditar, isErrorEditar]);
 
   return (
-    <section>                                              b,
+    <section>
       {toast.visible && (
         <Toast type={toast.type} message={toast.message} onClose={closeToast} />
       )}

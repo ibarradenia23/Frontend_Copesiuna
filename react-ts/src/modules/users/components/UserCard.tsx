@@ -4,10 +4,23 @@ import Toast from "../../../common/components/Toast";
 import Modal from "../../../common/components/Modal";
 import UserForm from "./UserForm";
 import { useEliminarUsuario } from "../hooks/useUser";
+import { UserInterface } from "../models";
 
-const UserCard = () => {
+interface Props {
+  users: UserInterface
+}
+
+const UserCard:React.FC<Props> = ({users}) => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [userEdit,setUserEdit] = useState({
+      id:0,
+      nombre: '',
+      apellido: '',
+      telefono:'',
+      email:'',
+      password:''
+    })
     const [toast, setToast] = useState<{
         type: "success" | "error" | "warning";
         message: string;
@@ -30,13 +43,9 @@ const UserCard = () => {
         setIsModalOpen(false);
       };
 
-      const userprueba = {
-        id:1,
-        nombre: 'Maynor ',
-        apellido: 'Padilla',
-        telefono:'74638363',
-        email:'ejemplo@gmail.com',
-        password:'........'
+      const handleEditar =(id:number,nombre:string,apellido:string,telefono:string,email:string,password:string)=>{
+        handleOpenModal();
+        setUserEdit({id,nombre,apellido,telefono,email,password})
       }
 
       const { mutate: eliminarUsuario, isError, isSuccess, error } = useEliminarUsuario();
@@ -70,7 +79,7 @@ const UserCard = () => {
     <div className=" p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
         {toast.visible && <Toast type={toast.type} message={toast.message} onClose={closeToast}/>}
         <Modal isOpen={isModalOpen} onClose={handleCloseModal} title='Actualiza este usuario'>
-            <UserForm user={userprueba}/>
+            <UserForm user={userEdit}/>
           </Modal>
       <div className="pb-2">
         <div className="flex space-x-4 align-middle items-center ">
@@ -89,21 +98,21 @@ const UserCard = () => {
             </svg>
           </div>
           <h3 className=" text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">
-            Mariana Melendez
+            {users.nombre}
           </h3>
         </div>
         <div className="">
         <div className="flex items-center mb-2 text-md text-gray-700 dark:text-gray-400 mt-2">
             <MailCheck className="mr-2 h-4 w-4" />
-            <span>juan@gmail.com</span>
+            <span>{users.email} {users.apellido}</span>
           </div>
         <div className="flex items-center mb-2 text-md text-gray-700 dark:text-gray-400 mt-2">
             <Phone className="mr-2 h-4 w-4" />
-            <span>8467-3458</span>
+            <span>{users.telefono}</span>
           </div>
         </div>
         <div className="flex justify-end gap-4 pt-6">
-        <button className="inline-flex text-white items-center bg-warning hover:bg-[#8C541D] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-sm px-5 py-2.5 text-center dark:bg-warning dark:hover:bg-[#8C541D] dark:focus:ring-warning" onClick={handleOpenModal}
+        <button className="inline-flex text-white items-center bg-warning hover:bg-[#8C541D] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-sm px-5 py-2.5 text-center dark:bg-warning dark:hover:bg-[#8C541D] dark:focus:ring-warning" onClick={()=>handleEditar(users.id ?? 0,users.nombre,users.apellido,users.telefono,users.email,users.password)}
         >
 
           {" "}

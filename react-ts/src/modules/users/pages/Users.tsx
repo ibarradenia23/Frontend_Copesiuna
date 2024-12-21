@@ -1,11 +1,25 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "../../../common/components/Modal";
 import Navbar from "../../../common/components/Navbar";
 import UserForm from "../components/UserForm";
 import UserCard from "../components/UserCard";
+import { useObtenerUduarios } from "../hooks/useUser";
+import { UserInterface } from "../models";
+import NoData from "../../../common/components/NoData";
 
 const Users = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const {data:userResponse} = useObtenerUduarios();
+  const [usuarios,setUsuarios] = useState<UserInterface[]>([]);
+
+  const traerUsuarios =()=>{
+    const usuarios = userResponse?.data as UserInterface[];
+    setUsuarios(usuarios);
+  }
+
+  useEffect(()=>{
+   traerUsuarios();
+  },[userResponse]);
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -33,11 +47,13 @@ const Users = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-2">
-          <UserCard />
-          <UserCard />
-          <UserCard />
-          <UserCard />
-          <UserCard />
+          {
+            !usuarios ? <NoData/> : 
+              usuarios?.map((usuario)=>(
+                <UserCard users={usuario} key={usuario.id}/>
+              ))
+            
+          }
         </div>
         <Modal
           isOpen={isModalOpen}
