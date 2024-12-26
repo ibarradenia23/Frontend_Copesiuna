@@ -1,4 +1,4 @@
-import { Fingerprint, MapPinHouse, Pencil, Trash2 } from "lucide-react";
+import { Fingerprint, MapPinHouse, Pencil, Tractor, Trash2 } from "lucide-react";
 import ImagenTemporal from "../../../../public/profile.jpg";
 import Accordion from "../../../common/components/Acordion";
 import CardParcela from "./CardParcela";
@@ -126,7 +126,7 @@ const CardProductor:React.FC<ProductorProps> = ({productor,onSave,parcelas}) => 
         </div>
 
         <div className="border-t dark:border-gray-600">
-          <Accordion title="Parcelas y cultivos">
+          <Accordion icon={<Tractor/>} title="Parcelas y cultivos">
             {
               parcelasDelProductor.map((parcelas)=>(
                 <CardParcela parcela={parcelas} key={parcelas.id}/>

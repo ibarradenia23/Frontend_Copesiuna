@@ -1,4 +1,5 @@
 import { ParcelaCompletaInterface } from "../../modules/productores/models";
+import { Asignacion } from "../../modules/users/models";
 
 export interface Paths {
   path: string;
@@ -7,6 +8,11 @@ export interface Paths {
 
 export interface ServiceResponse {
   data?: unknown;
+  error?: string;
+}
+
+export interface ServiceResponseAsignacion {
+  data:Asignacion[];
   error?: string;
 }
 

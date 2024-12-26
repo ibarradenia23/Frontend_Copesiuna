@@ -1,14 +1,14 @@
 import axios from "axios";
-import { ServiceResponse } from "../../../common/types/globals";
+import { ServiceResponse, ServiceResponseAsignacion } from "../../../common/types/globals";
 import Manager from "../../../common/api/manager";
 
-export const obtenerAsignaciones = async (): Promise<ServiceResponse> => {
+export const obtenerAsignaciones = async (): Promise<ServiceResponseAsignacion> => {
   try {
     const response = await Manager.get("/api/asignacion/findall");
     return { data: response.data.data };
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      throw new Error(error.response?.data?.message || "Error desconocido");
+      throw new Error(error.response?.data?.error || "Error desconocido");
     } else {
       throw new Error("Error inesperado");
     }
@@ -30,7 +30,7 @@ export const crearAsignacion = async (
   } catch (error) {
     // Lanzar un error en caso de fallo
     if (axios.isAxiosError(error)) {
-      throw new Error(error.response?.data?.message || "Error desconocido");
+      throw new Error(error.response?.data?.error || "Error desconocido");
     } else {
       throw new Error("Error inesperado");
     }
@@ -53,7 +53,7 @@ export const actualizarAsignacion = async (
   } catch (error) {
     // Lanzar un error en caso de fallo
     if (axios.isAxiosError(error)) {
-      throw new Error(error.response?.data?.message || "Error desconocido");
+      throw new Error(error.response?.data?.error || "Error desconocido");
     } else {
       throw new Error("Error inesperado");
     }

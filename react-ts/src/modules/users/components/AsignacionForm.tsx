@@ -67,6 +67,7 @@ const AsignacionForm:React.FC<AsignacionPropsInterface> = ({idUsuario}) => {
           ID_user:Number(idUsuario),
           tipo:data.tipo,
         }
+        console.log("Data de asignacion",newData)
         crearAsignacion(newData);
       }
     }
@@ -75,7 +76,7 @@ const AsignacionForm:React.FC<AsignacionPropsInterface> = ({idUsuario}) => {
       if (isSuccessCrear) {
         setToast({
           type: "success",
-          message: "Parcela creada exitosamente.",
+          message: "Asignacion creada exitosamente.",
           visible: true,
         });
       }
@@ -84,7 +85,7 @@ const AsignacionForm:React.FC<AsignacionPropsInterface> = ({idUsuario}) => {
         setToast({
           type: "error",
           message:
-            "Error al crear la parcela: " + (errorCrear as Error).message,
+            "Error al crear la asignacion: " + (errorCrear as Error).message,
           visible: true,
         });
       }
@@ -144,6 +145,28 @@ const AsignacionForm:React.FC<AsignacionPropsInterface> = ({idUsuario}) => {
               </p>
             )}
           </div>
+          <button
+          type="submit"
+          className={`text-white inline-flex items-center ${
+             " bg-primary hover:bg-[#016F35] dark:bg-primary dark:hover:bg-[#016F35] dark:focus:ring-primary"
+          } focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center `}
+        >
+          
+            <svg
+              className="me-1 -ms-1 w-5 h-5"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                clipRule="evenodd"
+              ></path>
+            </svg>
+      
+            Agregar Asignacion
+        </button>
       </div>
       </form>
     </section>

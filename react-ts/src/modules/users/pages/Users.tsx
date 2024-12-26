@@ -4,12 +4,15 @@ import Navbar from "../../../common/components/Navbar";
 import UserForm from "../components/UserForm";
 import UserCard from "../components/UserCard";
 import { useObtenerUduarios } from "../hooks/useUser";
-import { UserInterface } from "../models";
+import { Asignacion, UserInterface } from "../models";
 import NoData from "../../../common/components/NoData";
+import { useObtenerAsignaciones } from "../hooks/useAsignacion";
+import { CirclePlus } from "lucide-react";
 
 const Users = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const {data:userResponse} = useObtenerUduarios();
+  const {data:asignacionesResponse} = useObtenerAsignaciones();
   const [usuarios,setUsuarios] = useState<UserInterface[]>([]);
 
   const traerUsuarios =()=>{
@@ -17,6 +20,8 @@ const Users = () => {
       setUsuarios(userResponse.data);
     }
   }
+
+  const asignacionesArray:Asignacion[] = asignacionesResponse?.data || [];
 
   useEffect(()=>{
    traerUsuarios();
@@ -39,10 +44,10 @@ const Users = () => {
           </h2>
           <div className="flex items-center space-x-2">
             <button
-              className="bg-primary hover:bg-[#016F35] text-white focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none"
+              className="bg-primary hover:bg-[#016F35] text-white focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none inline-flex items-center gap-2"
               onClick={handleOpenModal}
             >
-              Agregar usuario
+             <CirclePlus /> Agregar usuario
             </button>
           </div>
         </div>
@@ -51,7 +56,7 @@ const Users = () => {
           {
             !usuarios ? <NoData/> : 
               usuarios?.map((usuario)=>(
-                <UserCard users={usuario} key={usuario.id}/>
+                <UserCard asignaciones={asignacionesArray} users={usuario} key={usuario.id}/>
               ))
             
           }

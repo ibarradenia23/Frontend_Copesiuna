@@ -1,13 +1,14 @@
 // Accordion.tsx
-import { Tractor } from 'lucide-react';
+
 import React, { useState } from 'react';
 
 interface AccordionProps {
   title: string;
   children: React.ReactNode;
+  icon: React.ReactNode;
 }
 
-const Accordion: React.FC<AccordionProps> = ({ title, children }) => {
+const Accordion: React.FC<AccordionProps> = ({ title, children,icon }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleAccordion = () => {
@@ -20,7 +21,7 @@ const Accordion: React.FC<AccordionProps> = ({ title, children }) => {
         className="flex justify-between items-center py-4 cursor-pointer rounded-lg"
         onClick={toggleAccordion}
       >
-        <h2 className="flex text-lg align-middle text-gray-900 dark:text-white items-center hover:underline"> <Tractor className="mr-2 h-5 w-5" />{title}</h2>
+        <h2 className="flex text-lg align-middle text-gray-900 dark:text-white items-center hover:underline gap-2"> {icon} {title}</h2>
         <span className={`transform transition-transform ${isOpen ? 'rotate-90' : ''}`}>
           <svg
           

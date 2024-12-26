@@ -24,8 +24,8 @@ export const useCrearUsuario = () => {
 // Hook para actualizar usuarios
 export const useActualizarUsuarios = () => {
     return useMutation({
-        mutationFn: (data: { id:number; nombre: string; apellido: string; telefono: string; email:string; password:string; }) =>
-            actualizarUser(data.id,data.nombre,data.apellido,data.telefono,data.email,data.password),
+        mutationFn: (data: { id:number; nombre: string; apellido: string; telefono: string; email:string; password:string; role:string}) =>
+            actualizarUser(data.id,data.nombre,data.apellido,data.telefono,data.email,data.role,data.password),
         onSuccess: (data: ServiceResponse) => {
             console.log('Usuario actualizado con éxito:', data);
         },

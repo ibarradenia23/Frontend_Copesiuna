@@ -1,3 +1,5 @@
+import { ProductorInterface } from "../../productores/models";
+
 export interface UserInterface {
   id?:number;
   nombre:string;
@@ -16,4 +18,7 @@ export interface Asignacion {
   ID_user:number;
   tipo:string;
   estado?:boolean;
+  productor?:ProductorInterface;
+  fecha_create: string;
+  fecha_update?: Date;
 }
