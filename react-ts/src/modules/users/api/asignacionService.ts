@@ -5,7 +5,7 @@ import Manager from "../../../common/api/manager";
 export const obtenerAsignaciones = async (): Promise<ServiceResponse> => {
   try {
     const response = await Manager.get("/api/asignacion/findall");
-    return { data: response.data };
+    return { data: response.data.data };
   } catch (error) {
     if (axios.isAxiosError(error)) {
       throw new Error(error.response?.data?.message || "Error desconocido");

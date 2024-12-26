@@ -4,13 +4,16 @@ import Toast from "../../../common/components/Toast";
 import Modal from "../../../common/components/Modal";
 import UserForm from "./UserForm";
 import { useEliminarUsuario } from "../hooks/useUser";
-import { UserInterface } from "../models";
+import { Asignacion, UserInterface } from "../models";
+import Accordion from "../../../common/components/Acordion";
+import AsignacionCard from "./AsignacionCard";
 
 interface Props {
-  users: UserInterface
+  users: UserInterface,
+  asignaciones:Asignacion[]
 }
 
-const UserCard:React.FC<Props> = ({users}) => {
+const UserCard:React.FC<Props> = ({users,asignaciones}) => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [userEdit,setUserEdit] = useState({
@@ -19,6 +22,7 @@ const UserCard:React.FC<Props> = ({users}) => {
       apellido: '',
       telefono:'',
       email:'',
+      role:'',
       password:''
     })
     const [toast, setToast] = useState<{
@@ -43,12 +47,15 @@ const UserCard:React.FC<Props> = ({users}) => {
         setIsModalOpen(false);
       };
 
-      const handleEditar =(id:number,nombre:string,apellido:string,telefono:string,email:string,password:string)=>{
+      const handleEditar =(id:number,nombre:string,apellido:string,telefono:string,email:string,role:string,password:string)=>{
         handleOpenModal();
-        setUserEdit({id,nombre,apellido,telefono,email,password})
+        setUserEdit({id,nombre,apellido,telefono,email,role,password})
       }
 
       const { mutate: eliminarUsuario, isError, isSuccess, error } = useEliminarUsuario();
+      const asignacionesUser = Array.isArray(asignaciones) ? asignaciones.filter((asignacion)=>{
+        return asignacion.ID_user === users.id;
+      }) : [];
 
       useEffect(()=>{
         if(isSuccess){
@@ -111,8 +118,17 @@ const UserCard:React.FC<Props> = ({users}) => {
             <span>{users.telefono}</span>
           </div>
         </div>
+        <div className="border-t dark:border-gray-600">
+          <Accordion title="Asignaciones">
+             {
+              asignacionesUser.map((asignacion)=>(
+                <AsignacionCard key={asignacion.id}/>
+              ))
+             }
+          </Accordion>
+        </div>
         <div className="flex justify-end gap-4 pt-6">
-        <button className="inline-flex text-white items-center bg-warning hover:bg-[#8C541D] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-sm px-5 py-2.5 text-center dark:bg-warning dark:hover:bg-[#8C541D] dark:focus:ring-warning" onClick={()=>handleEditar(users.id ?? 0,users.nombre,users.apellido,users.telefono,users.email,users.password)}
+        <button className="inline-flex text-white items-center bg-warning hover:bg-[#8C541D] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-sm px-5 py-2.5 text-center dark:bg-warning dark:hover:bg-[#8C541D] dark:focus:ring-warning" onClick={()=>handleEditar(users.id ?? 0,users.nombre,users.apellido,users.telefono,users.email,users.role,users.password)}
         >
 
           {" "}

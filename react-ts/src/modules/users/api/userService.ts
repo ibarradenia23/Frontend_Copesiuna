@@ -5,7 +5,7 @@ import Manager from "../../../common/api/manager";
 export const obtenerUsers = async (): Promise<ServiceResponse> => {
     try {
       const response = await Manager.get("/api/users/findall");
-      return { data: response.data };
+      return { data: response.data.data };
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         throw new Error(error.response?.data?.message || "Error desconocido");
@@ -20,6 +20,7 @@ export const obtenerUsers = async (): Promise<ServiceResponse> => {
     apellido: string,
     telefono: string,
     email:string,
+    role:string,
     password:string
   ): Promise<ServiceResponse> => {
     try {
@@ -28,12 +29,13 @@ export const obtenerUsers = async (): Promise<ServiceResponse> => {
         apellido,
         telefono,
         email,
+        role,
         password});
       return { data: response.data };
     } catch (error: unknown) {
       // Lanzar un error en caso de fallo
       if (axios.isAxiosError(error)) {
-        throw new Error(error.response?.data?.message || "Error desconocido");
+        throw new Error(error.response?.data?.error || "Error desconocido");
       } else {
         throw new Error("Error inesperado");
       }

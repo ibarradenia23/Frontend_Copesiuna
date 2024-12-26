@@ -26,8 +26,9 @@ const CardProductor:React.FC<ProductorProps> = ({productor,onSave,parcelas}) => 
     direccion: '',
     cedula: ''
   })
-  const parcelasDelProductor = parcelas.filter((parcela) => parcela.productor?.id === productor.id);
-
+  const parcelasDelProductor = Array.isArray(parcelas) ? parcelas.filter((parcela) => {
+    return parcela.productor && parcela.productor.id === productor.id; // Asegúrate de que productor no sea undefined
+  }) : [];
   const handleOpenModal = () => {
     setIsModalOpen(true);
   };

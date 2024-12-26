@@ -10,8 +10,8 @@ export const useObtenerUduarios =()=>{
 // Hook para crear un usuario
 export const useCrearUsuario = () => {
     return useMutation({
-        mutationFn: (data: { nombre: string; apellido: string; telefono: string; email:string; password:string; }) =>
-            crearUser(data.nombre,data.apellido,data.telefono,data.email,data.password),
+        mutationFn: (data: { nombre: string; apellido: string; telefono: string; email:string; role:string; password:string; }) =>
+            crearUser(data.nombre,data.apellido,data.telefono,data.email,data.role,data.password),
         onSuccess: (data: ServiceResponse) => {
             console.log('Usuario creado con éxito:', data);
         },

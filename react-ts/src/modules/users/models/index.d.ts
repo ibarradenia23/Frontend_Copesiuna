@@ -5,6 +5,7 @@ export interface UserInterface {
   telefono:string;
   email:string;
   password:string;
+  role:string;
   fecha_create?: Date;
   fecha_update?: Date;
 }

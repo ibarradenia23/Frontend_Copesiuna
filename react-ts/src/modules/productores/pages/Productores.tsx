@@ -28,13 +28,14 @@ const Productores = () => {
   };
 
   const traerProductores =()=>{
-    const productores = productoresResponse?.data as ProductorInterface[];
-     setProductores(productores);
+    if (productoresResponse && Array.isArray(productoresResponse.data)) {
+      setProductores(productoresResponse.data); // Asigna directamente el array de productores
+    }
   }
 
-  useEffect(()=>{
-     traerProductores();
-  },[productoresResponse]);
+  useEffect(() => {
+    traerProductores();
+  }, [productoresResponse]);
   
   return (
     <main className="bg-white border-gray-200 dark:bg-gray-900">
@@ -54,7 +55,7 @@ const Productores = () => {
             isLoading ?? <Loading/>
           }
           {
-            productores && productores.length < 1 ? <NoData/> : productores?.map((productor)=>(
+            productores && productores.length < 1 ? <NoData/> : productores.map((productor)=>(
               <CardProductor parcelas={parcelasArray} onSave={traerProductores} key={productor.id} productor={productor}/>
             ))
           }

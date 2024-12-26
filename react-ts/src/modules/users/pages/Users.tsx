@@ -13,8 +13,9 @@ const Users = () => {
   const [usuarios,setUsuarios] = useState<UserInterface[]>([]);
 
   const traerUsuarios =()=>{
-    const usuarios = userResponse?.data as UserInterface[];
-    setUsuarios(usuarios);
+    if(userResponse && Array.isArray(userResponse.data)){
+      setUsuarios(userResponse.data);
+    }
   }
 
   useEffect(()=>{

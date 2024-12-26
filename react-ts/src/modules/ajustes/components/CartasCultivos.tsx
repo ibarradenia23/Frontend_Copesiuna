@@ -108,7 +108,7 @@ const CartasCultivos = () => {
       </div>
       <div className="contenedorcartas mt-4">
        {
-        tiposCultivosD && tiposCultivosD.map((tipoCultivo)=>(
+        tiposCultivosD && tiposCultivosD?.map((tipoCultivo)=>(
            <div className="p-6 mb-4 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 flex justify-between items-center">
           <div className="">
             <h4 className="text-[1.2rem] font-bold text-gray-900 dark:text-white">

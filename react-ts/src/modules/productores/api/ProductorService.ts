@@ -5,7 +5,7 @@ import Manager from "../../../common/api/manager";
 export const obtenerProductores = async (): Promise<ServiceResponse> => {
   try {
     const response = await Manager.get("/api/productores/findall");
-    return { data: response.data };
+    return { data: response.data?.data };
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
       throw new Error(error.response?.data?.message || "Error desconocido");

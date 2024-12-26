@@ -108,7 +108,7 @@ const CartasTiposParcelas = () => {
     </div>
     <div className="contenedorcartas mt-4">
       {
-        tiposParcelasD && tiposParcelasD.map((tipoParcela)=>(
+        tiposParcelasD && tiposParcelasD?.map((tipoParcela)=>(
            <div className="mb-4 p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 flex justify-between items-center">
         <div className="">
           <h4 className="text-[1.2rem] font-bold text-gray-900 dark:text-white">

@@ -5,7 +5,7 @@ import Manager from "../../../common/api/manager";
 export const obtenerParcelas = async():Promise<ServiceResponseParcelas> =>{
     try {
         const response = await Manager.get("/api/parcelas/findall");
-        return {data: response.data}
+        return {data: response.data.data}
     } catch (error) {
         if (axios.isAxiosError(error)) {
             throw new Error(error.response?.data?.message || "Error desconocido");
@@ -36,7 +36,7 @@ export const actualizarParcela = async(id:number,descripcion:string,tamaño_parc
         const response = await Manager.patch(`/api/parcelas/update/${id}`,{
             descripcion,tamaño_parcela
         });
-        return {data: response.data}
+        return {data: response.data.data}
     } catch (error) {
         if (axios.isAxiosError(error)) {
             throw new Error(error.response?.data?.message || "Error desconocido");
