@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ServiceResponse } from "../../../common/types/globals";
+import { ServiceResponse, ValidationErrors } from "../../../common/types/globals";
 import Manager from "../../../common/api/manager";
 
 export const obtenerProductores = async (): Promise<ServiceResponse> => {
@@ -32,7 +32,18 @@ export const crearProductor = async (
   } catch (error: unknown) {
     // Lanzar un error en caso de fallo
     if (axios.isAxiosError(error)) {
-      throw new Error(error.response?.data?.message || "Error desconocido");
+      const errorMessage = error.response?.data?.message || "Error desconocido";
+      const validationErrors = error.response?.data?.errors as ValidationErrors; // Asegúrate de que sea del tipo ValidationErrors
+
+      // Si hay errores de validación, construimos un mensaje detallado
+      if (validationErrors) {
+        const detailedErrors = Object.entries(validationErrors)
+          .map(([field, messages]) => `${field}: ${messages.join(", ")}`)
+          .join("; ");
+        throw new Error(`${errorMessage}: ${detailedErrors}`);
+      }
+
+      throw new Error(errorMessage);
     } else {
       throw new Error("Error inesperado");
     }
@@ -57,7 +68,18 @@ export const actualizarProductor = async (
   } catch (error: unknown) {
     // Lanzar un error en caso de fallo
     if (axios.isAxiosError(error)) {
-      throw new Error(error.response?.data?.message || "Error desconocido");
+      const errorMessage = error.response?.data?.message || "Error desconocido";
+      const validationErrors = error.response?.data?.errors as ValidationErrors; // Asegúrate de que sea del tipo ValidationErrors
+
+      // Si hay errores de validación, construimos un mensaje detallado
+      if (validationErrors) {
+        const detailedErrors = Object.entries(validationErrors)
+          .map(([field, messages]) => `${field}: ${messages.join(", ")}`)
+          .join("; ");
+        throw new Error(`${errorMessage}: ${detailedErrors}`);
+      }
+
+      throw new Error(errorMessage);
     } else {
       throw new Error("Error inesperado");
     }

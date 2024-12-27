@@ -48,9 +48,10 @@ const CartasCultivos = () => {
   const [tiposCultivosD,setTiposCultivosD] = useState<TiposCultivosInterface[]>([]);
 
   const traerTiposCultivos =()=>{
-    const tiposCultivos = tiposCultivosResponse?.data as TiposCultivosInterface[];
-    console.log(tiposCultivos);
-    setTiposCultivosD(tiposCultivos);
+    if(tiposCultivosResponse && Array.isArray(tiposCultivosResponse.data)){
+      setTiposCultivosD(tiposCultivosResponse.data);
+    }
+    
   }
 
   useEffect(()=>{

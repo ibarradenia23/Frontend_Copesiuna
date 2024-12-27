@@ -1,10 +1,7 @@
 import axios from "axios";
-import { ServiceResponse } from "../../../common/types/globals";
+import { ServiceResponse, ValidationErrors } from "../../../common/types/globals";
 import Manager from "../../../common/api/manager";
 
-interface ValidationErrors {
-  [key: string]: string[]; // Clave es el nombre del campo, valor es un array de mensajes de error
-}
 
 
 export const obtenerUsers = async (): Promise<ServiceResponse> => {

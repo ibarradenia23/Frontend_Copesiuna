@@ -11,6 +11,11 @@ export interface ServiceResponse {
   error?: string;
 }
 
+interface ValidationErrors {
+  [key: string]: string[]; // Clave es el nombre del campo, valor es un array de mensajes de error
+}
+
+
 export interface ServiceResponseAsignacion {
   data:Asignacion[];
   error?: string;
