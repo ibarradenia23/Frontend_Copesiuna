@@ -18,6 +18,7 @@ import {
 import { useRecoilValue } from "recoil";
 import { authTokenState } from "../../auth/state/authAtom";
 import { useEffect } from "react";
+//import { userState } from "../../auth/state/userAtom";
 
 const Home = () => {
   //Datos para mostrar en la grafica
@@ -29,9 +30,12 @@ const Home = () => {
     { nutriente: "Magnesio", valor: 32 },
   ];
   const token = useRecoilValue(authTokenState);
+  //const user = useRecoilValue(userState);
   useEffect(()=>{
   console.log("El token global",token);
-  },[])
+     
+  },[]);
+
   return (
     <main className="bg-white border-gray-200 dark:bg-gray-900">
       <Navbar />

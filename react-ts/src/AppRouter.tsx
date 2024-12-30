@@ -5,12 +5,13 @@ import useAuth from "./modules/auth/hooks/useAuth";
 //import AuthMiddleware from "./common/middleware/auth";
 
 export const AppRouter:React.FC = () => {
-    const { initializeToken } = useAuth();
+    const { initializeToken,initializeUser } = useAuth();
 
     useEffect(() => {
         // Inicializar el token al montar el componente
         initializeToken();
-    }, [initializeToken]);
+        initializeUser();
+    }, []);
     return(
         <Router>
             

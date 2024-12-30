@@ -1,16 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ToogleThemeButton } from "./ToogleTheme";
 import Logo from '/iconocacao.png'
 import { useLocation } from "react-router-dom";
 import useAuth from "../../modules/auth/hooks/useAuth";
 import { useNavigate } from 'react-router-dom';
+import { userState } from "../../modules/auth/state/userAtom";
+import { useRecoilValue } from "recoil";
+import { UserInterface } from "../../modules/users/models";
 
 const Navbar = () => {
   //Saber la ruta en la que me encuentro
   const location = useLocation();
   const {logout} = useAuth();
   const navigate = useNavigate();
-
+  const user = useRecoilValue(userState) as UserInterface;
+  const [userData,setUserData] = useState<UserInterface>();
 
   // Estado para controlar la visibilidad del menú de usuario
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -28,12 +32,20 @@ const Navbar = () => {
     setIsMenuOpen((prev) => !prev);
   };
 
+  //Funcion para cerrar sesion.
   const handleLogout =()=>{
-    if (window.confirm("¿Estás seguro de que deseas eliminar esta parcela?")){
+    if (window.confirm("¿Estás seguro de cerrar sesion?")){
       logout();
       navigate('/');
     }
   }
+
+  //Obtener la informacion del ususario
+  useEffect(() => {
+    if (user ) {
+      setUserData (user); // Asegúrate de que esto actualice el estado de Recoil
+    }
+  }, [user]);
 
   return (
     <nav className="bg-white border-gray-200 dark:bg-gray-900">
@@ -76,20 +88,30 @@ const Navbar = () => {
               id="user-dropdown"
             >
               <div className="px-4 py-3">
-                <span className="block text-sm text-gray-900 dark:text-white">
-                  Bonnie Green
-                </span>
-                <span className="block text-sm  text-gray-500 truncate dark:text-gray-400">
-                  name@flowbite.com
-                </span>
+                                {userData ? (
+                  <>
+                    <span className="block text-sm text-gray-900 dark:text-white">
+                      {userData.nombre} 
+                    </span>
+                    <span className="block text-sm text-gray-500 truncate dark:text-gray-400">
+                      {userData.email}
+                    </span>
+                  </>
+                ) : (
+                  <span className="block text-sm text-gray-500 dark:text-gray-400">
+                    Usuario no disponible
+                  </span>
+                )}
+
               </div>
               <ul className="py-2" aria-labelledby="user-menu-button">
+               
                 <li>
                   <a
                     href="#"
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                   >
-                    Dashboard
+                    Ajustes
                   </a>
                 </li>
                 <li>
@@ -97,15 +119,7 @@ const Navbar = () => {
                     href="#"
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                   >
-                    Settings
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                  >
-                    Earnings
+                    Ayuda
                   </a>
                 </li>
                 <li>
@@ -113,7 +127,7 @@ const Navbar = () => {
                     
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white cursor-pointer" onClick={handleLogout}
                   >
-                    Sign out
+                    Cerrar sesion
                   </a>
                 </li>
               </ul>
