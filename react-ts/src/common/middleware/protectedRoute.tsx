@@ -2,7 +2,6 @@ import React, { ReactNode, useEffect, useState } from 'react';
 import {Navigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { authTokenState } from '../../modules/auth/state/authAtom'; // Asegúrate de importar tu estado de token
-import { isTokenExpired } from '../../modules/auth/utils/tokenUtils'; // Asegúrate de importar tu función de verificación
 
 interface Props {
     element:ReactNode;
@@ -37,7 +36,7 @@ const ProtectedRoute:React.FC<Props> = ({ element }) => {
       }
   
    
-    if (token) {
+    if (token ) {
       return element; // Si el token es válido, renderiza el elemento
     } else {
       return <Navigate to="/" replace />; // Si no, redirige a login

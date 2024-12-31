@@ -1,9 +1,24 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Navbar from '../../../common/components/Navbar'
 import CartasCultivos from '../components/CartasCultivos'
 import CartasTiposParcelas from '../components/CartasTiposParcelas'
+import { isTokenExpired } from '../../auth/utils/tokenUtils'
+import useAuth from '../../auth/hooks/useAuth'
+import { useRecoilValue } from 'recoil'
+import { authTokenState } from '../../auth/state/authAtom'
+import { useNavigate } from 'react-router-dom'
 
 const Cultivos_Parcelas = () => {
+
+  const {logout} = useAuth();
+  const token = useRecoilValue(authTokenState);
+   const navigate = useNavigate();
+
+  useEffect(() => {
+      if (isTokenExpired(token)) {
+        logout();
+      }
+    }, [token, navigate]);
   return (
     <main className="bg-white border-gray-200 dark:bg-gray-900">
          <Navbar />

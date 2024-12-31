@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -16,20 +16,13 @@ import { isTokenExpired } from "./modules/auth/utils/tokenUtils";
 export const AppRouter: React.FC = () => {
   const { initializeToken, initializeUser } = useAuth();
   const token = useRecoilValue(authTokenState);
-  const [autenticated,setAutenticated] = useState(false)
+
 
   useEffect(() => {
     // Inicializar el token al montar el componente
     initializeToken();
     initializeUser();
   }, []);
-
-  useEffect(()=>{
-    if(token){
-        setAutenticated(true);
-        console.log("Estado del token",token); 
-    }
-  },[token])
   
 
   return (

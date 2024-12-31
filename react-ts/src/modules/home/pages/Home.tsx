@@ -20,6 +20,7 @@ import { authTokenState } from "../../auth/state/authAtom";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { isTokenExpired } from "../../auth/utils/tokenUtils";
+import useAuth from "../../auth/hooks/useAuth";
 //import { userState } from "../../auth/state/userAtom";
 
 const Home = () => {
@@ -31,6 +32,7 @@ const Home = () => {
     { nutriente: "Calcio", valor: 53 },
     { nutriente: "Magnesio", valor: 32 },
   ];
+  const {logout} = useAuth();
   const token = useRecoilValue(authTokenState);
   //const user = useRecoilValue(userState);
   useEffect(()=>{
@@ -42,8 +44,7 @@ const Home = () => {
 
   useEffect(() => {
     if (isTokenExpired(token)) {
-      // Redirigir a la página de inicio de sesión si el token ha expirado
-      navigate('/');
+      logout();
     }
   }, [token, navigate]);
 

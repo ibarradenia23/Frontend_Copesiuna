@@ -9,11 +9,26 @@ import { CirclePlus } from 'lucide-react';
 import Loading from '../../../common/components/Loading';
 import NoData from '../../../common/components/NoData';
 import { useObtenerParcelas } from '../hooks/useParcela';
+import useAuth from '../../auth/hooks/useAuth';
+import { useRecoilValue } from 'recoil';
+import { authTokenState } from '../../auth/state/authAtom';
+import { useNavigate } from 'react-router-dom';
+import { isTokenExpired } from '../../auth/utils/tokenUtils';
 
 const Productores = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { data: productoresResponse, isLoading } = useObtenerProductores();
-  const [productores,setProductores] = useState<ProductorInterface[]>([])
+  const [productores,setProductores] = useState<ProductorInterface[]>([]);
+
+  const {logout} = useAuth();
+  const token = useRecoilValue(authTokenState);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+        if (isTokenExpired(token)) {
+          logout();
+        }
+      }, [token, navigate]);
 
   //Extraer todas las parcelas
   const { data: serviceResponse } = useObtenerParcelas();

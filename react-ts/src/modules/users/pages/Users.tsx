@@ -8,12 +8,27 @@ import { Asignacion, UserInterface } from "../models";
 import NoData from "../../../common/components/NoData";
 import { useObtenerAsignaciones } from "../hooks/useAsignacion";
 import { CirclePlus } from "lucide-react";
+import useAuth from "../../auth/hooks/useAuth";
+import { useRecoilValue } from "recoil";
+import { useNavigate } from "react-router-dom";
+import { authTokenState } from "../../auth/state/authAtom";
+import { isTokenExpired } from "../../auth/utils/tokenUtils";
 
 const Users = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const {data:userResponse} = useObtenerUduarios();
   const {data:asignacionesResponse} = useObtenerAsignaciones();
   const [usuarios,setUsuarios] = useState<UserInterface[]>([]);
+
+  const {logout} = useAuth();
+  const token = useRecoilValue(authTokenState);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+        if (isTokenExpired(token)) {
+          logout();
+        }
+      }, [token, navigate]);
 
   const traerUsuarios =()=>{
     if(userResponse && Array.isArray(userResponse.data)){
