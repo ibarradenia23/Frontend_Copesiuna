@@ -18,6 +18,8 @@ import {
 import { useRecoilValue } from "recoil";
 import { authTokenState } from "../../auth/state/authAtom";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { isTokenExpired } from "../../auth/utils/tokenUtils";
 //import { userState } from "../../auth/state/userAtom";
 
 const Home = () => {
@@ -35,6 +37,16 @@ const Home = () => {
   console.log("El token global",token);
      
   },[]);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isTokenExpired(token)) {
+      // Redirigir a la página de inicio de sesión si el token ha expirado
+      navigate('/');
+    }
+  }, [token, navigate]);
+
 
   return (
     <main className="bg-white border-gray-200 dark:bg-gray-900">

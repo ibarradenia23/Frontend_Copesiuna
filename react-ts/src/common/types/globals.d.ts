@@ -4,6 +4,7 @@ import { Asignacion } from "../../modules/users/models";
 export interface Paths {
   path: string;
   element: () => Promise<{ default: React.ComponentType<> }>;
+  protected:boolean;
 }
 
 export interface ServiceResponse {
