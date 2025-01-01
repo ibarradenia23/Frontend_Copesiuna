@@ -3,19 +3,19 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Navigate,
+  //Navigate,
 } from "react-router-dom";
 import { routes } from "./common/routes";
 import useAuth from "./modules/auth/hooks/useAuth";
 //import AuthMiddleware from "./common/middleware/auth";
 import ProtectedRoute from "./common/middleware/protectedRoute";
-import { useRecoilValue } from "recoil";
-import { authTokenState } from "./modules/auth/state/authAtom";
-import { isTokenExpired } from "./modules/auth/utils/tokenUtils";
+//import { useRecoilValue } from "recoil";
+//import { authTokenState } from "./modules/auth/state/authAtom";
+//import { isTokenExpired } from "./modules/auth/utils/tokenUtils";
 
 export const AppRouter: React.FC = () => {
   const { initializeToken, initializeUser } = useAuth();
-  const token = useRecoilValue(authTokenState);
+  //const token = useRecoilValue(authTokenState);
 
 
   useEffect(() => {
@@ -28,7 +28,7 @@ export const AppRouter: React.FC = () => {
   return (
     <Router>
       <Routes>
-        {
+        {/*
             <Route
             path="/"
             element={
@@ -38,7 +38,7 @@ export const AppRouter: React.FC = () => {
                 <Navigate to="/" replace />
               )
             }
-          />
+          />*/
         }
         {routes.map((route, index) => {
           const LazyComponent = React.lazy(route.element);

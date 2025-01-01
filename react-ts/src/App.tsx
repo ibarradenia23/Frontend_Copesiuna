@@ -6,11 +6,17 @@ import { ToogleThemeButton } from "./common/components/ToogleTheme";
 import { LoginFormInputs } from "./modules/auth/models";
 import { useLogin } from "./modules/auth/hooks/useLogin";
 import Spiner from "./common/components/Spiner";
+import { useRecoilValue } from "recoil";
+import { authTokenState } from "./modules/auth/state/authAtom";
+import { useNavigate } from "react-router-dom";
+
+
 
 function App() {
   const { register, handleSubmit, formState: { errors } } = useForm<LoginFormInputs>();
   
-
+  const navigate = useNavigate();
+  const token = useRecoilValue(authTokenState);
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -55,8 +61,6 @@ function App() {
     setShowPassword(!showPassword);
   };
 
-
-
   //manejador del envio del formulario
   const onSubmit = (data: LoginFormInputs) => {
     setErrorMessage("");
@@ -71,6 +75,13 @@ function App() {
       setErrorMessage(error.message || "Error en el inicio de sesión. Inténtalo de nuevo.");
     }
   }, [isError, error]);
+
+  //Validacion de un token existente
+  useEffect(()=>{
+   if(token){
+      navigate('/home');
+   }
+  },[token]);
 
   return (
     <div

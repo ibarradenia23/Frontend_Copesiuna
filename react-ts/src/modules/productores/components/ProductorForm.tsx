@@ -84,6 +84,7 @@ const ProductorForm: React.FC<ProductorPropsInterface> = ({ productor,onSave }) 
         message: "Productor creado exitosamente.",
         visible: true,
       });
+      onSave();
     }
 
     if (isErrorCrear) {
@@ -101,6 +102,7 @@ const ProductorForm: React.FC<ProductorPropsInterface> = ({ productor,onSave }) 
         message: "Productor editado exitosamente.",
         visible: true,
       });
+      onSave();
     }
 
     if (isErrorEditar) {

@@ -30,9 +30,11 @@ const ParcelaForm: React.FC<ParcelaPropsInterface> = ({parcela,idProductor}) => 
    
    useEffect(()=>{
     const tiposParcelas = tiposParcelaResponse?.data as TiposParcelaInterface[];
-    const tiposCultivos =  tiposCultivossResponse?.data as TiposCultivosInterface[];
     setTipoParcelaData(tiposParcelas);
-    setTiposCultivosData(tiposCultivos);
+    if(tiposCultivossResponse && Array.isArray(tiposCultivossResponse.data)){
+      setTiposCultivosData(tiposCultivossResponse.data);
+    }
+    
    },[tiposCultivossResponse,tiposParcelaResponse]);
 
    // Usamos el hook para crear una parcela

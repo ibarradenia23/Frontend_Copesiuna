@@ -75,7 +75,7 @@ const Productores = () => {
             ))
           }
         </div><Modal isOpen={isModalOpen} onClose={handleCloseModal} title='Crea un nuevo Productor'>
-            <ProductorForm onSave={traerProductores}/>
+            <ProductorForm onSave={()=>traerProductores()}/>
           </Modal>
          </section>
     </main>
