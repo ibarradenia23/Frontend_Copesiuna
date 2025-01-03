@@ -9,7 +9,7 @@ export const routes:Paths[] = [
     {
         path:'/home',
         element:()=> import('../../modules/home/pages/Home'),
-        protected:false
+        protected:true
     },
     {
         path:'/cosechas',
