@@ -6,9 +6,11 @@ import Mazorcas from "./Mazorcas";
 import Estados from "./Estados";
 import Afectaciones from "./Afectaciones";
 import Estimacion from "./Estimacion";
+import Modal from "../../../common/components/Modal";
+import AfectacionForm from "./AfectacionForm";
 
 export default function CosechasDashboard() {
-  const [activeTab, setActiveTab] = useState("mazorcas");
+  const [activeTab, setActiveTab] = useState("estimaciones");
 
 
   const handleAdd = (section: string) => {
@@ -169,25 +171,38 @@ type SectionContentProps = {
   columns: string[];
 };
 
+
 function SectionContent({
   title,
-  onAdd,
   render
 }: SectionContentProps) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+const handleOpenModal = () => {
+  setIsModalOpen(true);
+};
+
+const handleCloseModal = () => {
+  setIsModalOpen(false);
+};
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold text-gray-900 dark:text-white">{title}</h2>
         <button
-          onClick={onAdd}
+          onClick={handleOpenModal}
           className="bg-primary text-white px-4 py-2 rounded"
         >
           <Plus className="inline-block mr-2" /> Agregar
         </button>
       </div>
+      <section className="min-h-96">
+{render}
+      </section>
       
-      {render}
-      
+      <Modal isOpen={isModalOpen} title="Crea un tipo de cultivo" onClose={handleCloseModal}>
+        {<AfectacionForm />}
+      </Modal>
     </div>
   );
 }

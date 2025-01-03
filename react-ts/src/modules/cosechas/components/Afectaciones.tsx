@@ -4,6 +4,8 @@ import { Pencil, Receipt, Trash2 } from "lucide-react";
 import Toast from "../../../common/components/Toast";
 import { useEliminarAfectacion, useObtenerAfectaciones } from "../hooks/useAfactaciones";
 import { AfectacionesInterface } from "../models";
+import Modal from "../../../common/components/Modal";
+import AfectacionForm from "./AfectacionForm";
 
 const Afectaciones = () => {
   const [toast, setToast] = useState<{
@@ -18,6 +20,15 @@ const Afectaciones = () => {
   const [afectacionesData,setAfectacionesData] = useState<AfectacionesInterface[]>([])
 
   const {data:afectacionesResponse} = useObtenerAfectaciones();
+  const [isModalOpenEdit, setIsModalOpenEdit] = useState(false);
+
+  const handleOpenModalEdit = () => {
+    setIsModalOpenEdit(true);
+  };
+
+  const handleCloseModalEdit = () => {
+    setIsModalOpenEdit(false);
+  };
 
   const traerAfectaciones =()=>{
     const afectaciones = afectacionesResponse?.data as AfectacionesInterface[];
@@ -41,6 +52,17 @@ const Afectaciones = () => {
       eliminarAsignacion(id);
     }
   };
+
+  const [afectacionEdit,setAfectacionEdit] = useState({
+      id:0,
+      nombre:'',
+      descripcion:'',
+    })
+
+  const handleEdit =(id:number,nombre:string,descripcion:string)=>{
+    handleOpenModalEdit();
+    setAfectacionEdit({id,nombre, descripcion})
+  }
 
   useEffect(() => {
       if (isSuccess) {
@@ -74,7 +96,7 @@ const Afectaciones = () => {
   }, [toast.visible]);
 
   return (
-    <div className="min-h-128 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-2">
+    <div className=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-2">
       {toast.visible && (
         <Toast type={toast.type} message={toast.message} onClose={closeToast} />
       )}
@@ -90,7 +112,7 @@ const Afectaciones = () => {
           </span>
         </div>
         <div className="flex flex-col gap-2">
-          <button className=" items-center  font-medium rounded-lg text-sm p-2.5 text-center w-full justify-center text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
+          <button onClick={()=>handleEdit(afectacion.id ?? 0,afectacion.nombre,afectacion.descripcion)} className=" items-center  font-medium rounded-lg text-sm p-2.5 text-center w-full justify-center text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
             <Pencil className="h-4 w-4" />
           </button>
           <button onClick={()=>handleEliminar(1)} className=" items-center  font-medium rounded-lg text-sm p-2.5 text-center w-full justify-center text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100  dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
@@ -100,7 +122,9 @@ const Afectaciones = () => {
       </div>
             ))
         }
-        
+        <Modal isOpen={isModalOpenEdit} title="Edita un tipo de cultivo" onClose={handleCloseModalEdit}>
+        <AfectacionForm afectacion={afectacionEdit}/>
+      </Modal>
     </div>
   );
 };
