@@ -1,4 +1,4 @@
-export interface Afectaciones {
+export interface AfectacionesInterface {
     id?:number;
     nombre:string;
     descripcion:string;

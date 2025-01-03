@@ -18,6 +18,7 @@ export const useCreateParcela =()=>{
         }
     })
 }
+
 export const useActualizarParcela =()=>{
     return useMutation({
         mutationFn: (data:{id:number, descripcion:string; tamaño_parcela:string;}) =>

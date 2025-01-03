@@ -13,8 +13,7 @@ export const obtenerParcelas = async (): Promise<ServiceResponseParcelas> => {
   } catch (error) {
     if (axios.isAxiosError(error)) {
       const errorMessage = error.response?.data?.message || "Error desconocido";
-      const validationErrors = error.response?.data?.errors as ValidationErrors; // Asegúrate de que sea del tipo ValidationErrors
-
+      const validationErrors = error.response?.data?.errors as ValidationErrors;
       // Si hay errores de validación, construimos un mensaje detallado
       if (validationErrors) {
         const detailedErrors = Object.entries(validationErrors)
@@ -49,7 +48,7 @@ export const createParcela = async (
   } catch (error) {
     if (axios.isAxiosError(error)) {
       const errorMessage = error.response?.data?.message || "Error desconocido";
-      const validationErrors = error.response?.data?.errors as ValidationErrors; // Asegúrate de que sea del tipo ValidationErrors
+      const validationErrors = error.response?.data?.errors as ValidationErrors; 
 
       // Si hay errores de validación, construimos un mensaje detallado
       if (validationErrors) {
@@ -79,7 +78,18 @@ export const actualizarParcela = async (
     return { data: response.data.data };
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      throw new Error(error.response?.data?.message || "Error desconocido");
+      const errorMessage = error.response?.data?.message || "Error desconocido";
+      const validationErrors = error.response?.data?.errors as ValidationErrors; 
+
+      // Si hay errores de validación, construimos un mensaje detallado
+      if (validationErrors) {
+        const detailedErrors = Object.entries(validationErrors)
+          .map(([field, messages]) => `${field}: ${messages.join(", ")}`)
+          .join("; ");
+        throw new Error(`${errorMessage}: ${detailedErrors}`);
+      }
+
+      throw new Error(errorMessage);
     } else {
       throw new Error("Error inesperado");
     }
@@ -92,7 +102,18 @@ export const eliminarParcela = async (id: number): Promise<ServiceResponse> => {
     return { data: response.data };
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
-      throw new Error(error.response?.data?.message || "Error desconocido");
+      const errorMessage = error.response?.data?.message || "Error desconocido";
+      const validationErrors = error.response?.data?.errors as ValidationErrors; 
+
+      // Si hay errores de validación, construimos un mensaje detallado
+      if (validationErrors) {
+        const detailedErrors = Object.entries(validationErrors)
+          .map(([field, messages]) => `${field}: ${messages.join(", ")}`)
+          .join("; ");
+        throw new Error(`${errorMessage}: ${detailedErrors}`);
+      }
+
+      throw new Error(errorMessage);
     } else {
       throw new Error("Error inesperado");
     }
