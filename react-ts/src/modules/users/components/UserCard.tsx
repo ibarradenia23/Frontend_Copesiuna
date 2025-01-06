@@ -77,9 +77,13 @@ const UserCard: React.FC<Props> = ({ users, asignaciones }) => {
 
   const asignacionesUser = Array.isArray(asignaciones)
     ? asignaciones.filter((asignacion) => {
-        return asignacion.ID_user === users.id;
+      if(asignacion.tecnico){
+        return Number(asignacion.tecnico.id) === Number(users.id);
+      }
+      
       })
     : [];
+
 
   useEffect(() => {
     if (isSuccess) {

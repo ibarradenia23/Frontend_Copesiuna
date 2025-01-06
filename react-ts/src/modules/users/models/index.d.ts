@@ -18,6 +18,7 @@ export interface Asignacion {
   ID_user:number;
   tipo:string;
   estado?:boolean;
+  tecnico?:ProductorInterface;
   productor?:ProductorInterface;
   fecha_create: string;
   fecha_update?: Date;

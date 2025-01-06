@@ -40,6 +40,7 @@ const Users = () => {
 
   useEffect(()=>{
    traerUsuarios();
+   console.log("las asignaciones son:",asignacionesArray)
   },[userResponse]);
 
   const handleOpenModal = () => {
