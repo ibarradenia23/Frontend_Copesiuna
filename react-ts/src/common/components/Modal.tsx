@@ -3,7 +3,7 @@ import React from "react";
 import { ModalProps } from "../types/globals";
 import { X } from "lucide-react";
 
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
+const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children,width,height }) => {
   if (!isOpen) return null;
 
   return (
@@ -12,7 +12,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
         className="absolute inset-0 bg-black opacity-50"
         onClick={onClose}
       ></div>
-      <div className="relative bg-white rounded-lg shadow dark:bg-gray-700 min-w-[400px]">
+      <div  className={`relative bg-white rounded-lg shadow dark:bg-gray-700 ${width} ${height} max-h-[90vh] overflow-y-auto`}>
         <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 gap-8">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
             {title}

@@ -107,8 +107,9 @@ const EstimacionCard: React.FC<EstimacionCardProp> = ({
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         title="Detalle de estimacion"
+        width="min-w-[1000px]" 
       >
-        <DetalleEstimacion />
+        <DetalleEstimacion estimacion={estimacionCosecha}/>
       </Modal>
     </div>
   );

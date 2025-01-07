@@ -32,6 +32,8 @@ export interface ModalProps {
   onClose: () => void;
   title?: string;
   children?: React.ReactNode;
+  width?: string; // Ancho opcional
+  height?: string; // Alto opcional
 }
 
 export interface ToastProps {

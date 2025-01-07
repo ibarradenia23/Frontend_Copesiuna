@@ -12,7 +12,7 @@ export interface EstimacionCosechaInterface {
     id?:number;
     estado_clima:"Soleado" | "Nublado" | "LLuvioso";
     fecha_create:string;
-    fecha_update?:string;
+    fecha_update:string;
     parcela:ParcelaInterface;
     plantas:PlantasInterface[];
 }
@@ -22,8 +22,8 @@ export interface PlantasInterface {
     num_planta:number;
     ID_afectacion:number;
     ID_estimacion:number;
-    fecha_create?:string;
-    fecha_update?:string;
+    fecha_create:string;
+    fecha_update:string;
     mazorcas:MazorcaInterface[];
 }
 
@@ -34,6 +34,6 @@ export interface MazorcaInterface{
     cantidad:number;
     ID_afectacion:number;
     ID_planta:number;
-    fecha_create?:string;
-    fecha_update?:string;
+    fecha_create:string;
+    fecha_update:string;
 }
