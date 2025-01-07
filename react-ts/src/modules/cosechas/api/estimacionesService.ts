@@ -4,7 +4,7 @@ import { ServiceResponse, ValidationErrors } from "../../../common/types/globals
 
 export const obtenerBitacorasCosecha = async (): Promise<ServiceResponse> => {
 try {
-    const response = await Manager.get("/api/estimacioncosecha/findall");
+    const response = await Manager.get("api/estimacioncosecha/findall");
     return {data:response.data.data}
 } catch (error) {
     if (axios.isAxiosError(error)) {
