@@ -1,22 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { AfectacionesInterface, EstimacionCosechaInterface, PlantasInterface } from "../models";
-import { useObtenerAfectaciones } from "../hooks/useAfactaciones";
 
 interface DetalleEstimacionProps {
   estimacion: EstimacionCosechaInterface;
+  afectaciones:AfectacionesInterface[];
 }
 
 const DetalleEstimacion: React.FC<DetalleEstimacionProps> = ({
-  estimacion,
+  estimacion, afectaciones
 }) => {
   const [plantas, setPlantas] = useState<PlantasInterface[]>([]);
   const [afectacionesData,setAfectacionesData] = useState<AfectacionesInterface[]>([])
   
-    const {data:afectacionesResponse} = useObtenerAfectaciones();
-
      const traerAfectaciones =()=>{
-        if(afectacionesResponse && Array.isArray(afectacionesResponse.data)){
-          setAfectacionesData(afectacionesResponse.data);
+        if(afectaciones && Array.isArray(afectaciones)){
+          setAfectacionesData(afectaciones);
         }
         
       }
@@ -27,7 +25,7 @@ const DetalleEstimacion: React.FC<DetalleEstimacionProps> = ({
     
       useEffect(()=>{
        traerAfectaciones();
-      },[afectacionesResponse]);
+      },[afectaciones]);
 
   useEffect(() => {
     if (estimacion) {
