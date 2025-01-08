@@ -22,7 +22,7 @@ const CartasTiposParcelas = () => {
 
    useEffect(()=>{
    traerTiposParcelas();
-   },[tiposParcelaResponse])
+   },[tiposParcelaResponse]);
 
    const [isModalOpen, setIsModalOpen] = useState(false);
     const [isModalOpenEdit, setIsModalOpenEdit] = useState(false);

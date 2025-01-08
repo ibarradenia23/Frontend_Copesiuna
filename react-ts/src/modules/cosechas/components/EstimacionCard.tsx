@@ -14,7 +14,6 @@ import Modal from "../../../common/components/Modal";
 import DetalleEstimacion from "./DetalleEstimacion";
 import ExcelJS from "exceljs";
 import { useObtenerAfectaciones } from "../hooks/useAfactaciones";
-//import * as XLSX from 'xlsx';
 
 interface EstimacionCardProp {
   estimacionCosecha: EstimacionCosechaInterface;
@@ -34,24 +33,28 @@ const EstimacionCard: React.FC<EstimacionCardProp> = ({
     LLuvioso: CloudRain,
   };
 
-  const [afectacionesData,setAfectacionesData] = useState<AfectacionesInterface[]>([]);
+  const [afectacionesData, setAfectacionesData] = useState<
+    AfectacionesInterface[]
+  >([]);
 
-  const {data:afectacionesResponse} = useObtenerAfectaciones();
-  
-       const traerAfectaciones =()=>{
-          if(afectacionesResponse && Array.isArray(afectacionesResponse.data)){
-            setAfectacionesData(afectacionesResponse.data);
-          }
-          
-        }
+  const { data: afectacionesResponse } = useObtenerAfectaciones();
 
-         useEffect(()=>{
-               traerAfectaciones();
-              },[afectacionesResponse]);
+  //Traer objeto de afcetaciones.
+  const traerAfectaciones = () => {
+    if (afectacionesResponse && Array.isArray(afectacionesResponse.data)) {
+      setAfectacionesData(afectacionesResponse.data);
+    }
+  };
 
-        const obtenerAfcetacionPorId =(id:number):AfectacionesInterface | undefined=>{
-                return afectacionesData.find(afectacion =>afectacion.id === id);
-              }
+  useEffect(() => {
+    traerAfectaciones();
+  }, [afectacionesResponse]);
+
+  const obtenerAfcetacionPorId = (
+    id: number
+  ): AfectacionesInterface | undefined => {
+    return afectacionesData.find((afectacion) => afectacion.id === id);
+  };
 
   const WeatherIcon = weatherIcons[estimacionCosecha.estado_clima];
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -79,7 +82,7 @@ const EstimacionCard: React.FC<EstimacionCardProp> = ({
     headerRow.getCell(1).font = { bold: true, size: 14 }; // Negrita y tamaño 14
 
     // Agregar la imagen al lado del título
-  /*const imageId = workbook.addImage({
+    /*const imageId = workbook.addImage({
     filename: '../../../public/logo1.png', // Reemplaza con la ruta de tu imagen
     extension: 'png',
   });
@@ -93,21 +96,38 @@ const EstimacionCard: React.FC<EstimacionCardProp> = ({
     samplingRow.getCell(1).alignment = { horizontal: "center" }; // Centrar el texto
     samplingRow.getCell(1).font = { bold: true, size: 12 }; // Negrita y tamaño 12
 
-   // Rellenar la fila 4
-  worksheet.addRow(['Fecha:', new Date(estimacionCosecha.fecha_create).toLocaleDateString(), '', 'Tipo de Cultivo:', 'Cacao']); // Ajusta el tipo de cultivo según sea necesario
-  worksheet.getCell('A4').font = { bold: true }; // Negrita para la etiqueta "Fecha"
-  worksheet.getCell('D4').font = { bold: true }; // Negrita para la etiqueta "Tipo de Cultivo"
+    // Rellenar la fila 4
+    worksheet.addRow([
+      "Fecha:",
+      new Date(estimacionCosecha.fecha_create).toLocaleDateString(),
+      "",
+      "Tipo de Cultivo:",
+      "Cacao",
+    ]); // Ajusta el tipo de cultivo según sea necesario
+    worksheet.getCell("A4").font = { bold: true }; // Negrita para la etiqueta "Fecha"
+    worksheet.getCell("D4").font = { bold: true }; // Negrita para la etiqueta "Tipo de Cultivo"
 
-  // Rellenar la fila 5
-  worksheet.addRow(['Tipo de Parcela:', 'Parcelas de Ejemplo', '', 'Edad:', '2 años']); // Ajusta los valores según sea necesario
-  worksheet.getCell('A5').font = { bold: true }; // Negrita para la etiqueta "Tipo de Parcela"
-  worksheet.getCell('D5').font = { bold: true }; // Negrita para la etiqueta "Edad"
+    // Rellenar la fila 5
+    worksheet.addRow([
+      "Tipo de Parcela:",
+      estimacionCosecha.parcela.descripcion,
+      "",
+      "Edad:",
+      "2 años",
+    ]); // Ajusta los valores según sea necesario
+    worksheet.getCell("A5").font = { bold: true }; // Negrita para la etiqueta "Tipo de Parcela"
+    worksheet.getCell("D5").font = { bold: true }; // Negrita para la etiqueta "Edad"
 
-  // Rellenar la fila 6
-  worksheet.addRow(['Nombre del Productor:', estimacionCosecha.parcela.ID_productor, '', 'Estado del Clima:', estimacionCosecha.estado_clima]); // Ajusta el nombre del productor según sea necesario
-  worksheet.getCell('A6').font = { bold: true }; // Negrita para la etiqueta "Nombre del Productor"
-  worksheet.getCell('D6').font = { bold: true }; // Negrita para la etiqueta "Estado del Clima"
-
+    // Rellenar la fila 6
+    worksheet.addRow([
+      "Nombre del Productor:",
+      productor?.nombre,
+      "",
+      "Estado del Clima:",
+      estimacionCosecha.estado_clima,
+    ]); // Ajusta el nombre del productor según sea necesario
+    worksheet.getCell("A6").font = { bold: true }; // Negrita para la etiqueta "Nombre del Productor"
+    worksheet.getCell("D6").font = { bold: true }; // Negrita para la etiqueta "Estado del Clima"
 
     // Agregar filas vacías hasta la fila 7
     for (let i = 0; i < 1; i++) {
@@ -115,31 +135,32 @@ const EstimacionCard: React.FC<EstimacionCardProp> = ({
     }
 
     // Definir los encabezados
-  const headerColumnsRow = worksheet.addRow([
-    "Mazorca", 
-    "Número de Planta",
-    "ID Afectación Planta",
-    "ID Afectación Mazorca",
-    "Cantidad",
-  ]);
-
+    const headerColumnsRow = worksheet.addRow([
+      "Mazorca",
+      "Número de Planta",
+      "ID Afectación Planta",
+      "ID Afectación Mazorca",
+      "Cantidad",
+    ]);
 
     // Aplicar negrita a los encabezados de las columnas
-  headerColumnsRow.eachCell((cell) => {
-    cell.font = { bold: true }; // Negrita para cada celda del encabezado
-  });
+    headerColumnsRow.eachCell((cell) => {
+      cell.font = { bold: true }; // Negrita para cada celda del encabezado
+    });
 
     // Transformar los datos en un formato adecuado para Excel
     const exportData = estimacionCosecha.plantas.flatMap((planta) => {
       return planta.mazorcas.map((mazorca) => {
-         const afectacion = obtenerAfcetacionPorId(Number(mazorca.ID_afectacion))
-         return {
+        const afectacion = obtenerAfcetacionPorId(
+          Number(mazorca.ID_afectacion)
+        );
+        return {
           numeroPlanta: planta.id,
-        ID_afectacion_planta: planta.ID_afectacion,
-        ID_afectacion_mazorca: afectacion?.nombre,
-        cantidad: mazorca.cantidad,
-         }
-      })
+          ID_afectacion_planta: planta.ID_afectacion,
+          ID_afectacion_mazorca: afectacion?.nombre,
+          cantidad: mazorca.cantidad,
+        };
+      });
     });
 
     // Agregar los datos a la hoja, comenzando desde la fila 8
@@ -254,7 +275,10 @@ const EstimacionCard: React.FC<EstimacionCardProp> = ({
         title="Detalle de estimacion"
         width="min-w-[1000px]"
       >
-        <DetalleEstimacion afectaciones={afectacionesData} estimacion={estimacionCosecha} />
+        <DetalleEstimacion
+          afectaciones={afectacionesData}
+          estimacion={estimacionCosecha}
+        />
       </Modal>
     </div>
   );
