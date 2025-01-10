@@ -1,18 +1,22 @@
+import { ProductorInterface } from "../../productores/models";
+
 export interface EstimacionSueloInterface {
-    tectura: string;
-    color: string;
-    ph: string;
-    nitrogen: string;
-    potassium: string;
-    aluminum: string;
-    calcium: string;
-    ferric_iron: string;
-    humus: string;
-    magnecium: string;
-    nitrite_nitrogeno: string;
-    sulfate: string;
-    fecha_levantamiento: string; // Fecha en formato ISO
-    fecha_laboratorio: string;  // Fecha en formato ISO
-    productor_id: number;
+    id: number;
+    fecha_levantamiento: string;
+    fecha_e_laboratorio: string;
+    descripcion: string;
+    fecha_updated: string;
+    fecha_created: string;
+    productor: ProductorInterface;
+    propiedades: Propiedad[];
 }
+
+export interface Propiedad {
+    id: number;
+    nombre: string;
+    dato: string;
+    fecha_create: string;
+    fecha_update: string;
+  }
+  
   

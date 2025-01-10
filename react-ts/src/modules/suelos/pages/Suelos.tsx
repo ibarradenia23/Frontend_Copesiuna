@@ -36,7 +36,7 @@ const Suelos = () => {
   return (
     <main className="bg-white border-gray-200 dark:bg-gray-900">
          <Navbar />
-         <section className="max-w-screen-xl mx-auto p-4">
+         <section className="max-w-screen-xl mx-auto p-4 min-h-[38rem]">
          <div className="flex items-center justify-between space-y-2">
           <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">Dashboard</h2>
           <div className="flex items-center space-x-2">
@@ -46,7 +46,12 @@ const Suelos = () => {
           </div>
         </div>
         <div className=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-2">
-          <EstimacionSueloCard/>
+          {
+            estimacionesSuelos.map((estimacion)=>(
+              <EstimacionSueloCard estimacionSuelo={estimacion}/>
+            ))
+          }
+          
         </div>
          </section>
     </main>

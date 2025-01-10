@@ -208,7 +208,7 @@ const EstimacionCard: React.FC<EstimacionCardProp> = ({
   return (
     <div
       key={estimacionCosecha.id}
-      className="overflow-hidden transition-all duration-300 hover:shadow-xl bg-white dark:bg-[#111827] border-t-4 border-primary rounded-lg border"
+      className="overflow-hidden transition-all duration-300 hover:shadow-xl bg-white dark:bg-[#111827] border-t-4 border-primary rounded-lg borde r"
     >
       <div className="flex flex-row items-center justify-between dark:bg-gray-800  bg-gray-50 p-4">
         <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-300">
@@ -218,7 +218,7 @@ const EstimacionCard: React.FC<EstimacionCardProp> = ({
       </div>
       <div className="p-4">
         <div className="space-y-2">
-          <p className="text-sm text-gray-500">
+         <p className="text-sm text-gray-500">
             <span className="font-medium text-gray-700 dark:text-gray-300">
               Fecha de Creación:
             </span>{" "}
