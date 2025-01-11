@@ -75,7 +75,7 @@ const EstimacionCard: React.FC<EstimacionCardProp> = ({
     const headerRow = worksheet.addRow([
       "COOPERATIVA AGROPECUARIA MULTISECTORIAL DE SIUNA R.L",
     ]);
-    worksheet.mergeCells("A1:E2"); // Fusionar celdas de A1 a E2
+    worksheet.mergeCells("A1:P2"); // Fusionar celdas de A1 a E2
     headerRow.getCell(1).alignment = { horizontal: "center" }; // Centrar el texto
 
     // Establecer estilo para el encabezado

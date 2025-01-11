@@ -8,6 +8,7 @@ interface DetalleEstimacionProps {
 const DetalleEstimacionSuelo: React.FC<DetalleEstimacionProps> = ({
   estimacion,
 }) => {
+    
   return (
     <div>
       <section>
