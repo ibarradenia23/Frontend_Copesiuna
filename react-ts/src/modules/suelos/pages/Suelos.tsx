@@ -39,21 +39,21 @@ const Suelos = () => {
     }
   }, [token, navigate]);
 
-  const handleExportToExel =async()=>{
+  const handleExportToExel = async () => {
     const workbook = new ExcelJS.Workbook();
-        const worksheet = workbook.addWorksheet("Datos");
+    const worksheet = workbook.addWorksheet("Datos");
 
-         // Agregar el encabezado que ocupa desde la columna A hasta la columna E
+    // Agregar el encabezado que ocupa desde la columna A hasta la columna E
     const headerRow = worksheet.addRow([
       "COOPERATIVA AGROPECUARIA MULTISECTORIAL DE SIUNA R.L",
     ]);
     worksheet.mergeCells("A1:P2"); // Fusionar celdas de A1 a E2
     headerRow.getCell(1).alignment = { horizontal: "center" };
 
-     // Establecer estilo para el encabezado
-     headerRow.getCell(1).font = { bold: true, size: 14 }; // Negrita y tamaño 14
+    // Establecer estilo para el encabezado
+    headerRow.getCell(1).font = { bold: true, size: 14 }; // Negrita y tamaño 14
 
-     // Agregar la fila 2 con el texto "Hoja de muestreo en cacao"
+    // Agregar la fila 2 con el texto "Hoja de muestreo en cacao"
     const samplingRow = worksheet.addRow([
       "Base de datos de análisis físico químico de suelo en parcela de proceso de certificación Raint Forest y orgánico",
     ]);
@@ -66,12 +66,10 @@ const Suelos = () => {
       worksheet.addRow([]);
     }
 
-    const samplingRow2 = worksheet.addRow([
-      "RESULTADOS",
-    ]);
+    const samplingRow2 = worksheet.addRow(["RESULTADOS"]);
     worksheet.mergeCells("A5:P5"); // Fusionar celdas de A3 a E3
     samplingRow2.getCell(1).alignment = { horizontal: "center" }; // Centrar el texto
-    samplingRow2.getCell(1).font = { bold: true, size: 12 }; 
+    samplingRow2.getCell(1).font = { bold: true, size: 12 };
 
     // Definir los encabezados
     const headerColumnsRow = worksheet.addRow([
@@ -89,12 +87,18 @@ const Suelos = () => {
       "Magnecium",
       "Sulfate",
       "Fecha de levantamiento en campo",
-      "Fecha de en laboratorio"
+      "Fecha de en laboratorio",
     ]);
 
-    // Aplicar negrita a los encabezados de las columnas
+    // Aplicar negrita y color de fondo a los encabezados de las columnas
     headerColumnsRow.eachCell((cell) => {
       cell.font = { bold: true }; // Negrita para cada celda del encabezado
+      cell.fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: "F8CBAD" }, // Color de fondo para los encabezados
+      };
+      cell.alignment = { horizontal: "center" };
     });
 
     // Definir un tipo para las propiedades
@@ -113,15 +117,18 @@ const Suelos = () => {
     };
 
     //Extraccion de los datos
-    const exportData = estimacionesSuelos.flatMap((estimacion,index)=>{
-      const propiedades: Propiedades = estimacion.propiedades.reduce((acc: Propiedades, propiedad) => {
-        acc[propiedad.nombre as keyof Propiedades] = propiedad.dato; // Mapeo de propiedades
-        return acc;
-      }, {});
-      return{
-        numero: index +1,
-        nombreProductor:`${estimacion.productor.nombre} ${estimacion.productor.apellido}`,
-        textura:propiedades["tectura"] || "",
+    const exportData = estimacionesSuelos.flatMap((estimacion, index) => {
+      const propiedades: Propiedades = estimacion.propiedades.reduce(
+        (acc: Propiedades, propiedad) => {
+          acc[propiedad.nombre as keyof Propiedades] = propiedad.dato; // Mapeo de propiedades
+          return acc;
+        },
+        {}
+      );
+      return {
+        numero: index + 1,
+        nombreProductor: `${estimacion.productor.nombre} ${estimacion.productor.apellido}`,
+        textura: propiedades["tectura"] || "",
         color: propiedades["color"] || "",
         ph: propiedades["ph"] || "",
         nitrogeno: propiedades["nitrogen"] || "",
@@ -131,16 +138,19 @@ const Suelos = () => {
         ferricIron: propiedades["ferric_iron"] || "",
         humus: propiedades["humus"] || "",
         magnecium: propiedades["magnecium"] || "",
- sulfate: propiedades["sulfate"] || "",
- fechaLevantamiento: new Date(estimacion.fecha_levantamiento).toLocaleDateString(),
-        fechaLaboratorio: new Date(estimacion.fecha_e_laboratorio).toLocaleDateString(),
-
-      }
-    })
+        sulfate: propiedades["sulfate"] || "",
+        fechaLevantamiento: new Date(
+          estimacion.fecha_levantamiento
+        ).toLocaleDateString(),
+        fechaLaboratorio: new Date(
+          estimacion.fecha_e_laboratorio
+        ).toLocaleDateString(),
+      };
+    });
 
     // Agregar los datos a la hoja
     exportData.forEach((data) => {
-      worksheet.addRow([
+      const row = worksheet.addRow([
         data.numero,
         data.nombreProductor,
         data.textura,
@@ -157,15 +167,39 @@ const Suelos = () => {
         data.fechaLevantamiento,
         data.fechaLaboratorio,
       ]);
+      row.eachCell((cell) => {
+        cell.fill = {
+          type: "pattern",
+          pattern: "solid",
+          fgColor: { argb: "FFE699" }, // Color de fondo para los datos
+        };
+        cell.alignment = { horizontal: "center" };
+      });
     });
 
-     // Ajustar el ancho de las columnas
-     worksheet.columns = [
+    // Aplicar bordes a todas las celdas a partir de la fila 6
+    const startRow = 6; // Fila desde la cual aplicar bordes
+    if (worksheet.lastRow) {
+      for (let i = startRow; i <= worksheet.lastRow.number; i++) {
+        const row = worksheet.getRow(i);
+        row.eachCell((cell) => {
+          cell.border = {
+            top: { style: "thin" },
+            left: { style: "thin" },
+            bottom: { style: "thin" },
+            right: { style: "thin" },
+          };
+        });
+      }
+    }
+
+    // Ajustar el ancho de las columnas
+    worksheet.columns = [
       { width: 5 }, // N°
       { width: 30 }, // Nombre y apellido del productor
       { width: 15 }, // Textura
       { width: 15 }, // Color
-      { width: 10 }, // PH
+      { width: 7 }, // PH
       { width: 10 }, // Nitrogeno
       { width: 10 }, // Potassium
       { width: 15 }, // Aluminium
@@ -174,8 +208,8 @@ const Suelos = () => {
       { width: 10 }, // Humus
       { width: 15 }, // Magnecium
       { width: 10 }, // Sulfate
-      { width: 25 }, // Fecha de levantamiento en campo
-      { width: 20 }, // Fecha de en laboratorio
+      { width: 35 }, // Fecha de levantamiento en campo
+      { width: 25 }, // Fecha de en laboratorio
     ];
     // Guardar el archivo
     const buffer = await workbook.xlsx.writeBuffer();
@@ -186,7 +220,7 @@ const Suelos = () => {
     a.download = `Analisis de suelo.xlsx`;
     a.click();
     window.URL.revokeObjectURL(url);
-  }
+  };
 
   return (
     <main className="bg-white border-gray-200 dark:bg-gray-900">
@@ -197,7 +231,10 @@ const Suelos = () => {
             Dashboard
           </h2>
           <div className="flex items-center space-x-2">
-            <button onClick={handleExportToExel} className="bg-primary hover:bg-[#016F35] text-white focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none flex align-middle items-center gap-2">
+            <button
+              onClick={handleExportToExel}
+              className="bg-primary hover:bg-[#016F35] text-white focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none flex align-middle items-center gap-2"
+            >
               <FileSpreadsheet /> Exportar a exel
             </button>
           </div>
