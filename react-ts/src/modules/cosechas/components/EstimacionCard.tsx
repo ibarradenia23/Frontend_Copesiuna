@@ -14,6 +14,8 @@ import Modal from "../../../common/components/Modal";
 import DetalleEstimacion from "./DetalleEstimacion";
 import ExcelJS from "exceljs";
 import { useObtenerAfectaciones } from "../hooks/useAfactaciones";
+import { useEliminarEstimacionCosecha } from "../hooks/useEstimaciones";
+import Toast from "../../../common/components/Toast";
 
 interface EstimacionCardProp {
   estimacionCosecha: EstimacionCosechaInterface;
@@ -65,6 +67,50 @@ const EstimacionCard: React.FC<EstimacionCardProp> = ({
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
+  };
+
+  const {
+    mutate: eliminarEstimacionCosecha,
+    isError,
+    isSuccess,
+    error,
+  } = useEliminarEstimacionCosecha();
+
+  const [toast, setToast] = useState<{
+    type: "success" | "error" | "warning";
+    message: string;
+    visible: boolean;
+  }>({
+    type: "success", // Valor por defecto
+    message: "",
+    visible: false,
+  });
+
+  useEffect(() => {
+    if (isSuccess) {
+      setToast({
+        type: "warning",
+        message: "Estimacion de cosecha se ha eliminado exitosamente.",
+        visible: true,
+      });
+    }
+    if (isError) {
+      setToast({
+        type: "error",
+        message: "Error al eliminar estimacion de cosecha",
+        visible: true,
+      });
+    }
+  }, [isSuccess, isError, error]);
+
+  const handleEliminar = (id: number) => {
+    if (
+      window.confirm(
+        "¿Estás seguro de que deseas eliminar esta estimacion de cosecha ?"
+      )
+    ) {
+      eliminarEstimacionCosecha(id);
+    }
   };
 
   const handleExportToExcel = async () => {
@@ -205,11 +251,18 @@ const EstimacionCard: React.FC<EstimacionCardProp> = ({
     window.URL.revokeObjectURL(url);
   };
 
+  const closeToast = () => {
+    setToast({ ...toast, visible: false });
+  };
+
   return (
     <div
       key={estimacionCosecha.id}
       className="overflow-hidden transition-all duration-300 hover:shadow-xl bg-white dark:bg-[#111827] border-t-4 border-primary rounded-lg borde r"
     >
+      {toast.visible && (
+        <Toast type={toast.type} message={toast.message} onClose={closeToast} />
+      )}
       <div className="flex flex-row items-center justify-between dark:bg-gray-800  bg-gray-50 p-4">
         <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-300">
           Ficha de estimacion
@@ -218,7 +271,7 @@ const EstimacionCard: React.FC<EstimacionCardProp> = ({
       </div>
       <div className="p-4">
         <div className="space-y-2">
-         <p className="text-sm text-gray-500">
+          <p className="text-sm text-gray-500">
             <span className="font-medium text-gray-700 dark:text-gray-300">
               Fecha de Creación:
             </span>{" "}
@@ -260,7 +313,7 @@ const EstimacionCard: React.FC<EstimacionCardProp> = ({
           <FileSpreadsheet className="h-4 w-4 mr-2" />
           Excel
         </button>
-        <button className="text-red-500 hover:text-red-700 border dark:border-gray-600 rounded px-3 py-2 text-sm flex items-center flex-grow basis-[calc(50%-0.25rem)] sm:basis-[calc(25%-0.375rem)]">
+        <button onClick={()=>handleEliminar(estimacionCosecha.id ?? 0)} className="text-red-500 hover:text-red-700 border dark:border-gray-600 rounded px-3 py-2 text-sm flex items-center flex-grow basis-[calc(50%-0.25rem)] sm:basis-[calc(25%-0.375rem)]">
           <Trash2 className="h-4 w-4 mr-2" />
           Eliminar
         </button>

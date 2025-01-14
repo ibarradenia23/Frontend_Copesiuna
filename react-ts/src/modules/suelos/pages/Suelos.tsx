@@ -228,7 +228,7 @@ const Suelos = () => {
       <section className="max-w-screen-xl mx-auto p-4 min-h-[38rem]">
         <div className="flex items-center justify-between space-y-2">
           <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
-            Dashboard
+            Analisis fisico quimico de suelos
           </h2>
           <div className="flex items-center space-x-2">
             <button
