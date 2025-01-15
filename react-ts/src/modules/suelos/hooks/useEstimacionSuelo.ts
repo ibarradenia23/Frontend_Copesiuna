@@ -54,13 +54,11 @@ export const useActualizarPropiedadesSuelo = () => {
             id: number;
             nombre: string;
             dato: string;
-            id_analisis_suelo: number;
         }) =>
           actualizarPropiedadSuelo(
             data.id,
             data.nombre,
             data.dato,
-            data.id_analisis_suelo
           ),
         onSuccess: (data: ServiceResponse) => {
           console.log("Analisis de suelo actualizado con éxito:", data);

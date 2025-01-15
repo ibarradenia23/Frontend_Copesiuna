@@ -87,13 +87,11 @@ export const actualizarPropiedadSuelo = async (
   id: number,
   nombre: string,
   dato: string,
-  id_analisis_suelo: number
 ): Promise<ServiceResponse> => {
   try {
-   const response = await Manager.patch(`/api/analisissuelo/update/${id}`,{
+   const response = await Manager.patch(`/api/propiedadesuelo/update/${id}`,{
     nombre,
     dato,
-    id_analisis_suelo
    })
    return {data:response.data.data}
   } catch (error) {

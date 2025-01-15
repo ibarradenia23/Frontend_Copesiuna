@@ -14,6 +14,12 @@ const EstimacionSueloCard: React.FC<EstimacionSueloProps> = ({
   estimacionSuelo,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editar,setEditar] = useState(false);
+
+  const handleEditar =()=>{
+    setEditar(true);
+    handleOpenModal();
+  }
 
   const {
     mutate: eliminarAnalisisSuelo,
@@ -71,6 +77,11 @@ const EstimacionSueloCard: React.FC<EstimacionSueloProps> = ({
     setToast({ ...toast, visible: false });
   };
 
+  const handleExaminar =()=>{
+    setEditar(false)
+    handleOpenModal();
+  }
+
   return (
     <div className="overflow-hidden transition-all duration-300 hover:shadow-xl bg-white dark:bg-[#111827] border-t-4 border-primary rounded-lg border">
       {toast.visible && (
@@ -113,7 +124,7 @@ const EstimacionSueloCard: React.FC<EstimacionSueloProps> = ({
       </div>
       <div className="flex flex-wrap justify-between dark:bg-gray-800  bg-gray-50 p-4 gap-2">
         <button
-          onClick={handleOpenModal}
+          onClick={handleExaminar}
           className="text-blue-500 hover:text-blue-700 border dark:border-gray-600 rounded px-3 py-2 text-sm flex items-center flex-grow basis-[calc(50%-0.25rem)] sm:basis-[calc(25%-0.375rem)]"
         >
           <Eye className="h-4 w-4 mr-2" />
@@ -127,7 +138,7 @@ const EstimacionSueloCard: React.FC<EstimacionSueloProps> = ({
           <Trash2 className="h-4 w-4 mr-2" />
           Eliminar
         </button>
-        <button className="text-yellow-500 hover:text-yellow-700 border dark:border-gray-600 rounded px-3 py-2 text-sm flex items-center flex-grow basis-[calc(50%-0.25rem)] sm:basis-[calc(25%-0.375rem)] justify-center">
+        <button onClick={handleEditar} className="text-yellow-500 hover:text-yellow-700 border dark:border-gray-600 rounded px-3 py-2 text-sm flex items-center flex-grow basis-[calc(50%-0.25rem)] sm:basis-[calc(25%-0.375rem)] justify-center">
           <Edit2 className="h-4 w-4 mr-2" />
           Editar
         </button>
@@ -138,7 +149,7 @@ const EstimacionSueloCard: React.FC<EstimacionSueloProps> = ({
         title="Detalle de estimacion de suelo"
         width="min-w-[760px]"
       >
-        <DetalleEstimacionSuelo estimacion={estimacionSuelo} />
+        <DetalleEstimacionSuelo editar={editar} estimacion={estimacionSuelo} />
       </Modal>
     </div>
   );

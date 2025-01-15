@@ -1,34 +1,95 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { EstimacionSueloInterface } from "../models";
-import { useActualizarAnalisisSuelo, useActualizarPropiedadesSuelo } from "../hooks/useEstimacionSuelo";
+import { useActualizarPropiedadesSuelo } from "../hooks/useEstimacionSuelo";
 import { useForm } from "react-hook-form";
+import Toast from "../../../common/components/Toast";
 
 interface DetalleEstimacionProps {
   estimacion: EstimacionSueloInterface;
+  editar?:boolean;
 }
 
 const DetalleEstimacionSuelo: React.FC<DetalleEstimacionProps> = ({
-  estimacion,
+  estimacion,editar
 }) => {
-  const [isEditing, setIsEditing] = useState(true);
-  const { mutate: actualizarPropiedadSuelo} = useActualizarPropiedadesSuelo();
+  const [isEditing, setIsEditing] = useState(false);
+  const { mutate: actualizarPropiedadSuelo,isError,
+    isSuccess,
+    error,} = useActualizarPropiedadesSuelo();
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<EstimacionSueloInterface>();
+  } = useForm<EstimacionSueloInterface>({
+    defaultValues: {
+      propiedades: estimacion.propiedades.map(propiedad => ({
+        id:propiedad.id,
+        nombre: propiedad.nombre,
+        dato: propiedad.dato,
+      }))}
+  });
 
-  const onSubmit = async(data: EstimacionSueloInterface) => {
-    console.log(data)
-    const updateData = {
-      id: estimacion.id,
-      ...data,
-    };
-    actualizarAnalisis(updateData);
+  useEffect(()=>{
+    if(editar===true){
+      setIsEditing(true);
+    }
+  },[editar]);
+
+   useEffect(() => {
+      if (isSuccess) {
+        setToast({
+          type: "warning",
+          message: "Propiedad de suelo se ha editado exitosamente.",
+          visible: true,
+        });
+      }
+      if (isError) {
+        setToast({
+          type: "error",
+          message: "Error al editar propiedad de suelo",
+          visible: true,
+        });
+      }
+    }, [isSuccess, isError, error]);
+
+ 
+  const onSubmit = async (data: any) => {
+    // Iterar sobre cada propiedad y enviar la actualización
+    for (const propiedad of data.propiedades) {
+      const payload = {
+        id:Number(propiedad.id),
+        nombre: propiedad.nombre, // El nombre no se edita
+        dato: propiedad.dato,// Asegúrate de que este ID sea el correcto
+      };
+
+      actualizarPropiedadSuelo(payload);
+    }
+    setIsEditing(false); // Desactivar el modo de edición después de actualizar
   };
+
+  const onCancelar =()=>{
+    setIsEditing(false);
+  }
+
+  const [toast, setToast] = useState<{
+      type: "success" | "error" | "warning";
+      message: string;
+      visible: boolean;
+    }>({
+      type: "success", // Valor por defecto
+      message: "",
+      visible: false,
+    });
+
+    const closeToast = () => {
+      setToast({ ...toast, visible: false });
+    };
 
   return (
     <div>
+      {toast.visible && (
+        <Toast type={toast.type} message={toast.message} onClose={closeToast} />
+      )}
       <section>
         <h3 className="text-lg font-semibold mb-2  text-gray-900 dark:text-white">
           Información General
@@ -102,7 +163,7 @@ const DetalleEstimacionSuelo: React.FC<DetalleEstimacionProps> = ({
                       {...register(`propiedades.${index}.dato`, {
                         required: "Este campo es obligatorio",
                       })}
-                      className="border rounded p-1 "
+                      className="border rounded p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white focus:ring-primary focus:border-primary mt-2"
                     />
                   ) : (
                     propiedad.dato
@@ -130,12 +191,22 @@ const DetalleEstimacionSuelo: React.FC<DetalleEstimacionProps> = ({
           </table>
         </section>
         {isEditing && (
-          <button
+          <div className="flex gap-2">
+            <button
             type="submit"
             className="mt-4 bg-primary text-white py-2 px-4 rounded"
           >
             Actualizar Análisis de Suelo
           </button>
+            <button
+            onClick={onCancelar}
+            type="button"
+            className="mt-4 bg-red-800 text-white py-2 px-4 rounded"
+          >
+            Cancelar
+          </button>
+          </div>
+          
         )}
       </form>
     </div>
