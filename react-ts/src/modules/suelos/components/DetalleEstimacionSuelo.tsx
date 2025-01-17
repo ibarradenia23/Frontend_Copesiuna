@@ -1,89 +1,149 @@
 import React, { useEffect, useState } from "react";
-import { EstimacionSueloInterface } from "../models";
-import { useActualizarPropiedadesSuelo } from "../hooks/useEstimacionSuelo";
+import { EstimacionSueloInterface, Propiedad } from "../models";
+import {
+  useActualizarPropiedadesSuelo,
+  useObtenerEstimacionSuelo,
+} from "../hooks/useEstimacionSuelo";
 import { useForm } from "react-hook-form";
 import Toast from "../../../common/components/Toast";
 
 interface DetalleEstimacionProps {
   estimacion: EstimacionSueloInterface;
-  editar?:boolean;
+  editar?: boolean;
 }
 
 const DetalleEstimacionSuelo: React.FC<DetalleEstimacionProps> = ({
-  estimacion,editar
+  estimacion,
+  editar,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const { mutate: actualizarPropiedadSuelo,isError,
+  const [estimacionData, setEstimacionData] =
+    useState<EstimacionSueloInterface>(estimacion);
+  const {
+    mutate: actualizarPropiedadSuelo,
+    isError,
     isSuccess,
-    error,} = useActualizarPropiedadesSuelo();
+    error,
+  } = useActualizarPropiedadesSuelo();
+
+  const { data: analisisSuelo } = useObtenerEstimacionSuelo(
+    Number(estimacion.id)
+  );
+
+  const updateData = () => {
+    if (analisisSuelo && analisisSuelo.data) {
+      setEstimacionData(analisisSuelo.data);
+      console.log("data actualizada:",analisisSuelo.data);
+    }
+  };
+
+  useEffect(() => {
+    if (editar === true) {
+      setIsEditing(true);
+    }
+  }, [editar]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      setToast({
+        type: "warning",
+        message: "Propiedad de suelo se ha editado exitosamente.",
+        visible: true,
+      });
+    }
+    if (isError) {
+      setToast({
+        type: "error",
+        message: "Error al editar propiedad de suelo",
+        visible: true,
+      });
+    }
+  }, [isSuccess, isError, error]);
+
+  const onCancelar = () => {
+    setIsEditing(false);
+  };
+
+  const [toast, setToast] = useState<{
+    type: "success" | "error" | "warning";
+    message: string;
+    visible: boolean;
+  }>({
+    type: "success", // Valor por defecto
+    message: "",
+    visible: false,
+  });
+
+  const closeToast = () => {
+    setToast({ ...toast, visible: false });
+  };
+  const [propiedadesOrdenadas, setPropiedadesOrdenadas] =
+    useState<Propiedad[]>();
+
+  // Ordenar las propiedades por ID
+  useEffect(() => {
+    setPropiedadesOrdenadas(
+      [...estimacionData.propiedades].sort((a, b) => (a.id || 0) - (b.id || 0))
+    );
+  }, [estimacionData]);
+  // const propiedadesOrdenadas = [...estimacion.propiedades].sort((a, b) => (a.id || 0) - (b.id || 0));
+
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<EstimacionSueloInterface>({
     defaultValues: {
-      propiedades: estimacion.propiedades.map(propiedad => ({
-        id:propiedad.id,
-        nombre: propiedad.nombre,
-        dato: propiedad.dato,
-      }))}
+      propiedades:
+        propiedadesOrdenadas &&
+        propiedadesOrdenadas.map((propiedad) => ({
+          id: propiedad.id,
+          nombre: propiedad.nombre,
+          dato: propiedad.dato,
+        })),
+    },
   });
 
-  useEffect(()=>{
-    if(editar===true){
-      setIsEditing(true);
+  // Actualizar los valores en el formulario cuando las propiedades ordenadas cambian
+  useEffect(() => {
+    if (propiedadesOrdenadas) {
+      propiedadesOrdenadas.forEach((propiedad, index) => {
+        setValue(`propiedades.${index}.id`, propiedad.id);
+        setValue(`propiedades.${index}.nombre`, propiedad.nombre);
+        setValue(`propiedades.${index}.dato`, propiedad.dato);
+      });
     }
-  },[editar]);
+  }, [propiedadesOrdenadas, setValue]);
 
-   useEffect(() => {
-      if (isSuccess) {
-        setToast({
-          type: "warning",
-          message: "Propiedad de suelo se ha editado exitosamente.",
-          visible: true,
-        });
-      }
-      if (isError) {
-        setToast({
-          type: "error",
-          message: "Error al editar propiedad de suelo",
-          visible: true,
-        });
-      }
-    }, [isSuccess, isError, error]);
-
- 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: EstimacionSueloInterface) => {
     // Iterar sobre cada propiedad y enviar la actualización
     for (const propiedad of data.propiedades) {
       const payload = {
-        id:Number(propiedad.id),
+        id: Number(propiedad.id),
         nombre: propiedad.nombre, // El nombre no se edita
-        dato: propiedad.dato,// Asegúrate de que este ID sea el correcto
+        dato: propiedad.dato, // Asegúrate de que este ID sea el correcto
       };
 
       actualizarPropiedadSuelo(payload);
+
+      
     }
+    setTimeout(() => {
+      updateData();
+    }, 4000);
     setIsEditing(false); // Desactivar el modo de edición después de actualizar
   };
 
-  const onCancelar =()=>{
-    setIsEditing(false);
-  }
+  useEffect(() => {
+    if (toast.visible) {
+      const timer = setTimeout(() => {
+        closeToast();
+      }, 3000); // Duración del toast en milisegundos (3 segundos)
 
-  const [toast, setToast] = useState<{
-      type: "success" | "error" | "warning";
-      message: string;
-      visible: boolean;
-    }>({
-      type: "success", // Valor por defecto
-      message: "",
-      visible: false,
-    });
-
-    const closeToast = () => {
-      setToast({ ...toast, visible: false });
-    };
+      return () => clearTimeout(timer); // Limpiar el temporizador al desmontar
+    }
+  }, [toast.visible]);
 
   return (
     <div>
@@ -145,71 +205,68 @@ const DetalleEstimacionSuelo: React.FC<DetalleEstimacionProps> = ({
               </tr>
             </thead>
             <tbody>
-              {estimacion.propiedades.map((propiedad, index) => (
-                <tr
-                  key={propiedad.id}
-                  className="bg-white border-b dark:bg-gray-700 dark:border-gray-700"
-                >
-                  <th
-                    scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+              {propiedadesOrdenadas &&
+                propiedadesOrdenadas.map((propiedad, index) => (
+                  <tr
+                    key={propiedad.id}
+                    className="bg-white border-b dark:bg-gray-700 dark:border-gray-700"
                   >
-                    {propiedad.nombre}
-                  </th>
-                  {isEditing ? (
-                    <input
-                      type="text"
-                      defaultValue={propiedad.dato}
-                      {...register(`propiedades.${index}.dato`, {
-                        required: "Este campo es obligatorio",
-                      })}
-                      className="border rounded p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white focus:ring-primary focus:border-primary mt-2"
-                    />
-                  ) : (
-                    <span className="pt-2">
-                     {propiedad.dato }
-                    </span>
-                    
-                  )}
-                  {errors.propiedades?.[index]?.dato && (
-                    <span className="text-red-500">
-                      {errors.propiedades[index].dato.message}
-                    </span>
-                  )}
-                  <td className="px-6 py-4">
-                    {new Date(propiedad.fecha_create).toLocaleDateString(
-                      "es-ES",
-                      { year: "numeric", month: "long", day: "numeric" }
+                    <th
+                      scope="row"
+                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                    >
+                      {propiedad.nombre}
+                    </th>
+                    {isEditing ? (
+                      <input
+                        type="text"
+                        defaultValue={propiedad.dato}
+                        {...register(`propiedades.${index}.dato`, {
+                          required: "Este campo es obligatorio",
+                        })}
+                        className="border rounded p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white focus:ring-primary focus:border-primary mt-2"
+                      />
+                    ) : (
+                      <span className="pt-2">{propiedad.dato}</span>
                     )}
-                  </td>
-                  <td className="px-6 py-4">
-                    {new Date(propiedad.fecha_update).toLocaleDateString(
-                      "es-ES",
-                      { year: "numeric", month: "long", day: "numeric" }
+                    {errors.propiedades?.[index]?.dato && (
+                      <span className="text-red-500">
+                        {errors.propiedades[index].dato.message}
+                      </span>
                     )}
-                  </td>
-                </tr>
-              ))}
+                    <td className="px-6 py-4">
+                      {new Date(propiedad.fecha_create).toLocaleDateString(
+                        "es-ES",
+                        { year: "numeric", month: "long", day: "numeric" }
+                      )}
+                    </td>
+                    <td className="px-6 py-4">
+                      {new Date(propiedad.fecha_update).toLocaleDateString(
+                        "es-ES",
+                        { year: "numeric", month: "long", day: "numeric" }
+                      )}
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         </section>
         {isEditing && (
           <div className="flex gap-2">
             <button
-            type="submit"
-            className="mt-4 bg-primary text-white py-2 px-4 rounded"
-          >
-            Actualizar Análisis de Suelo
-          </button>
+              type="submit"
+              className="mt-4 bg-primary text-white py-2 px-4 rounded"
+            >
+              Actualizar Análisis de Suelo
+            </button>
             <button
-            onClick={onCancelar}
-            type="button"
-            className="mt-4 bg-red-800 text-white py-2 px-4 rounded"
-          >
-            Cancelar
-          </button>
+              onClick={onCancelar}
+              type="button"
+              className="mt-4 bg-red-800 text-white py-2 px-4 rounded"
+            >
+              Cancelar
+            </button>
           </div>
-          
         )}
       </form>
     </div>

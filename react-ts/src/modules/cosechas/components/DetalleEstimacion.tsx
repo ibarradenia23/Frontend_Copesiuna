@@ -114,7 +114,6 @@ const DetalleEstimacion: React.FC<DetalleEstimacionProps> = ({
       cantidad: Number(cantidad),
       ID_afectacion: Number(afectacionId),
     };
-    console.log("lo que envio", payload);
     actualizarMazorca(payload);
     setEditingMazorca(null);
 
@@ -141,6 +140,16 @@ const DetalleEstimacion: React.FC<DetalleEstimacionProps> = ({
   const closeToast = () => {
     setToast({ ...toast, visible: false });
   };
+
+  useEffect(() => {
+    if (toast.visible) {
+      const timer = setTimeout(() => {
+        closeToast();
+      }, 3000); // Duración del toast en milisegundos (3 segundos)
+
+      return () => clearTimeout(timer); // Limpiar el temporizador al desmontar
+    }
+  }, [toast.visible]);
 
   return (
     <section>

@@ -77,13 +77,11 @@ const UserCard: React.FC<Props> = ({ users, asignaciones }) => {
 
   const asignacionesUser = Array.isArray(asignaciones)
     ? asignaciones.filter((asignacion) => {
-      if(asignacion.tecnico){
-        return Number(asignacion.tecnico.id) === Number(users.id);
-      }
-      
+        if (asignacion.tecnico) {
+          return Number(asignacion.tecnico.id) === Number(users.id);
+        }
       })
     : [];
-
 
   useEffect(() => {
     if (isSuccess) {
@@ -108,15 +106,15 @@ const UserCard: React.FC<Props> = ({ users, asignaciones }) => {
     }
   };
 
-     useEffect(() => {
-        if (toast.visible) {
-          const timer = setTimeout(() => {
-            closeToast();
-          }, 3000); // Duración del toast en milisegundos (3 segundos)
-    
-          return () => clearTimeout(timer); // Limpiar el temporizador al desmontar
-        }
-      }, [toast.visible]);
+  useEffect(() => {
+    if (toast.visible) {
+      const timer = setTimeout(() => {
+        closeToast();
+      }, 3000); // Duración del toast en milisegundos (3 segundos)
+
+      return () => clearTimeout(timer); // Limpiar el temporizador al desmontar
+    }
+  }, [toast.visible]);
 
   return (
     <div className=" p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
@@ -182,7 +180,7 @@ const UserCard: React.FC<Props> = ({ users, asignaciones }) => {
           </div>
         </div>
         <div className="border-t dark:border-gray-600">
-          <Accordion icon={<Pin/>} title="Asignaciones">
+          <Accordion icon={<Pin />} title="Asignaciones">
             {asignacionesUser.map((asignacion) => (
               <AsignacionCard asignacion={asignacion} key={asignacion.id} />
             ))}

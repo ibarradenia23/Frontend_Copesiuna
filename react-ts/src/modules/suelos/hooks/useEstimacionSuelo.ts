@@ -1,9 +1,15 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { actualizarBitacoraAnalisisSuelo, actualizarPropiedadSuelo, eliminarBitacoraEstimacionSuelo, obtenerBitacorasEstimacionSuelo } from "../api/estimacionSueloService";
+import { actualizarBitacoraAnalisisSuelo, actualizarPropiedadSuelo, eliminarBitacoraEstimacionSuelo, obtenerBitacoraEstimacionSuelo, obtenerBitacorasEstimacionSuelo } from "../api/estimacionSueloService";
 import { ServiceResponse } from "../../../common/types/globals";
 
 export const useObtenerEstimacionesSuelo =()=>{
     return useQuery(["estimacionesSuelo"],obtenerBitacorasEstimacionSuelo);
+}
+
+export const useObtenerEstimacionSuelo =(id:number)=>{
+return useQuery(["analisisSuelo",id],()=>obtenerBitacoraEstimacionSuelo(id),{
+  enabled: !!id, // Solo ejecutar la consulta si el ID es válido
+})
 }
 
 // Hook para editar un analisis de suelo
