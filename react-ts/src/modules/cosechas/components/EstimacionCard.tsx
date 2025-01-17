@@ -3,7 +3,6 @@ import { AfectacionesInterface, EstimacionCosechaInterface } from "../models";
 import {
   Cloud,
   CloudRain,
-  Edit2,
   Eye,
   FileSpreadsheet,
   Sun,
@@ -313,13 +312,12 @@ const EstimacionCard: React.FC<EstimacionCardProp> = ({
           <FileSpreadsheet className="h-4 w-4 mr-2" />
           Excel
         </button>
-        <button onClick={()=>handleEliminar(estimacionCosecha.id ?? 0)} className="text-red-500 hover:text-red-700 border dark:border-gray-600 rounded px-3 py-2 text-sm flex items-center flex-grow basis-[calc(50%-0.25rem)] sm:basis-[calc(25%-0.375rem)]">
+        <button
+          onClick={() => handleEliminar(estimacionCosecha.id ?? 0)}
+          className="text-red-500 hover:text-red-700 border dark:border-gray-600 rounded px-3 py-2 text-sm flex items-center flex-grow basis-[calc(50%-0.25rem)] sm:basis-[calc(25%-0.375rem)]"
+        >
           <Trash2 className="h-4 w-4 mr-2" />
           Eliminar
-        </button>
-        <button className="text-yellow-500 hover:text-yellow-700 border dark:border-gray-600 rounded px-3 py-2 text-sm flex items-center flex-grow basis-[calc(50%-0.25rem)] sm:basis-[calc(25%-0.375rem)] justify-center">
-          <Edit2 className="h-4 w-4 mr-2" />
-          Editar
         </button>
       </div>
       <Modal

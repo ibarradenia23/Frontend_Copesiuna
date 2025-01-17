@@ -2,8 +2,15 @@ import React, { useEffect, useState } from "react";
 import {
   AfectacionesInterface,
   EstimacionCosechaInterface,
+  MazorcaInterface,
   PlantasInterface,
 } from "../models";
+import { useForm } from "react-hook-form";
+import {
+  useActualizarMazorcas,
+  useObtenerEstimacion,
+} from "../hooks/useEstimaciones";
+import Toast from "../../../common/components/Toast";
 
 interface DetalleEstimacionProps {
   estimacion: EstimacionCosechaInterface;
@@ -14,16 +21,76 @@ const DetalleEstimacion: React.FC<DetalleEstimacionProps> = ({
   estimacion,
   afectaciones,
 }) => {
+  const [estimacionData, setEstimacionData] =
+    useState<EstimacionCosechaInterface>(estimacion);
   const [plantas, setPlantas] = useState<PlantasInterface[]>([]);
   const [afectacionesData, setAfectacionesData] = useState<
     AfectacionesInterface[]
   >([]);
+  const [editingMazorca, setEditingMazorca] = useState<MazorcaInterface | null>(
+    null
+  );
+  const [cantidad, setCantidad] = useState<number | undefined>(undefined);
+  const [afectacionId, setAfectacionId] = useState<number | undefined>(
+    undefined
+  );
+
+  const { data: estimacionUpdate } = useObtenerEstimacion(
+    Number(estimacion.id)
+  );
+
+  useEffect(() => {
+    setEstimacionData(estimacion);
+  }, [estimacion]);
+
+  const updateData = () => {
+    if (estimacionUpdate && estimacionUpdate.data) {
+      setPlantas(estimacionUpdate?.data.plantas);
+      setEstimacionData(estimacionUpdate?.data);
+    }
+  };
 
   const traerAfectaciones = () => {
     if (afectaciones && Array.isArray(afectaciones)) {
       setAfectacionesData(afectaciones);
     }
   };
+
+  const {
+    mutate: actualizarMazorca,
+    isError,
+    isSuccess,
+    error,
+  } = useActualizarMazorcas();
+
+  const { handleSubmit } = useForm<MazorcaInterface>();
+
+  const [toast, setToast] = useState<{
+    type: "success" | "error" | "warning";
+    message: string;
+    visible: boolean;
+  }>({
+    type: "success", // Valor por defecto
+    message: "",
+    visible: false,
+  });
+
+  useEffect(() => {
+    if (isSuccess) {
+      setToast({
+        type: "warning",
+        message: "Mazorca se ha editado exitosamente.",
+        visible: true,
+      });
+    }
+    if (isError) {
+      setToast({
+        type: "error",
+        message: "Error al editar mazorca",
+        visible: true,
+      });
+    }
+  }, [isSuccess, isError, error]);
 
   const obtenerAfcetacionPorId = (
     id: number
@@ -35,14 +102,51 @@ const DetalleEstimacion: React.FC<DetalleEstimacionProps> = ({
     traerAfectaciones();
   }, [afectaciones]);
 
+  const handleEditMazorca = (mazorca: MazorcaInterface) => {
+    setEditingMazorca(mazorca);
+    setCantidad(mazorca.cantidad);
+    setAfectacionId(mazorca.ID_afectacion);
+  };
+
+  const onSubmit = async () => {
+    const payload = {
+      id: Number(editingMazorca?.id),
+      cantidad: Number(cantidad),
+      ID_afectacion: Number(afectacionId),
+    };
+    console.log("lo que envio", payload);
+    actualizarMazorca(payload);
+    setEditingMazorca(null);
+
+    setTimeout(() => {
+      updateData();
+    }, 3000);
+  };
+
   useEffect(() => {
-    if (estimacion) {
-      setPlantas(estimacion.plantas);
+    if (estimacionData) {
+      // Ordenar las mazorcas por ID al cargar
+      const plantasConMazorcasOrdenadas = estimacionData.plantas.map(
+        (planta) => ({
+          ...planta,
+          mazorcas: planta.mazorcas.sort(
+            (a, b) => (a.id as number) - (b.id as number)
+          ), // Ordenar por ID
+        })
+      );
+      setPlantas(plantasConMazorcasOrdenadas);
     }
-  }, [estimacion]);
+  }, [estimacionData]);
+
+  const closeToast = () => {
+    setToast({ ...toast, visible: false });
+  };
 
   return (
     <section>
+      {toast.visible && (
+        <Toast type={toast.type} message={toast.message} onClose={closeToast} />
+      )}
       <div className="flex flex-col gap-2">
         {plantas.map((planta) => {
           const afectacion = obtenerAfcetacionPorId(
@@ -108,6 +212,9 @@ const DetalleEstimacion: React.FC<DetalleEstimacionProps> = ({
                       <th scope="col" className="px-6 py-3">
                         Fecha de actualizacion
                       </th>
+                      <th scope="col" className="px-6 py-3">
+                        Acciones
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -126,8 +233,42 @@ const DetalleEstimacion: React.FC<DetalleEstimacionProps> = ({
                           >
                             {mazorca.id}
                           </th>
-                          <td className="px-6 py-4">{mazorca.cantidad}</td>
-                          <td className="px-6 py-4">{afectacion?.nombre}</td>
+                          <td className="px-6 py-4">
+                            {editingMazorca?.id === mazorca.id ? (
+                              <input
+                                type="number"
+                                value={cantidad}
+                                onChange={(e) =>
+                                  setCantidad(Number(e.target.value))
+                                }
+                                className="border border-gray-300 rounded p-1  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white focus:ring-primary focus:border-primary"
+                              />
+                            ) : (
+                              mazorca.cantidad
+                            )}
+                          </td>
+                          <td className="px-6 py-4">
+                            {editingMazorca?.id === mazorca.id ? (
+                              <select
+                                value={afectacionId}
+                                onChange={(e) =>
+                                  setAfectacionId(Number(e.target.value))
+                                }
+                                className="border border-gray-300 rounded p-1  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white focus:ring-primary focus:border-primary"
+                              >
+                                {afectacionesData.map((afectacion) => (
+                                  <option
+                                    key={afectacion.id}
+                                    value={afectacion.id}
+                                  >
+                                    {afectacion.nombre}
+                                  </option>
+                                ))}
+                              </select>
+                            ) : (
+                              afectacion?.nombre
+                            )}
+                          </td>
                           <td className="px-6 py-4">
                             {new Date(mazorca.fecha_create).toLocaleDateString(
                               "es-ES",
@@ -138,6 +279,26 @@ const DetalleEstimacion: React.FC<DetalleEstimacionProps> = ({
                             {new Date(mazorca.fecha_update).toLocaleDateString(
                               "es-ES",
                               { year: "numeric", month: "long", day: "numeric" }
+                            )}
+                          </td>
+                          <td className="px-6 py-4">
+                            {editingMazorca?.id === mazorca.id ? (
+                              <form onSubmit={handleSubmit(onSubmit)}>
+                                <button
+                                  type="submit"
+                                  /*onClick={handleSaveMazorca}*/ className="text-primary hover:underline"
+                                >
+                                  Guardar
+                                </button>
+                              </form>
+                            ) : (
+                              <button
+                                type="button"
+                                onClick={() => handleEditMazorca(mazorca)}
+                                className="text-primary hover:underline"
+                              >
+                                Editar
+                              </button>
                             )}
                           </td>
                         </tr>

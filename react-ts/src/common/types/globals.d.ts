@@ -12,6 +12,11 @@ export interface ServiceResponse {
   error?: string;
 }
 
+export interface ServiceResponseGeneric<T = unknown> {
+  data?: T;
+  error?: string;
+}
+
 interface ValidationErrors {
   [key: string]: string[]; // Clave es el nombre del campo, valor es un array de mensajes de error
 }

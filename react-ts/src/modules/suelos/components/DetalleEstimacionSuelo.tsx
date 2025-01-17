@@ -166,7 +166,10 @@ const DetalleEstimacionSuelo: React.FC<DetalleEstimacionProps> = ({
                       className="border rounded p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white focus:ring-primary focus:border-primary mt-2"
                     />
                   ) : (
-                    propiedad.dato
+                    <span className="pt-2">
+                     {propiedad.dato }
+                    </span>
+                    
                   )}
                   {errors.propiedades?.[index]?.dato && (
                     <span className="text-red-500">
