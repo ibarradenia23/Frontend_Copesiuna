@@ -147,7 +147,7 @@ const EstimacionSueloCard: React.FC<EstimacionSueloProps> = ({
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         title="Detalle de estimacion de suelo"
-        width="min-w-[760px]"
+        width="min-w-[950px]"
       >
         <DetalleEstimacionSuelo editar={editar} estimacion={estimacionSuelo} />
       </Modal>

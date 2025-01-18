@@ -146,6 +146,7 @@ export default function CosechasDashboard() {
           onEdit={(id) => handleEdit("afectaciones", id)}
           onDelete={(id) => handleDelete("afectaciones", id)}
           columns={["Tipo"]}
+          activeTab={activeTab}
         />
       )}
       {activeTab === "estimaciones" && (
@@ -156,6 +157,7 @@ export default function CosechasDashboard() {
           onEdit={(id) => handleEdit("estimaciones", id)}
           onDelete={(id) => handleDelete("estimaciones", id)}
           columns={["Cantidad", "Fecha"]}
+         
         />
       )}
     </div>
@@ -169,12 +171,14 @@ type SectionContentProps = {
   onEdit: (id: number) => void;
   onDelete: (id: number) => void;
   columns: string[];
+  activeTab?:string;
 };
 
 
 function SectionContent({
   title,
-  render
+  render,
+  activeTab
 }: SectionContentProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -189,12 +193,15 @@ const handleCloseModal = () => {
     <div>
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold text-gray-900 dark:text-white">{title}</h2>
-        <button
+        {
+          activeTab === "afectaciones" && <button
           onClick={handleOpenModal}
           className="bg-primary text-white px-4 py-2 rounded"
         >
           <Plus className="inline-block mr-2" /> Agregar
         </button>
+        }
+          
       </div>
       <section className="min-h-96">
 {render}

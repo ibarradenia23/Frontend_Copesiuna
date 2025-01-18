@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { ToogleThemeButton } from "./ToogleTheme";
-import Logo from '/iconocacao.png'
+import LogoV from '/logoV.jpg'
 import { useLocation } from "react-router-dom";
 import useAuth from "../../modules/auth/hooks/useAuth";
 import { useNavigate } from 'react-router-dom';
 import { userState } from "../../modules/auth/state/userAtom";
 import { useRecoilValue } from "recoil";
 import { UserInterface } from "../../modules/users/models";
+import Modal from "./Modal";
+import Help from "./Help";
 
 const Navbar = () => {
   //Saber la ruta en la que me encuentro
@@ -47,21 +49,30 @@ const Navbar = () => {
     }
   }, [user]);
 
+    const [isModalOpen, setIsModalOpen] = useState(false);
+  
+    const handleOpenModal = () => {
+      setIsModalOpen(true);
+    };
+  
+    const handleCloseModal = () => {
+      setIsModalOpen(false);
+    };
+  
+
   return (
     <nav className="bg-white border-gray-200 dark:bg-gray-900">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         <a
-          href="https://flowbite.com/"
+          href="/"
           className="flex items-center space-x-3 rtl:space-x-reverse"
         >
           <img
-            src={Logo}
-            className="h-8"
+            src={LogoV}
+            className="h-14 w-auto object-contain"
             alt="Flowbite Logo"
           />
-          <span className="self-center text-2xl font-semibold whitespace-nowrap text-[#C52024]">
-            Cope<span className="text-primary">siuna</span>
-          </span>
+         
         </a>
         <div className="flex relative items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse gap-4">
           <ToogleThemeButton />
@@ -84,7 +95,7 @@ const Navbar = () => {
           </button>
           {isDropdownOpen && (
             <div
-              className="absolute right-0 z-50 mt-72 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600"
+              className="absolute right-0 z-50 mt-52 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600"
               id="user-dropdown"
             >
               <div className="px-4 py-3">
@@ -106,16 +117,10 @@ const Navbar = () => {
               </div>
               <ul className="py-2" aria-labelledby="user-menu-button">
                
+            
                 <li>
                   <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                  >
-                    Ajustes
-                  </a>
-                </li>
-                <li>
-                  <a
+                  onClick={handleOpenModal}
                     href="#"
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                   >
@@ -270,6 +275,16 @@ const Navbar = () => {
         </div>
       )}
       </div>
+      <Modal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        title="Necesitas ayuda?"
+        width="min-w-[800px]"
+      >
+        <Help
+          
+        />
+      </Modal>
     </nav>
   );
 };

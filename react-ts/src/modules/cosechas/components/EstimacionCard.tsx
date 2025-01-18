@@ -257,7 +257,7 @@ const EstimacionCard: React.FC<EstimacionCardProp> = ({
   return (
     <div
       key={estimacionCosecha.id}
-      className="overflow-hidden transition-all duration-300 hover:shadow-xl bg-white dark:bg-[#111827] border-t-4 border-primary rounded-lg borde r"
+      className="overflow-hidden transition-all duration-300 hover:shadow-xl bg-white dark:bg-[#111827] border-t-4 border-primary rounded-lg border"
     >
       {toast.visible && (
         <Toast type={toast.type} message={toast.message} onClose={closeToast} />
