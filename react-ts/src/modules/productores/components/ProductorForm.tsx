@@ -7,6 +7,7 @@ import {
   useCrearProductor,
 } from "../hooks/useProductor";
 import { Pencil } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface ProductorPropsInterface {
   productor?: ProductorInterface;
@@ -23,6 +24,7 @@ const ProductorForm: React.FC<ProductorPropsInterface> = ({ productor,onSave }) 
 
   //Estado para decidir si crear o editar
   const [isEditing, setIsEditing] = useState(false);
+  const queryClient = useQueryClient();
 
   // Usamos el hook para crear un productor
   const {
@@ -69,11 +71,22 @@ const ProductorForm: React.FC<ProductorPropsInterface> = ({ productor,onSave }) 
   const onSubmit = async (data: ProductorInterface) => {
     console.log(data);
     if (isEditing && productor && productor.id) {
-      editarProductor({ id: productor.id, ...data });
-      onSave();
+      editarProductor(
+        { id: productor.id, ...data },
+        {
+          onSuccess: () => {
+            queryClient.invalidateQueries(['productores']);
+            onSave(); // Llama a onSave para actualizar la lista en el componente padre
+          },
+        }
+      );
     } else {
-      crearProductor(data);
-      onSave();
+      crearProductor(data, {
+        onSuccess: () => {
+          queryClient.invalidateQueries(['productores']);
+          onSave(); // Llama a onSave para actualizar la lista en el componente padre
+        },
+      });
     }
   };
 

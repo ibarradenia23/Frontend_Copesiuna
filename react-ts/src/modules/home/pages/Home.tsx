@@ -97,7 +97,7 @@ const Home = () => {
           <div className="border-l-4 border-primary p-6 bg-white border rounded-lg shadow dark:bg-gray-800 ">
             <div className="flex flex-row items-center justify-between space-y-0 pb-2">
               <p className="text-sm font-medium text-primary">
-                Parcelas analizadas
+                Asignaciones existentes
               </p>
               <Leaf className="h-4 w-4 text-primary" />
             </div>
@@ -113,16 +113,16 @@ const Home = () => {
           <div className="border-l-4 border-primary p-6 bg-white border rounded-lg shadow dark:bg-gray-800">
             <div className="flex flex-row items-center justify-between space-y-0 pb-2">
               <p className="text-sm font-medium text-primary">
-                Proxima cochecha estimada
+                Productores asociados
               </p>
               <CalendarDays className="h-4 w-4 text-primary" />
             </div>
             <div>
               <div className="text-2xl font-bold text-gray-900 dark:text-white">
-                23 de Enero
+                23
               </div>
               <p className="text-xs text-muted-foreground text-gray-700 dark:text-gray-400">
-                En n días
+                8 en el ultimo año
               </p>
             </div>
           </div>

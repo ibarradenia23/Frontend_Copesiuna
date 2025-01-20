@@ -6,6 +6,7 @@ import ParcelaForm from "./ParcelaForm";
 import { useEliminarParcela } from "../hooks/useParcela";
 import Toast from "../../../common/components/Toast";
 import { ParcelaCompletaInterface } from "../models";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface PropsInterface {
   parcela: ParcelaCompletaInterface;
@@ -14,6 +15,7 @@ interface PropsInterface {
 const CardParcela: React.FC<PropsInterface> = ({ parcela }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [parcelaEdit,setParcelaEdit] = useState<ParcelaCompletaInterface>()
+   const queryClient = useQueryClient();
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -42,7 +44,11 @@ const CardParcela: React.FC<PropsInterface> = ({ parcela }) => {
 
   const handleEliminar = (id: number) => {
     if (window.confirm("¿Estás seguro de que deseas eliminar esta parcela?")) {
-      eliminarParcela(id);
+      eliminarParcela(id,{
+        onSuccess: () => {
+          queryClient.invalidateQueries(['parcelas']); // Invalida la consulta para obtener los productores
+         // onSave();
+        }});
     }
   };
 

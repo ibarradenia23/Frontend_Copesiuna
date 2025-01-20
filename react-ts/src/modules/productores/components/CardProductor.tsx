@@ -9,6 +9,7 @@ import ProductorForm from "./ProductorForm";
 import { useEliminarProductor } from "../hooks/useProductor";
 import Toast from "../../../common/components/Toast";
 import { ParcelaCompletaInterface, ProductorInterface } from "../models";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface ProductorProps {
   productor:ProductorInterface,
@@ -17,7 +18,11 @@ interface ProductorProps {
 }
 
 const CardProductor:React.FC<ProductorProps> = ({productor,onSave,parcelas}) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+ 
+   const queryClient = useQueryClient();
+  
+
+  const [isModalOpen, setIsModalOpen] = useState(false); 
   const [isModalProductorOpen, setIsModalProductorOpen] = useState(false);
   const [productorSelect,setProductorSelect] = useState({
     id:0,
@@ -59,8 +64,11 @@ const CardProductor:React.FC<ProductorProps> = ({productor,onSave,parcelas}) => 
 
   const handleEliminar = (id: number) => {
       if (window.confirm("¿Estás seguro de que deseas eliminar este productor?")) {
-          eliminarProductor(id);
-          onSave()
+          eliminarProductor(id,{
+            onSuccess: () => {
+              queryClient.invalidateQueries(['productores']); // Invalida la consulta para obtener los productores
+              onSave();
+            }});
       }
   };
 

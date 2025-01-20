@@ -2,12 +2,14 @@ import { useMutation,useQuery } from "@tanstack/react-query";
 import { ServiceResponse } from "../../../common/types/globals";
 import { actualizarAfectaciones, createAfectaciones, eliminarAfectaciones, obtenerAfectaciones } from "../api/afectacionesService";
 
+//Hook para traer todas las afectaciones
 export const useObtenerAfectaciones =()=>{
     return useQuery(['afectaciones'],
         obtenerAfectaciones
     );
 }
 
+//Hook para crear una afectacion
 export const useCreateAfectacion =()=>{
     return useMutation({
         mutationFn: (data:{nombre:string; descripcion:string; }) =>
@@ -21,6 +23,7 @@ export const useCreateAfectacion =()=>{
     })
 }
 
+//Hook para actualizar una afectacion
 export const useActualizarAfectacion =()=>{
     return useMutation({
         mutationFn: (data:{id:number; nombre:string; descripcion:string; }) =>
@@ -34,6 +37,7 @@ export const useActualizarAfectacion =()=>{
     })
 }
 
+//Hook para eliminar una afectacion
 export const useEliminarAfectacion = () => {
     return useMutation({
         mutationFn: (id: number) => eliminarAfectaciones(id),

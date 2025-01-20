@@ -82,6 +82,9 @@ const DetalleEstimacion: React.FC<DetalleEstimacionProps> = ({
         message: "Mazorca se ha editado exitosamente.",
         visible: true,
       });
+      setTimeout(() => {
+        updateData();
+      }, 3000);
     }
     if (isError) {
       setToast({
@@ -117,9 +120,9 @@ const DetalleEstimacion: React.FC<DetalleEstimacionProps> = ({
     actualizarMazorca(payload);
     setEditingMazorca(null);
 
-    setTimeout(() => {
+    /*setTimeout(() => {
       updateData();
-    }, 3000);
+    }, 3000);*/
   };
 
   useEffect(() => {

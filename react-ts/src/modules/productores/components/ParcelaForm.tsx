@@ -7,6 +7,7 @@ import { Pencil } from "lucide-react";
 import { useObtenerTiposParcelas } from "../../ajustes/hooks/useTiposParcelas";
 import { useObtenerTiposCultivos } from "../../ajustes/hooks/useTiposCutivos";
 import { TiposCultivosInterface, TiposParcelaInterface } from "../../ajustes/models";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface ParcelaPropsInterface {
   parcela?: ParcelaInterface;
@@ -28,6 +29,9 @@ const ParcelaForm: React.FC<ParcelaPropsInterface> = ({parcela,idProductor}) => 
    const {data:tiposParcelaResponse} = useObtenerTiposParcelas();
    const {data:tiposCultivossResponse} = useObtenerTiposCultivos();
    
+   const queryClient = useQueryClient();
+   
+
    useEffect(()=>{
     const tiposParcelas = tiposParcelaResponse?.data as TiposParcelaInterface[];
     setTipoParcelaData(tiposParcelas);
@@ -87,7 +91,12 @@ const ParcelaForm: React.FC<ParcelaPropsInterface> = ({parcela,idProductor}) => 
       descripcion:data.descripcion,
       tamaño_parcela:data.tamaño_parcela
     }
-    editarParcela(newDataEdit);
+    editarParcela(newDataEdit,{
+      onSuccess: () => {
+        queryClient.invalidateQueries(['parcelas']);
+        //onSave(); // Llama a onSave para actualizar la lista en el componente padre
+      },
+    });
    }
    else {
     const newData ={
@@ -99,7 +108,12 @@ const ParcelaForm: React.FC<ParcelaPropsInterface> = ({parcela,idProductor}) => 
     }
     console.log("Form enviado",newData);
     
-    crearParcela(newData);
+    crearParcela(newData,{
+      onSuccess: () => {
+        queryClient.invalidateQueries(['parcelas']);
+       // onSave(); // Llama a onSave para actualizar la lista en el componente padre
+      },
+    });
    }
   };
 
