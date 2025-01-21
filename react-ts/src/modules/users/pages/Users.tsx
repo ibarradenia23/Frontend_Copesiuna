@@ -16,32 +16,32 @@ import { isTokenExpired } from "../../auth/utils/tokenUtils";
 
 const Users = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const {data:userResponse} = useObtenerUduarios();
-  const {data:asignacionesResponse} = useObtenerAsignaciones();
-  const [usuarios,setUsuarios] = useState<UserInterface[]>([]);
+  const { data: userResponse } = useObtenerUduarios();
+  const { data: asignacionesResponse } = useObtenerAsignaciones();
+  const [usuarios, setUsuarios] = useState<UserInterface[]>([]);
 
-  const {logout} = useAuth();
+  const { logout } = useAuth();
   const token = useRecoilValue(authTokenState);
   const navigate = useNavigate();
 
   useEffect(() => {
-        if (isTokenExpired(token)) {
-          logout();
-        }
-      }, [token, navigate]);
+    if (isTokenExpired(token)) {
+      logout();
+    }
+  }, [token, navigate]);
 
-  const traerUsuarios =()=>{
-    if(userResponse && Array.isArray(userResponse.data)){
+  const traerUsuarios = () => {
+    if (userResponse && Array.isArray(userResponse.data)) {
       setUsuarios(userResponse.data);
     }
-  }
+  };
 
-  const asignacionesArray:Asignacion[] = asignacionesResponse?.data || [];
+  const asignacionesArray: Asignacion[] = asignacionesResponse?.data || [];
 
-  useEffect(()=>{
-   traerUsuarios();
-   console.log("las asignaciones son:",asignacionesArray)
-  },[userResponse]);
+  useEffect(() => {
+    traerUsuarios();
+    console.log("las asignaciones son:", asignacionesArray);
+  }, [userResponse]);
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -53,7 +53,7 @@ const Users = () => {
   return (
     <main className="bg-white border-gray-200 dark:bg-gray-900">
       <Navbar />
-      <section className="max-w-screen-xl mx-auto p-4">
+      <section className="max-w-screen-xl mx-auto p-4 min-h-[38rem]">
         <div className="flex items-center justify-between space-y-2">
           <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
             Gestion de usuarios
@@ -63,24 +63,29 @@ const Users = () => {
               className="bg-primary hover:bg-[#016F35] text-white focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none inline-flex items-center gap-2"
               onClick={handleOpenModal}
             >
-             <CirclePlus /> Agregar usuario
+              <CirclePlus /> Agregar usuario
             </button>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-2">
-          {
-            !usuarios ? <NoData/> : 
-              usuarios?.map((usuario)=>(
-                <UserCard asignaciones={asignacionesArray} users={usuario} key={usuario.id}/>
-              ))
-            
-          }
+          {!usuarios ? (
+            <NoData />
+          ) : (
+            usuarios?.map((usuario) => (
+              <UserCard
+                asignaciones={asignacionesArray}
+                users={usuario}
+                key={usuario.id}
+              />
+            ))
+          )}
         </div>
         <Modal
           isOpen={isModalOpen}
           onClose={handleCloseModal}
           title="Crea un nuevo Usuario"
+          width='min-w-[35rem]'
         >
           <UserForm />
         </Modal>

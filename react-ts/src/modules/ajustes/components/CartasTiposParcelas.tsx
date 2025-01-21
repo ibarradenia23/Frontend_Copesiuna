@@ -77,14 +77,14 @@ const CartasTiposParcelas = () => {
         if(isSuccess){
           setToast({
             type: "warning",
-                 message: "Tipo de cultivo se ha eliminado exitosamente.",
+                 message: "Tipo de parcela se ha eliminado exitosamente.",
                  visible: true,
           })
         }
         if(isError){
           setToast({
             type: "error",
-              message: "Error al eliminar tipo de cultivo",
+              message: "Error al eliminar tipo de parcela",
               visible: true,
           })
         }
