@@ -7,7 +7,7 @@ export const useObtenerEstimacionesSuelo =()=>{
 }
 
 export const useObtenerEstimacionSuelo =(id:number)=>{
-return useQuery(["analisisSuelo",id],()=>obtenerBitacoraEstimacionSuelo(id),{
+return useQuery(["estimacionesSuelo",id],()=>obtenerBitacoraEstimacionSuelo(id),{
   enabled: !!id, // Solo ejecutar la consulta si el ID es válido
 })
 }

@@ -135,7 +135,7 @@ function App() {
       <div className="z-50 w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
       <div className="flex justify-between mb-4">
             <h5 className="text-xl font-medium text-gray-900 dark:text-white">
-              Sign in to our platform
+            Inicia sesión en la plataforma
             </h5>
             <ToogleThemeButton />
           </div>
@@ -145,7 +145,7 @@ function App() {
               htmlFor="email"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
-              Your email
+              Email
             </label>
             <input
               type="email"
@@ -162,7 +162,7 @@ function App() {
               htmlFor="password"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
-              Your password
+              Contraseña
             </label>
             <div className="relative">
                 <input
@@ -207,14 +207,14 @@ function App() {
                 htmlFor="remember"
                 className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
               >
-                Remember me
+                Recordar
               </label>
             </div>
             <a
               href="#"
               className="ms-auto text-sm text-primary hover:underline dark:text-primary"
             >
-              Lost Password?
+              Olvidaste contraseña?
             </a>
           </div>
           {errorMessage && <p className="text-red-500 text-sm mt-1 flex items-center gap-2"><ShieldAlert/> {errorMessage}</p>}
@@ -223,7 +223,7 @@ function App() {
             className="w-full text-white bg-primary hover:bg-[#016F35] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary dark:hover:bg-[#016F35] dark:focus:ring-blue-800"
           >
             {
-              isLoading ? <Spiner/> :  'Login to your account'
+              isLoading ? <Spiner/> :  'Inicie sesión en su cuenta'
             }
            
           </button>

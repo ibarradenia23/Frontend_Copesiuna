@@ -7,6 +7,7 @@ import {
 } from "../hooks/useAfactaciones";
 import Toast from "../../../common/components/Toast";
 import { Pencil } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface AfectacionesProps {
   afectacion?: AfectacionesInterface;
@@ -19,6 +20,8 @@ const AfectacionForm: React.FC<AfectacionesProps> = ({ afectacion }) => {
     handleSubmit,
     formState: { errors },
   } = useForm<AfectacionesInterface>();
+
+  const queryClient = useQueryClient();
 
   // Usamos el hook para crear una afectacion
   const {
@@ -54,54 +57,52 @@ const AfectacionForm: React.FC<AfectacionesProps> = ({ afectacion }) => {
     setToast({ ...toast, visible: false });
   };
 
-  useEffect(()=>{
-    if(afectacion){
+  useEffect(() => {
+    if (afectacion) {
       setIsEditing(true);
-      setValue("nombre",afectacion.nombre);
-      setValue("descripcion",afectacion.descripcion);
+      setValue("nombre", afectacion.nombre);
+      setValue("descripcion", afectacion.descripcion);
       resetEditar();
     } else {
       setIsEditing(false);
       resetCrear();
     }
-  },[afectacion,setValue,resetCrear]);
+  }, [afectacion, setValue, resetCrear]);
 
-   useEffect(() => {
-      if (isSuccessCrear) {
-        setToast({
-          type: "success",
-          message: "Afectacion creada exitosamente.",
-          visible: true,
-        });
-      }
-  
-      if (isErrorCrear) {
-        setToast({
-          type: "error",
-          message:
-            "Error al crear afectacion: " + (errorCrear as Error).message,
-          visible: true,
-        });
-      }
-  
-      if (isSuccessEditar) {
-        setToast({
-          type: "warning",
-          message: "afectacion editada exitosamente.",
-          visible: true,
-        });
-      }
-  
-      if (isErrorEditar) {
-        setToast({
-          type: "error",
-          message:
-            "Error al editar afectacion: " + (errorEditar as Error).message,
-          visible: true,
-        });
-      }
-    }, [isSuccessCrear, isErrorCrear, isSuccessEditar, isErrorEditar]);
-  
+  useEffect(() => {
+    if (isSuccessCrear) {
+      setToast({
+        type: "success",
+        message: "Afectacion creada exitosamente.",
+        visible: true,
+      });
+    }
+
+    if (isErrorCrear) {
+      setToast({
+        type: "error",
+        message: "Error al crear afectacion: " + (errorCrear as Error).message,
+        visible: true,
+      });
+    }
+
+    if (isSuccessEditar) {
+      setToast({
+        type: "warning",
+        message: "afectacion editada exitosamente.",
+        visible: true,
+      });
+    }
+
+    if (isErrorEditar) {
+      setToast({
+        type: "error",
+        message:
+          "Error al editar afectacion: " + (errorEditar as Error).message,
+        visible: true,
+      });
+    }
+  }, [isSuccessCrear, isErrorCrear, isSuccessEditar, isErrorEditar]);
 
   useEffect(() => {
     if (toast.visible) {
@@ -114,21 +115,33 @@ const AfectacionForm: React.FC<AfectacionesProps> = ({ afectacion }) => {
   }, [toast.visible]);
 
   //Manejador de envio del formulario
-  const onSubmit =async(data:AfectacionesInterface) =>{
-    if(isEditing && afectacion && afectacion.id){
-      editarAfectacion({id:afectacion.id,...data})
+  const onSubmit = async (data: AfectacionesInterface) => {
+    if (isEditing && afectacion && afectacion.id) {
+      editarAfectacion(
+        { id: afectacion.id, ...data },
+        {
+          onSuccess: () => {
+            queryClient.invalidateQueries(["afectaciones"]);
+          },
+        }
+      );
     } else {
-      crearAfectacion(data);
+      crearAfectacion(data, {
+        onSuccess: () => {
+          queryClient.invalidateQueries(["afectaciones"]);
+        },
+      });
     }
-  }
+  };
 
-  return <section>
-    {toast.visible && (
+  return (
+    <section>
+      {toast.visible && (
         <Toast type={toast.type} message={toast.message} onClose={closeToast} />
       )}
       <form onSubmit={handleSubmit(onSubmit)}>
-      <div className="mb-6 space-y-6">
-      <div className="">
+        <div className="mb-6 space-y-6">
+          <div className="">
             <label
               htmlFor="nombre"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -181,35 +194,36 @@ const AfectacionForm: React.FC<AfectacionesProps> = ({ afectacion }) => {
             )}
           </div>
           <button
-          type="submit"
-          className={`text-white inline-flex items-center ${
-            isEditing
-              ? "bg-secondary hover:bg-[#8C541D] dark:bg-secondary dark:hover:bg-[#8C541D] dark:focus:ring-secondary"
-              : " bg-primary hover:bg-[#016F35] dark:bg-primary dark:hover:bg-[#016F35] dark:focus:ring-primary"
-          } focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center `}
-        >
-          {isEditing ? (
-            <Pencil className="h-4 w-4 mr-2" />
-          ) : (
-            <svg
-              className="me-1 -ms-1 w-5 h-5"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                clipRule="evenodd"
-              ></path>
-            </svg>
-          )}
+            type="submit"
+            className={`text-white inline-flex items-center ${
+              isEditing
+                ? "bg-secondary hover:bg-[#8C541D] dark:bg-secondary dark:hover:bg-[#8C541D] dark:focus:ring-secondary"
+                : " bg-primary hover:bg-[#016F35] dark:bg-primary dark:hover:bg-[#016F35] dark:focus:ring-primary"
+            } focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center `}
+          >
+            {isEditing ? (
+              <Pencil className="h-4 w-4 mr-2" />
+            ) : (
+              <svg
+                className="me-1 -ms-1 w-5 h-5"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                  clipRule="evenodd"
+                ></path>
+              </svg>
+            )}
 
-          {isEditing ? "Editar afectacion" : "Agregar afectacion"}
-        </button>
-      </div>
+            {isEditing ? "Editar afectacion" : "Agregar afectacion"}
+          </button>
+        </div>
       </form>
-  </section>;
+    </section>
+  );
 };
 
 export default AfectacionForm;

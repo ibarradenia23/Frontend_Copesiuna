@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { EstimacionSueloInterface, Propiedad } from "../models";
-import {
-  useActualizarPropiedadesSuelo,
-  useObtenerEstimacionSuelo,
-} from "../hooks/useEstimacionSuelo";
+import { useActualizarPropiedadesSuelo } from "../hooks/useEstimacionSuelo";
 import { useForm } from "react-hook-form";
 import Toast from "../../../common/components/Toast";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface DetalleEstimacionProps {
   estimacion: EstimacionSueloInterface;
@@ -17,8 +15,6 @@ const DetalleEstimacionSuelo: React.FC<DetalleEstimacionProps> = ({
   editar,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [estimacionData, setEstimacionData] =
-    useState<EstimacionSueloInterface>(estimacion);
   const {
     mutate: actualizarPropiedadSuelo,
     isError,
@@ -26,16 +22,7 @@ const DetalleEstimacionSuelo: React.FC<DetalleEstimacionProps> = ({
     error,
   } = useActualizarPropiedadesSuelo();
 
-  const { data: analisisSuelo } = useObtenerEstimacionSuelo(
-    Number(estimacion.id)
-  );
-
-  const updateData = () => {
-    if (analisisSuelo && analisisSuelo.data) {
-      setEstimacionData(analisisSuelo.data);
-      console.log("data actualizada:",analisisSuelo.data);
-    }
-  };
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (editar === true) {
@@ -83,9 +70,9 @@ const DetalleEstimacionSuelo: React.FC<DetalleEstimacionProps> = ({
   // Ordenar las propiedades por ID
   useEffect(() => {
     setPropiedadesOrdenadas(
-      [...estimacionData.propiedades].sort((a, b) => (a.id || 0) - (b.id || 0))
+      [...estimacion.propiedades].sort((a, b) => (a.id || 0) - (b.id || 0))
     );
-  }, [estimacionData]);
+  }, [estimacion]);
   // const propiedadesOrdenadas = [...estimacion.propiedades].sort((a, b) => (a.id || 0) - (b.id || 0));
 
   const {
@@ -125,13 +112,13 @@ const DetalleEstimacionSuelo: React.FC<DetalleEstimacionProps> = ({
         dato: propiedad.dato, // Asegúrate de que este ID sea el correcto
       };
 
-      actualizarPropiedadSuelo(payload);
-
-      
+      actualizarPropiedadSuelo(payload, {
+        onSuccess: () => {
+          queryClient.invalidateQueries(["estimacionesSuelo"]);
+        },
+      });
     }
-    setTimeout(() => {
-      updateData();
-    }, 4000);
+
     setIsEditing(false); // Desactivar el modo de edición después de actualizar
   };
 

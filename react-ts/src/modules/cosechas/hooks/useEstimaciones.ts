@@ -9,7 +9,7 @@ export const useObtenerEstimaciones = () => {
 
 //Hook para traer solo una estimacion
 export const useObtenerEstimacion =(id:number)=>{
-return useQuery(["estimacionCosecha",id],()=>obtenerBitacorasCosechaPorID(id),{
+return useQuery(["estimacionesCosecha",id],()=>obtenerBitacorasCosechaPorID(id),{
   enabled: !!id, // Solo ejecutar la consulta si el ID es válido
 })
 }

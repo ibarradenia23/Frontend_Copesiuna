@@ -8,9 +8,9 @@ import {
 import { useForm } from "react-hook-form";
 import {
   useActualizarMazorcas,
-  useObtenerEstimacion,
 } from "../hooks/useEstimaciones";
 import Toast from "../../../common/components/Toast";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface DetalleEstimacionProps {
   estimacion: EstimacionCosechaInterface;
@@ -35,20 +35,13 @@ const DetalleEstimacion: React.FC<DetalleEstimacionProps> = ({
     undefined
   );
 
-  const { data: estimacionUpdate } = useObtenerEstimacion(
-    Number(estimacion.id)
-  );
+    const queryClient = useQueryClient();
+
 
   useEffect(() => {
     setEstimacionData(estimacion);
   }, [estimacion]);
 
-  const updateData = () => {
-    if (estimacionUpdate && estimacionUpdate.data) {
-      setPlantas(estimacionUpdate?.data.plantas);
-      setEstimacionData(estimacionUpdate?.data);
-    }
-  };
 
   const traerAfectaciones = () => {
     if (afectaciones && Array.isArray(afectaciones)) {
@@ -82,9 +75,7 @@ const DetalleEstimacion: React.FC<DetalleEstimacionProps> = ({
         message: "Mazorca se ha editado exitosamente.",
         visible: true,
       });
-      setTimeout(() => {
-        updateData();
-      }, 3000);
+
     }
     if (isError) {
       setToast({
@@ -117,7 +108,11 @@ const DetalleEstimacion: React.FC<DetalleEstimacionProps> = ({
       cantidad: Number(cantidad),
       ID_afectacion: Number(afectacionId),
     };
-    actualizarMazorca(payload);
+    actualizarMazorca(payload,{
+      onSuccess: () => {
+        queryClient.invalidateQueries(["estimacionesCosecha"]);
+      },
+    });
     setEditingMazorca(null);
 
     /*setTimeout(() => {
