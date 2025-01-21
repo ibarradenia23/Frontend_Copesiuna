@@ -5,6 +5,7 @@ import Toast from '../../../common/components/Toast';
 import TiposParcelasForm from './TiposParcelasForm';
 import { useEliminarTipoParcela, useObtenerTiposParcelas } from '../hooks/useTiposParcelas';
 import { TiposParcelaInterface } from '../models';
+import { useQueryClient } from '@tanstack/react-query';
 
 const CartasTiposParcelas = () => {
   const {data:tiposParcelaResponse,/*isLoading*/} = useObtenerTiposParcelas();
@@ -13,7 +14,9 @@ const CartasTiposParcelas = () => {
   const [tipoParcelaEdit,setTipoParcelaEdit] = useState({
     id:0,
     descripcion:''
-  })
+  });
+
+  const queryClient = useQueryClient();
 
   const traerTiposParcelas =()=>{
     const tiposParcelas = tiposParcelaResponse?.data as TiposParcelaInterface[];
@@ -57,7 +60,11 @@ const CartasTiposParcelas = () => {
 
     const handleEliminar = (id:number) => {
       if(window.confirm("¿Estas seguro de eliminar este tipo de cultivo?")){
-        eliminarTiposParcelas(id);
+        eliminarTiposParcelas(id, {
+          onSuccess: () => {
+            queryClient.invalidateQueries(['tiposParcelas']);
+          },
+        });
       }
     }
 

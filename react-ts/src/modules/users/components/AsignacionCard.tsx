@@ -3,6 +3,7 @@ import { useEliminarAsignacion } from "../hooks/useAsignacion";
 import Toast from "../../../common/components/Toast";
 import { Asignacion } from "../models";
 import { Trash2 } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface PropsInterface {
   asignacion: Asignacion;
@@ -18,6 +19,9 @@ const AsignacionCard: React.FC<PropsInterface> = ({ asignacion }) => {
     message: "",
     visible: false,
   });
+
+  const queryClient = useQueryClient();
+  
 
   const {
     mutate: eliminarAsignacion,
@@ -47,7 +51,11 @@ const AsignacionCard: React.FC<PropsInterface> = ({ asignacion }) => {
     if (
       window.confirm("¿Estás seguro de que deseas eliminar esta asignacion?")
     ) {
-      eliminarAsignacion(id);
+      eliminarAsignacion(id, {
+        onSuccess: () => {
+          queryClient.invalidateQueries(['asignaciones']);
+        },
+      });
     }
   };
 

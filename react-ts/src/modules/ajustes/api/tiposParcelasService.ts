@@ -41,7 +41,7 @@ export const crearTiposParcelas = async(descripcion:string): Promise<ServiceResp
 
 export const actualizarTiposParcelas = async(id:number,descripcion:string): Promise<ServiceResponse> => {
     try {
-        const response = await Manager.put(`/api/tipoparcelas/create/${id}`,{descripcion});
+        const response = await Manager.patch(`/api/tipoparcelas/update/${id}`,{descripcion});
         return {data:response.data};
     } catch (error:unknown) {
       if (axios.isAxiosError(error)) {

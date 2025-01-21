@@ -4,17 +4,20 @@ import { useForm } from "react-hook-form";
 import Toast from "../../../common/components/Toast";
 import { Pencil } from "lucide-react";
 import { useActualizarUsuarios, useCrearUsuario } from "../hooks/useUser";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface UserPropsInterface {
   user?: UserInterface;
 }
-const UserForm: React.FC<UserPropsInterface> = ({user}) => {
+const UserForm: React.FC<UserPropsInterface> = ({ user }) => {
   const {
     register,
     setValue,
     handleSubmit,
     formState: { errors },
   } = useForm<UserInterface>();
+
+  const queryClient = useQueryClient();
 
   // Usamos el hook para crear un usuario
   const {
@@ -69,18 +72,26 @@ const UserForm: React.FC<UserPropsInterface> = ({user}) => {
   const onSubmit = async (data: UserInterface) => {
     if (isEditing && user && user.id) {
       const newData = {
-        id:user.id,
-        nombre:data.nombre,
-        apellido:data.nombre,
-        telefono:data.telefono,
-        email:data.email,
-        role:user.role,
-        password:data.password
-      }
-      editarUsuario(newData);
+        id: user.id,
+        nombre: data.nombre,
+        apellido: data.nombre,
+        telefono: data.telefono,
+        email: data.email,
+        role: user.role,
+        password: data.password,
+      };
+      editarUsuario(newData, {
+        onSuccess: () => {
+          queryClient.invalidateQueries(["usuarios"]);
+        },
+      });
     } else {
-      console.log("El formulario es",data);
-      crearUsuario(data);
+      console.log("El formulario es", data);
+      crearUsuario(data, {
+        onSuccess: () => {
+          queryClient.invalidateQueries(["usuarios"]);
+        },
+      });
     }
   };
 
@@ -96,8 +107,7 @@ const UserForm: React.FC<UserPropsInterface> = ({user}) => {
     if (isErrorCrear) {
       setToast({
         type: "error",
-        message:
-          "Error al crear el usuario: " + (errorCrear as Error).message,
+        message: "Error al crear el usuario: " + (errorCrear as Error).message,
         visible: true,
       });
     }
@@ -126,8 +136,8 @@ const UserForm: React.FC<UserPropsInterface> = ({user}) => {
         <Toast type={toast.type} message={toast.message} onClose={closeToast} />
       )}
       <form onSubmit={handleSubmit(onSubmit)}>
-      <div className="mb-6 space-y-6">
-      <div className="">
+        <div className="mb-6 space-y-6">
+          <div className="">
             <label
               htmlFor="nombre"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -210,17 +220,26 @@ const UserForm: React.FC<UserPropsInterface> = ({user}) => {
               htmlFor="email"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
-                Email
+              Email
             </label>
             <input
               type="email"
               id="email"
-              {...register('email', { required: 'Este campo es obligatorio', pattern: { value: /^\S+@\S+$/i, message: 'Formato de correo inválido' } })}
+              {...register("email", {
+                required: "Este campo es obligatorio",
+                pattern: {
+                  value: /^\S+@\S+$/i,
+                  message: "Formato de correo inválido",
+                },
+              })}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-[#016F35] block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
               placeholder="name@company.com"
-              
             />
-             {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
+            {errors.email && (
+              <p className="text-red-500 text-xs mt-1">
+                {errors.email.message}
+              </p>
+            )}
           </div>
           <div className="">
             <label
@@ -232,17 +251,15 @@ const UserForm: React.FC<UserPropsInterface> = ({user}) => {
             <select
               disabled={isEditing}
               id="role"
-              {...register("role",{ required: "Este campo es obligatorio" })}
+              {...register("role", { required: "Este campo es obligatorio" })}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             >
               <option selected>Elige una rol</option>
-              <option >ADMIN</option>
-              <option >TECNICO</option>
+              <option>ADMIN</option>
+              <option>TECNICO</option>
             </select>
             {errors.role && (
-              <p className="text-red-500 text-xs mt-1">
-                {errors.role.message}
-              </p>
+              <p className="text-red-500 text-xs mt-1">{errors.role.message}</p>
             )}
           </div>
           <div className="">
@@ -271,8 +288,8 @@ const UserForm: React.FC<UserPropsInterface> = ({user}) => {
               </p>
             )}
           </div>
-      </div>
-      <button
+        </div>
+        <button
           type="submit"
           className={`text-white inline-flex items-center ${
             isEditing

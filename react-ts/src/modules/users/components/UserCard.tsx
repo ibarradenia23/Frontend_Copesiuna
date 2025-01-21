@@ -8,6 +8,7 @@ import { Asignacion, UserInterface } from "../models";
 import Accordion from "../../../common/components/Acordion";
 import AsignacionCard from "./AsignacionCard";
 import AsignacionForm from "./AsignacionForm";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface Props {
   users: UserInterface;
@@ -26,6 +27,8 @@ const UserCard: React.FC<Props> = ({ users, asignaciones }) => {
     role: "",
     password: "",
   });
+  const queryClient = useQueryClient();
+
   const [toast, setToast] = useState<{
     type: "success" | "error" | "warning";
     message: string;
@@ -102,7 +105,11 @@ const UserCard: React.FC<Props> = ({ users, asignaciones }) => {
 
   const handleEliminar = (id: number) => {
     if (window.confirm("¿Estás seguro de que deseas eliminar este usuario?")) {
-      eliminarUsuario(id);
+      eliminarUsuario(id,{
+        onSuccess: () => {
+          queryClient.invalidateQueries(['usuarios']);
+        },
+      });
     }
   };
 
