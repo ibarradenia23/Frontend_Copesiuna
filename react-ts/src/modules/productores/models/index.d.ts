@@ -16,6 +16,7 @@ export interface ParcelaInterface {
     tamaño_parcela:string;
     productorId:number;
     ID_productor?:number;
+    productor?:ProductorInterface;
     cultivoId:number;
     tipoParcelaId:number;
     fecha_create?:Date;

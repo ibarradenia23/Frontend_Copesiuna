@@ -23,7 +23,7 @@ interface EstimacionCardProp {
 
 const EstimacionCard: React.FC<EstimacionCardProp> = ({
   estimacionCosecha,
-  productor,
+
 }) => {
   const weatherIcons: Record<
     EstimacionCosechaInterface["estado_clima"],
@@ -120,7 +120,7 @@ const EstimacionCard: React.FC<EstimacionCardProp> = ({
     const headerRow = worksheet.addRow([
       "COOPERATIVA AGROPECUARIA MULTISECTORIAL DE SIUNA R.L",
     ]);
-    worksheet.mergeCells("A1:P2"); // Fusionar celdas de A1 a E2
+    worksheet.mergeCells("A1:E2"); // Fusionar celdas de A1 a E2
     headerRow.getCell(1).alignment = { horizontal: "center" }; // Centrar el texto
 
     // Establecer estilo para el encabezado
@@ -144,7 +144,7 @@ const EstimacionCard: React.FC<EstimacionCardProp> = ({
     // Rellenar la fila 4
     worksheet.addRow([
       "Fecha:",
-      new Date(estimacionCosecha.fecha_create).toLocaleDateString(),
+      new Date(estimacionCosecha.fecha_created).toLocaleDateString(),
       "",
       "Tipo de Cultivo:",
       "Cacao",
@@ -166,7 +166,7 @@ const EstimacionCard: React.FC<EstimacionCardProp> = ({
     // Rellenar la fila 6
     worksheet.addRow([
       "Nombre del Productor:",
-      productor?.nombre,
+      estimacionCosecha.parcela.productor?.nombre,
       "",
       "Estado del Clima:",
       estimacionCosecha.estado_clima,
@@ -201,7 +201,7 @@ const EstimacionCard: React.FC<EstimacionCardProp> = ({
         );
         return {
           numeroPlanta: planta.id,
-          ID_afectacion_planta: planta.ID_afectacion,
+          ID_afectacion_planta: planta.afectaciones && planta.afectaciones.map(af => af.nombre).join(', ') , 
           ID_afectacion_mazorca: afectacion?.nombre,
           cantidad: mazorca.cantidad,
         };
@@ -274,7 +274,7 @@ const EstimacionCard: React.FC<EstimacionCardProp> = ({
             <span className="font-medium text-gray-700 dark:text-gray-300">
               Fecha de Creación:
             </span>{" "}
-            {new Date(estimacionCosecha.fecha_create).toLocaleDateString(
+            {new Date(estimacionCosecha.fecha_created).toLocaleDateString(
               "es-ES",
               { year: "numeric", month: "long", day: "numeric" }
             )}
@@ -289,7 +289,7 @@ const EstimacionCard: React.FC<EstimacionCardProp> = ({
             <span className="font-medium text-gray-700 dark:text-gray-300">
               Productor:
             </span>{" "}
-            {productor ? productor.nombre : ""}
+            {estimacionCosecha.parcela.productor?.nombre}
           </p>
         </div>
         <span className="inline-block mt-3 bg-gray-200 dark:bg-gray-800 dark:text-gray-400 text-gray-600 text-xs font-medium px-2 py-1 rounded">

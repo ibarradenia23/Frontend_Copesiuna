@@ -156,9 +156,7 @@ const DetalleEstimacion: React.FC<DetalleEstimacionProps> = ({
       )}
       <div className="flex flex-col gap-2">
         {plantas.map((planta) => {
-          const afectacion = obtenerAfcetacionPorId(
-            Number(planta.ID_afectacion)
-          );
+          
           return (
             <div
               key={planta.id}
@@ -172,7 +170,7 @@ const DetalleEstimacion: React.FC<DetalleEstimacionProps> = ({
                   ID: {planta.id}
                 </div>
                 <div className="text-gray-700 dark:text-gray-300">
-                  Afectación: {afectacion?.nombre}
+                Afectaciones: {planta.afectaciones && planta.afectaciones.map(af => af.nombre).join(', ')}
                 </div>
                 <div className="text-gray-700 dark:text-gray-300">
                   Parcela: {estimacion.parcela.descripcion}

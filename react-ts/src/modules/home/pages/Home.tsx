@@ -17,10 +17,11 @@ import {
 } from "recharts";
 import { useRecoilValue } from "recoil";
 import { authTokenState } from "../../auth/state/authAtom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { isTokenExpired } from "../../auth/utils/tokenUtils";
 import useAuth from "../../auth/hooks/useAuth";
+import { useObtenerDataDashboard } from "../hooks/useDataDashboard";
 //import { userState } from "../../auth/state/userAtom";
 
 const Home = () => {
@@ -32,6 +33,8 @@ const Home = () => {
     { nutriente: "Calcio", valor: 53 },
     { nutriente: "Magnesio", valor: 32 },
   ];
+  const [dashboardData,setDashboardData] = useState<DataDashboard>()
+  const {data:dataDashboard} = useObtenerDataDashboard();
   const {logout} = useAuth();
   const token = useRecoilValue(authTokenState);
   //const user = useRecoilValue(userState);
@@ -47,6 +50,14 @@ const Home = () => {
       logout();
     }
   }, [token, navigate]);
+
+  useEffect(()=>{
+   console.log("Data",dataDashboard)
+   if(dataDashboard){
+    setDashboardData(dataDashboard?.data)
+   }
+   
+  },[dataDashboard])
 
 
   return (
@@ -71,10 +82,10 @@ const Home = () => {
             </div>
             <div>
               <div className="text-2xl font-bold text-gray-900 dark:text-white">
-                24
+                {dashboardData?.totalBitacorasSuelo}
               </div>
               <p className="text-xs text-muted-foreground text-gray-700 dark:text-gray-400">
-                +2 desde el ultimo mes
+                + {dashboardData?.bitacorasSueloLastMonth} desde el ultimo mes
               </p>
             </div>
           </div>
@@ -87,10 +98,10 @@ const Home = () => {
             </div>
             <div>
               <div className="text-2xl font-bold text-gray-900 dark:text-white">
-                15
+                {dashboardData?.totalBitacorasCosecha}
               </div>
               <p className="text-xs text-muted-foreground text-gray-700 dark:text-gray-400">
-                +4 desde la última semana
+                + {dashboardData?.bitacorasCosechaLastMonth} desde la última semana
               </p>
             </div>
           </div>
@@ -103,10 +114,10 @@ const Home = () => {
             </div>
             <div>
               <div className="text-2xl font-bold text-gray-900 dark:text-white">
-                15
+              {dashboardData?.totalAsignaciones}
               </div>
               <p className="text-xs text-muted-foreground text-gray-700 dark:text-gray-400">
-                +7 desde el ultimo mes
+                +{dashboardData?.asignacionesLastSixMonths} desde el ultimo mes
               </p>
             </div>
           </div>
@@ -119,10 +130,10 @@ const Home = () => {
             </div>
             <div>
               <div className="text-2xl font-bold text-gray-900 dark:text-white">
-                23
+                {dashboardData?.totalProductores}
               </div>
               <p className="text-xs text-muted-foreground text-gray-700 dark:text-gray-400">
-                8 en el ultimo año
+                {dashboardData?.productoresLastYear} en el ultimo año
               </p>
             </div>
           </div>
