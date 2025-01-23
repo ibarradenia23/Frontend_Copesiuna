@@ -36,5 +36,10 @@ export const routes:Paths[] = [
         element:()=>import('../../modules/users/pages/Users'),
         protected:true
     },
+    {
+        path:'/recuperarContrasena',
+        element:()=>import('../../modules/auth/pages/RecuperarContraseña'),
+        protected:false
+    },
 ]
    

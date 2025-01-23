@@ -4,6 +4,15 @@ export interface LoginFormInputs {
     password: string;
 }
 
+export interface RecuperarContra {
+    email:string;
+}
+
+export interface ReestablecerContra {
+    token:string;
+    password:string
+}
+
 //Para la respuesta del servicio
 export interface LoginResponse {
     data: {

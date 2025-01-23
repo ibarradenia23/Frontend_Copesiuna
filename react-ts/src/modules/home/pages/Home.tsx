@@ -26,6 +26,7 @@ import { useObtenerEstimaciones } from "../../cosechas/hooks/useEstimaciones";
 import { EstimacionCosechaInterface } from "../../cosechas/models";
 import { EstimacionSueloInterface } from "../../suelos/models";
 import { useObtenerEstimacionesSuelo } from "../../suelos/hooks/useEstimacionSuelo";
+import Modal from "../../../common/components/Modal";
 //import { userState } from "../../auth/state/userAtom";
 
 const Home = () => {
@@ -133,6 +134,8 @@ const Home = () => {
       setEstimacionesCombinadas(combinadas);
     }
   }, [estimacionCosechasResponse, estimacionSueloResponse]);
+
+  
 
   return (
     <main className="bg-white border-gray-200 dark:bg-gray-900">
@@ -271,6 +274,9 @@ const Home = () => {
             </div>
           </div>
         </div>
+        <Modal>
+
+        </Modal>
       </section>
     </main>
   );

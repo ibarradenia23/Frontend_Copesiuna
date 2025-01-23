@@ -9,6 +9,8 @@ import Spiner from "./common/components/Spiner";
 import { useRecoilValue } from "recoil";
 import { authTokenState } from "./modules/auth/state/authAtom";
 import { useNavigate } from "react-router-dom";
+import ReestablecerContra from "./modules/auth/components/ReestablecerContra";
+import Modal from "./common/components/Modal";
 
 
 
@@ -82,6 +84,17 @@ function App() {
       navigate('/home');
    }
   },[token]);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
 
   return (
     <div
@@ -211,8 +224,8 @@ function App() {
               </label>
             </div>
             <a
-              href="#"
-              className="ms-auto text-sm text-primary hover:underline dark:text-primary"
+              onClick={handleOpenModal}
+              className="ms-auto text-sm text-primary hover:underline dark:text-primary cursor-pointer"
             >
               Olvidaste contraseña?
             </a>
@@ -229,6 +242,9 @@ function App() {
           </button>
         </form>
       </div>
+      <Modal isOpen={isModalOpen} onClose={handleCloseModal} title="Recuperar contraseña">
+          <ReestablecerContra/>
+        </Modal>
     </div>
   );
 }
