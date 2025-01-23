@@ -1,7 +1,7 @@
-
 import Navbar from "../../../common/components/Navbar";
 import {
   CalendarDays,
+  CalendarIcon,
   Clipboard,
   Leaf,
   Printer,
@@ -22,6 +22,10 @@ import { useNavigate } from "react-router-dom";
 import { isTokenExpired } from "../../auth/utils/tokenUtils";
 import useAuth from "../../auth/hooks/useAuth";
 import { useObtenerDataDashboard } from "../hooks/useDataDashboard";
+import { useObtenerEstimaciones } from "../../cosechas/hooks/useEstimaciones";
+import { EstimacionCosechaInterface } from "../../cosechas/models";
+import { EstimacionSueloInterface } from "../../suelos/models";
+import { useObtenerEstimacionesSuelo } from "../../suelos/hooks/useEstimacionSuelo";
 //import { userState } from "../../auth/state/userAtom";
 
 const Home = () => {
@@ -33,15 +37,16 @@ const Home = () => {
     { nutriente: "Calcio", valor: 53 },
     { nutriente: "Magnesio", valor: 32 },
   ];
-  const [dashboardData,setDashboardData] = useState<DataDashboard>()
-  const {data:dataDashboard} = useObtenerDataDashboard();
-  const {logout} = useAuth();
+  const [dashboardData, setDashboardData] = useState<
+    DataDashboard | undefined
+  >();
+  const { data: dataDashboard } = useObtenerDataDashboard();
+  const { logout } = useAuth();
   const token = useRecoilValue(authTokenState);
   //const user = useRecoilValue(userState);
-  useEffect(()=>{
-  console.log("El token global",token);
-     
-  },[]);
+  useEffect(() => {
+    console.log("El token global", token);
+  }, []);
 
   const navigate = useNavigate();
 
@@ -51,24 +56,95 @@ const Home = () => {
     }
   }, [token, navigate]);
 
-  useEffect(()=>{
-   console.log("Data",dataDashboard)
-   if(dataDashboard){
-    setDashboardData(dataDashboard?.data)
-   }
-   
-  },[dataDashboard])
+  useEffect(() => {
+    console.log("Data", dataDashboard);
+    if (dataDashboard?.data && typeof dataDashboard.data === "object") {
+      setDashboardData(dataDashboard.data as DataDashboard);
+    }
+  }, [dataDashboard]);
 
+  //traer datos para la lista de estimaciones
+  const { data: estimacionCosechasResponse } = useObtenerEstimaciones();
+  const [estimacionesCosechas, setEstimacionesCosechas] = useState<
+    EstimacionCosechaInterface[]
+  >([]);
+  const { data: estimacionSueloResponse } = useObtenerEstimacionesSuelo();
+  const [estimacionesSuelos, setEstimacionesSuelos] = useState<
+    EstimacionSueloInterface[]
+  >([]);
+
+  const [estimacionesCombinadas, setEstimacionesCombinadas] = useState<
+    Array<{ tipo: string; fecha_created: string; id: number }>
+  >([]);
+
+  const traerEstimacionesCosecha = () => {
+    console.log("Datos de la estimacion", estimacionCosechasResponse);
+    if (
+      estimacionCosechasResponse &&
+      Array.isArray(estimacionCosechasResponse.data)
+    ) {
+      setEstimacionesCosechas(estimacionCosechasResponse.data);
+    }
+  };
+
+  const traerEstimacionesSuelos = () => {
+    if (
+      estimacionSueloResponse &&
+      Array.isArray(estimacionSueloResponse.data)
+    ) {
+      setEstimacionesSuelos(estimacionSueloResponse.data);
+    }
+  };
+
+  useEffect(() => {
+    traerEstimacionesCosecha();
+    traerEstimacionesSuelos();
+  }, [estimacionCosechasResponse, estimacionSueloResponse]);
+
+  //ahora combinamos listas
+  useEffect(() => {
+    if (estimacionCosechasResponse && estimacionSueloResponse) {
+      // Transformar y combinar datos
+      const cosechas = estimacionesCosechas.map(
+        (item: EstimacionCosechaInterface) => ({
+          tipo: "Cosecha",
+          fecha_created: item.fecha_created,
+          id: item.id,
+        })
+      );
+
+      const suelos = estimacionesSuelos.map(
+        (item: EstimacionSueloInterface) => ({
+          tipo: "Suelo",
+          fecha_created: item.fecha_levantamiento,
+          id: item.id,
+        })
+      );
+
+      // Fusionar, ordenar y filtrar los últimos 3
+      const combinadas = [...cosechas, ...suelos]
+        .sort(
+          (a, b) =>
+            new Date(b.fecha_created).getTime() -
+            new Date(a.fecha_created).getTime()
+        )
+        .slice(0, 3);
+
+      setEstimacionesCombinadas(combinadas);
+    }
+  }, [estimacionCosechasResponse, estimacionSueloResponse]);
 
   return (
     <main className="bg-white border-gray-200 dark:bg-gray-900">
       <Navbar />
       <section className="max-w-screen-xl mx-auto p-4">
         <div className="flex items-center justify-between space-y-2">
-          <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">Dashboard</h2>
+          <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
+            Dashboard
+          </h2>
           <div className="flex items-center space-x-2">
             <button className="bg-primary hover:bg-[#016F35] text-white focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none flex align-middle items-center gap-2">
-              <Printer/> Descargar Reporte
+              <Printer /> Descargar Reporte
             </button>
           </div>
         </div>
@@ -101,7 +177,7 @@ const Home = () => {
                 {dashboardData?.totalBitacorasCosecha}
               </div>
               <p className="text-xs text-muted-foreground text-gray-700 dark:text-gray-400">
-                + {dashboardData?.bitacorasCosechaLastMonth} desde la última semana
+                + {dashboardData?.bitacorasCosechaLastMonth} desde el último mes
               </p>
             </div>
           </div>
@@ -114,10 +190,11 @@ const Home = () => {
             </div>
             <div>
               <div className="text-2xl font-bold text-gray-900 dark:text-white">
-              {dashboardData?.totalAsignaciones}
+                {dashboardData?.totalAsignaciones}
               </div>
               <p className="text-xs text-muted-foreground text-gray-700 dark:text-gray-400">
-                +{dashboardData?.asignacionesLastSixMonths} desde el ultimo mes
+                +{dashboardData?.asignacionesLastSixMonths} de los ultimos 6
+                meses
               </p>
             </div>
           </div>
@@ -162,65 +239,34 @@ const Home = () => {
                 Estimaciones recientes
               </h5>
               <p className="text-gray-700 dark:text-gray-400">
-                Has completado 3 estimaciones esta semana
+                Las ultimas estimaciones completadas
               </p>
             </div>
             <div>
               <div className="space-y-8 mt-4">
-                <div className="flex items-center">
-                  <Sprout className="mr-2 h-4 w-4 text-gray-900 dark:text-white" />
-                  <div className="ml-4 space-y-1">
-                    <p className="text-sm font-medium leading-none text-gray-900 dark:text-white">
-                      Maíz - Parcela Norte
-                    </p>
-                    <p className="text-sm text-muted-foreground text-gray-700 dark:text-gray-400">
-                      Estimado: 5.2 ton/ha
-                    </p>
+                {estimacionesCombinadas.map((estimacion, index) => (
+                  <div key={index} className="flex flex-col gap-2">
+                    <div className="p-5 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                      <div className="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <p className="text-[1rem] font-bold text-gray-900 dark:text-white">
+                          {estimacion.tipo === "Cosecha"
+                            ? "Estimacion de cosecha"
+                            : "Analisis de suelo"}
+                        </p>
+                        <span className="bg-green-200 text-primary text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-700 dark:text-green-300">
+                          ID: {estimacion.id}
+                        </span>
+                      </div>
+                      <p className="text-sm text-gray-700 dark:text-gray-400 flex gap-2">
+                        <CalendarIcon className="h-4 w-4" aria-hidden="true" />{" "}
+                        {new Date(estimacion.fecha_created).toLocaleDateString(
+                          "es-ES",
+                          { year: "numeric", month: "long", day: "numeric" }
+                        )}
+                      </p>
+                    </div>
                   </div>
-                  <div className="ml-auto font-medium text-gray-900 dark:text-white mr-2">+12%</div>
-                  <div className="w-20 bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-                    <div
-                      className="bg-primary h-2.5 rounded-full"
-                      style={{ width: "45%" }}
-                    ></div>
-                  </div>
-                </div>
-                <div className="flex items-center ">
-                  <Sprout className="mr-2 h-4 w-4 text-gray-900 dark:text-white" />
-                  <div className="ml-4 space-y-1">
-                    <p className="text-sm font-medium leading-none text-gray-900 dark:text-white">
-                      Trigo - Parcela Este
-                    </p>
-                    <p className="text-sm text-muted-foreground text-gray-700 dark:text-gray-400">
-                      Estimado: 3.8 ton/ha
-                    </p>
-                  </div>
-                  <div className="ml-auto font-medium text-gray-900 dark:text-white mr-2">+7%</div>
-                  <div className="w-20 bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-                    <div
-                      className="bg-primary h-2.5 rounded-full"
-                      style={{ width: "45%" }}
-                    ></div>
-                  </div>
-                </div>
-                <div className="flex items-center">
-                  <Sprout className="mr-2 h-4 w-4 text-gray-900 dark:text-white" />
-                  <div className="ml-4 space-y-1">
-                    <p className="text-sm font-medium leading-none text-gray-900 dark:text-white">
-                      Soja - Parcela Sur
-                    </p>
-                    <p className="text-sm text-muted-foreground text-gray-700 dark:text-gray-400">
-                      Estimado: 2.9 ton/ha
-                    </p>
-                  </div>
-                  <div className="ml-auto font-medium text-gray-900 dark:text-white mr-2">-2%</div>
-                  <div className="w-20 bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-                    <div
-                      className="bg-primary h-2.5 rounded-full"
-                      style={{ width: "45%" }}
-                    ></div>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           </div>

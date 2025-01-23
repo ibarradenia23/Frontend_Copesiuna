@@ -2,7 +2,7 @@ import axios from "axios";
 import Manager from "../../../common/api/manager";
 import { ServiceResponse, ValidationErrors } from "../../../common/types/globals";
 
-export const obtenerDataDashboard = async (): Promise<ServiceResponse> => {
+export const obtenerDataDashboard = async (): Promise<ServiceResponse | undefined> => {
     try {
       const response = await Manager.get("/api/analisissuelo/getdashboard");
       return { data: response.data.data };

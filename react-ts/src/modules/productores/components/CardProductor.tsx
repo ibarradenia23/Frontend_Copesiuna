@@ -1,5 +1,4 @@
 import { Fingerprint, MapPinHouse, Pencil, Tractor, Trash2 } from "lucide-react";
-import ImagenTemporal from "../../../../public/profile.jpg";
 import Accordion from "../../../common/components/Acordion";
 import CardParcela from "./CardParcela";
 import React, { useEffect, useState } from "react";
@@ -108,11 +107,20 @@ const CardProductor:React.FC<ProductorProps> = ({productor,onSave,parcelas}) => 
      {toast.visible && <Toast type={toast.type} message={toast.message} onClose={closeToast}/>}
       <div className="pb-2">
         <div className="flex items-center space-x-4">
-          <img
-            src={ImagenTemporal}
-            alt={"Mariana Melendez"}
-            className="w-16 h-16 rounded-full border-2 border-primary"
-          />
+           <div className="relative w-16 h-16 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
+              <svg
+                className="absolute w-18 h-18 text-gray-400 -left-1"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                  clipRule="evenodd"
+                ></path>
+              </svg>
+            </div>
           <div>
             <h3 className="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">
               {productor.nombre} {productor.apellido}
