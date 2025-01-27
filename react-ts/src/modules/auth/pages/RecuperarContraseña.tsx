@@ -70,7 +70,7 @@ const RecuperarContraseña = () => {
     if (isSuccess) {
         setToast({
           type: "success",
-          message: "Usuario creado exitosamente.",
+          message: "La contraseña se ha cambiado exitosamente.",
           visible: true,
         });
       }
@@ -78,7 +78,7 @@ const RecuperarContraseña = () => {
       if (isError) {
         setToast({
           type: "error",
-          message: "Error al crear el usuario: " + (error as Error).message,
+          message: "Error al cambiar la contraseña: " + (error as Error).message,
           visible: true,
         });
       }

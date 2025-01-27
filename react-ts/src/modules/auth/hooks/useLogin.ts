@@ -56,8 +56,8 @@ export const useLogin = () => {
         }
       },
       onError: (error) => {
-        return error.message || "Error desconocido";
         console.error("Error en el inicio de sesión:", error);
+        return error.message || "Error desconocido";
       },
     }
   );

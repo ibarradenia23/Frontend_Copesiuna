@@ -1,8 +1,8 @@
 import axios from 'axios'
 
 const Manager = axios.create({
-    baseURL:"https://gdlh9m72-3003.use.devtunnels.ms/",
-    //baseURL:"http://localhost:3003/",
+    //baseURL:"https://gdlh9m72-3003.use.devtunnels.ms/",
+    baseURL:"http://localhost:3003/",
     headers: {
         'Content-Type': 'application/json',
     }
