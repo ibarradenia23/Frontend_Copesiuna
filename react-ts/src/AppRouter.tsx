@@ -26,7 +26,8 @@ export const AppRouter: React.FC = () => {
   
 
   return (
-    <Router>
+    <body className="bg-white dark:bg-gray-800">
+        <Router>
       <Routes>
         {/*
             <Route
@@ -45,7 +46,7 @@ export const AppRouter: React.FC = () => {
           return (
             <Route
               key={index}
-              path={route.path}
+              path={route.path  }
               element={
                 <React.Suspense>
                  {route.protected ? (
@@ -63,5 +64,7 @@ export const AppRouter: React.FC = () => {
         
       </Routes>
     </Router>
+    </body>
+  
   );
 };

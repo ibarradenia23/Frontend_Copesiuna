@@ -15,8 +15,14 @@ const AsignacionForm: React.FC<AsignacionPropsInterface> = ({ idUsuario }) => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
-  } = useForm<Asignacion>();
+  } = useForm<Asignacion>({
+    defaultValues:{
+      ID_productor:0,
+      tipo:""
+    }
+  });
   const { data: productoresResponse } = useObtenerProductores();
   const [productoresData, setProductoresData] = useState<ProductorInterface[]>(
     []
@@ -72,6 +78,7 @@ const AsignacionForm: React.FC<AsignacionPropsInterface> = ({ idUsuario }) => {
       crearAsignacion(newData, {
         onSuccess: () => {
           queryClient.invalidateQueries(["asignaciones"]);
+          reset();
         },
       });
     }
@@ -108,7 +115,7 @@ const AsignacionForm: React.FC<AsignacionPropsInterface> = ({ idUsuario }) => {
               htmlFor="parcelas"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
-              Tipo de parcela
+              Productor
             </label>
             <select
               id="tiposParcelas"
@@ -117,7 +124,7 @@ const AsignacionForm: React.FC<AsignacionPropsInterface> = ({ idUsuario }) => {
               })}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             >
-              <option selected>Elige un productor</option>
+              <option value={0} disabled selected>Elige un productor</option>
               {productoresData?.map((productor) => (
                 <option key={productor.id} value={productor.id}>
                   {productor.nombre}
@@ -135,14 +142,14 @@ const AsignacionForm: React.FC<AsignacionPropsInterface> = ({ idUsuario }) => {
               htmlFor="parcelas"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
-              Tipo de parcela
+              Tipo de asignacion
             </label>
             <select
               id="tiposParcelas"
               {...register("tipo", { required: "Este campo es obligatorio" })}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             >
-              <option selected>Elige una tipo</option>
+              <option value="" disabled selected>Elige una tipo</option>
               <option>Estimacion de Cosecha</option>
               <option>Analisis Fisico-Clinico de Suelo</option>
             </select>

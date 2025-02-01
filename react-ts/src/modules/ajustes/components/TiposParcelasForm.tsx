@@ -20,8 +20,13 @@ const TiposParcelasForm: React.FC<TiposParcelaPropsInterface> = ({
     register,
     setValue,
     handleSubmit,
+    reset,
     formState: { errors },
-  } = useForm<TiposParcelaInterface>();
+  } = useForm<TiposParcelaInterface>({
+    defaultValues: {
+      descripcion: "",
+    },
+  });
 
   // Usamos el hook para crear un usuario
   const {
@@ -42,7 +47,7 @@ const TiposParcelasForm: React.FC<TiposParcelaPropsInterface> = ({
   //Estado para decidir si crear o editar
   const [isEditing, setIsEditing] = useState(false);
 
-   const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
 
   //Estado para manejar el toast
   const [toast, setToast] = useState<{
@@ -78,6 +83,7 @@ const TiposParcelasForm: React.FC<TiposParcelaPropsInterface> = ({
         {
           onSuccess: () => {
             queryClient.invalidateQueries(["tiposParcelas"]);
+            reset();
           },
         }
       );
@@ -85,6 +91,7 @@ const TiposParcelasForm: React.FC<TiposParcelaPropsInterface> = ({
       crearTipoParcela(data, {
         onSuccess: () => {
           queryClient.invalidateQueries(["tiposParcelas"]);
+          reset();
         },
       });
     }

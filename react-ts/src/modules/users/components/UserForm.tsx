@@ -14,8 +14,18 @@ const UserForm: React.FC<UserPropsInterface> = ({ user }) => {
     register,
     setValue,
     handleSubmit,
+    reset,
     formState: { errors },
-  } = useForm<UserInterface>();
+  } = useForm<UserInterface>({
+    defaultValues: {
+      nombre: "",
+      apellido: "",
+      email: "",
+      role: "",
+      telefono: "",
+      password: "",
+    },
+  });
 
   const queryClient = useQueryClient();
 
@@ -59,6 +69,7 @@ const UserForm: React.FC<UserPropsInterface> = ({ user }) => {
       setValue("nombre", user.nombre);
       setValue("apellido", user.apellido);
       setValue("telefono", user.telefono);
+      setValue("role", user.role);
       setValue("email", user.email);
       setValue("password", user.password);
       resetEditar();
@@ -83,6 +94,7 @@ const UserForm: React.FC<UserPropsInterface> = ({ user }) => {
       editarUsuario(newData, {
         onSuccess: () => {
           queryClient.invalidateQueries(["usuarios"]);
+          reset();
         },
       });
     } else {
@@ -90,6 +102,7 @@ const UserForm: React.FC<UserPropsInterface> = ({ user }) => {
       crearUsuario(data, {
         onSuccess: () => {
           queryClient.invalidateQueries(["usuarios"]);
+          reset();
         },
       });
     }
@@ -137,114 +150,130 @@ const UserForm: React.FC<UserPropsInterface> = ({ user }) => {
       )}
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-6 space-y-6">
-        <div className="flex space-x-4"> {/* Contenedor padre con Flexbox */}
-  <div className="flex-1"> {/* Flex-1 para que ocupe el espacio disponible */}
-    <label
-      htmlFor="nombre"
-      className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-    >
-      Ambos nombres
-    </label>
-    <input
-      type="text"
-      id="nombre"
-      {...register("nombre", {
-        required: "Este campo es obligatorio",
-        minLength: {
-          value: 6,
-          message: "El nombre debe tener al menos 6 caracteres",
-        },
-      })}
-      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-[#016F35] block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-      placeholder="Juan Josue"
-    />
-    {errors.nombre && (
-      <p className="text-red-500 text-xs mt-1">
-        {errors.nombre.message}
-      </p>
-    )}
-  </div>
-  <div className="flex-1"> {/* Flex-1 para que ocupe el espacio disponible */}
-    <label
-      htmlFor="apellido"
-      className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-    >
-      Ambos apellidos
-    </label>
-    <input
-      type="text"
-      id="apellido"
-      {...register("apellido", {
-        required: "Este campo es obligatorio",
-        minLength: {
-          value: 6,
-          message: "El apellido debe tener al menos 6 caracteres",
-        },
-      })}
-      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-[#016F35] block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-      placeholder="Perez Perez"
-    />
-    {errors.apellido && (
-      <p className="text-red-500 text-xs mt-1">
-        {errors.apellido.message}
-      </p>
-    )}
-  </div>
-</div>
-<div className="flex space-x-4"> {/* Contenedor padre con Flexbox */}
-  <div className="flex-1"> {/* Flex-1 para que ocupe el espacio disponible */}
-    <label
-      htmlFor="telefono"
-      className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-    >
-      Número de teléfono
-    </label>
-    <input
-      type="text"
-      id="telefono"
-      {...register("telefono", {
-        required: "Este campo es obligatorio",
-        minLength: {
-          value: 6,
-          message: "El teléfono debe tener al menos 6 caracteres",
-        },
-      })}
-      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-[#016F35] block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-      placeholder="7456 6464"
-    />
-    {errors.telefono && (
-      <p className="text-red-500 text-xs mt-1">
-        {errors.telefono.message}
-      </p>
-    )}
-  </div>
-  <div className="flex-1"> {/* Flex-1 para que ocupe el espacio disponible */}
-    <label
-      htmlFor="email"
-      className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-    >
-      Email
-    </label>
-    <input
-      type="email"
-      id="email"
-      {...register("email", {
-        required: "Este campo es obligatorio",
-        pattern: {
-          value: /^\S+@\S+$/i,
-          message: "Formato de correo inválido",
-        },
-      })}
-      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-[#016F35] block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-      placeholder="name@company.com"
-    />
-    {errors.email && (
-      <p className="text-red-500 text-xs mt-1">
-        {errors.email.message}
-      </p>
-    )}
-  </div>
-</div>
+          <div className="flex space-x-4">
+            {" "}
+            {/* Contenedor padre con Flexbox */}
+            <div className="flex-1">
+              {" "}
+              {/* Flex-1 para que ocupe el espacio disponible */}
+              <label
+                htmlFor="nombre"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
+                Ambos nombres
+              </label>
+              <input
+                type="text"
+                id="nombre"
+                {...register("nombre", {
+                  required: "Este campo es obligatorio",
+                  minLength: {
+                    value: 6,
+                    message: "El nombre debe tener al menos 6 caracteres",
+                  },
+                })}
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-[#016F35] block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                placeholder="Juan Josue"
+              />
+              {errors.nombre && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.nombre.message}
+                </p>
+              )}
+            </div>
+            <div className="flex-1">
+              {" "}
+              {/* Flex-1 para que ocupe el espacio disponible */}
+              <label
+                htmlFor="apellido"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
+                Ambos apellidos
+              </label>
+              <input
+                type="text"
+                id="apellido"
+                {...register("apellido", {
+                  required: "Este campo es obligatorio",
+                  minLength: {
+                    value: 6,
+                    message: "El apellido debe tener al menos 6 caracteres",
+                  },
+                })}
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-[#016F35] block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                placeholder="Perez Perez"
+              />
+              {errors.apellido && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.apellido.message}
+                </p>
+              )}
+            </div>
+          </div>
+          <div className="flex space-x-4">
+            {" "}
+            {/* Contenedor padre con Flexbox */}
+            <div className="flex-1">
+              {" "}
+              {/* Flex-1 para que ocupe el espacio disponible */}
+              <label
+                htmlFor="telefono"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
+                Número de teléfono
+              </label>
+              <input
+                type="text"
+                id="telefono"
+                {...register("telefono", {
+                  required: "Este campo es obligatorio",
+                  minLength: {
+                    value: 8,
+                    message: "El teléfono debe tener al menos 8 caracteres",
+                  },
+                  maxLength: {
+                    value: 8,
+                    message: "El teléfono debe tener  8 caracteres",
+                  },
+                })}
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-[#016F35] block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                placeholder="7456 6464"
+              />
+              {errors.telefono && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.telefono.message}
+                </p>
+              )}
+            </div>
+            <div className="flex-1">
+              {" "}
+              {/* Flex-1 para que ocupe el espacio disponible */}
+              <label
+                htmlFor="email"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
+                Email
+              </label>
+              <input
+                type="email"
+                id="email"
+                {...register("email", {
+                  required: "Este campo es obligatorio",
+                  pattern: {
+                    value: /^\S+@\S+$/i,
+                    message: "Formato de correo inválido",
+                  },
+                })}
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-[#016F35] block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                placeholder="name@company.com"
+              />
+              {errors.email && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.email.message}
+                </p>
+              )}
+            </div>
+          </div>
           <div className="">
             <label
               htmlFor="role"

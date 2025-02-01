@@ -20,8 +20,14 @@ const TiposCultivosForm: React.FC<TiposCultivosPropsInterface> = ({
     register,
     setValue,
     handleSubmit,
+    reset,
     formState: { errors },
-  } = useForm<TiposCultivosInterface>();
+  } = useForm<TiposCultivosInterface>({
+    defaultValues: {
+      cultivo: "",
+      edad: "",
+    },
+  });
 
   // Usamos el hook para crear un usuario
   const {
@@ -78,6 +84,7 @@ const TiposCultivosForm: React.FC<TiposCultivosPropsInterface> = ({
         {
           onSuccess: () => {
             queryClient.invalidateQueries(["tiposCultivos"]);
+            reset();
           },
         }
       );
@@ -85,6 +92,7 @@ const TiposCultivosForm: React.FC<TiposCultivosPropsInterface> = ({
       crearTipoCultivo(data, {
         onSuccess: () => {
           queryClient.invalidateQueries(["tiposCultivos"]);
+          reset();
         },
       });
     }

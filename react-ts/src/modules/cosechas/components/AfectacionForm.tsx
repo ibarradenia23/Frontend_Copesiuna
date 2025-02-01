@@ -18,8 +18,14 @@ const AfectacionForm: React.FC<AfectacionesProps> = ({ afectacion }) => {
     register,
     setValue,
     handleSubmit,
+    reset,
     formState: { errors },
-  } = useForm<AfectacionesInterface>();
+  } = useForm<AfectacionesInterface>({
+    defaultValues: {
+      descripcion: "",
+      nombre: "",
+    },
+  });
 
   const queryClient = useQueryClient();
 
@@ -122,6 +128,7 @@ const AfectacionForm: React.FC<AfectacionesProps> = ({ afectacion }) => {
         {
           onSuccess: () => {
             queryClient.invalidateQueries(["afectaciones"]);
+            reset();
           },
         }
       );
@@ -129,6 +136,7 @@ const AfectacionForm: React.FC<AfectacionesProps> = ({ afectacion }) => {
       crearAfectacion(data, {
         onSuccess: () => {
           queryClient.invalidateQueries(["afectaciones"]);
+          reset();
         },
       });
     }

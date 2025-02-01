@@ -19,8 +19,16 @@ const ParcelaForm: React.FC<ParcelaPropsInterface> = ({parcela,idProductor}) => 
     register,
     setValue,
     handleSubmit,
+    reset,
     formState: { errors },
-  } = useForm<ParcelaInterface>();
+  } = useForm<ParcelaInterface>({
+    defaultValues: {
+      descripcion: "",
+      tamaño_parcela: "",
+      tipoParcelaId: 0, // Valor inicial para el select
+      cultivoId: 0, // Valor inicial para el select
+    },
+  });
 
    //Estado para decidir si crear o editar
    const [isEditing, setIsEditing] = useState(false);
@@ -94,6 +102,7 @@ const ParcelaForm: React.FC<ParcelaPropsInterface> = ({parcela,idProductor}) => 
     editarParcela(newDataEdit,{
       onSuccess: () => {
         queryClient.invalidateQueries(['parcelas']);
+        reset();
         //onSave(); // Llama a onSave para actualizar la lista en el componente padre
       },
     });
@@ -111,6 +120,7 @@ const ParcelaForm: React.FC<ParcelaPropsInterface> = ({parcela,idProductor}) => 
     crearParcela(newData,{
       onSuccess: () => {
         queryClient.invalidateQueries(['parcelas']);
+        reset();
        // onSave(); // Llama a onSave para actualizar la lista en el componente padre
       },
     });
@@ -157,6 +167,7 @@ const ParcelaForm: React.FC<ParcelaPropsInterface> = ({parcela,idProductor}) => 
     setToast({ ...toast, visible: false });
   };
 
+
   useEffect(() => {
     if (toast.visible) {
       const timer = setTimeout(() => {
@@ -187,7 +198,7 @@ const ParcelaForm: React.FC<ParcelaPropsInterface> = ({parcela,idProductor}) => 
               {...register("tipoParcelaId",{ required: "Este campo es obligatorio" })}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             >
-              <option selected>Elige una tipo</option>
+              <option value="" disabled selected>Elige una tipo</option>
               {tiposParecelaData?.map((tipoP)=>(
                  <option key={tipoP.id} value={tipoP.id}>
                  {tipoP.descripcion}
@@ -213,7 +224,7 @@ const ParcelaForm: React.FC<ParcelaPropsInterface> = ({parcela,idProductor}) => 
               {...register("cultivoId",{required: "Este campo es obligatorio"})}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             >
-               <option selected>Elige una tipo</option>
+               <option value="" disabled selected >Elige una tipo</option>
               {tiposCultivosData?.map((tipoC)=>(
                 <option key={tipoC.id} value={tipoC.id}>
                 {tipoC.cultivo}

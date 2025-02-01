@@ -11,16 +11,26 @@ import { useQueryClient } from "@tanstack/react-query";
 
 interface ProductorPropsInterface {
   productor?: ProductorInterface;
-  onSave:()=>void;
+  onSave: () => void;
 }
 
-const ProductorForm: React.FC<ProductorPropsInterface> = ({ productor,onSave }) => {
+const ProductorForm: React.FC<ProductorPropsInterface> = ({
+  productor,
+  onSave,
+}) => {
   const {
     register,
     setValue,
     handleSubmit,
     formState: { errors },
-  } = useForm<ProductorInterface>();
+  } = useForm<ProductorInterface>({
+    defaultValues: {
+      nombre:"",
+      apellido:"",
+      direccion:"",
+      cedula:""
+    },
+  });
 
   //Estado para decidir si crear o editar
   const [isEditing, setIsEditing] = useState(false);
@@ -57,7 +67,7 @@ const ProductorForm: React.FC<ProductorPropsInterface> = ({ productor,onSave }) 
     if (productor) {
       setIsEditing(true);
       setValue("nombre", productor.nombre);
-      setValue("apellido",productor.apellido);
+      setValue("apellido", productor.apellido);
       setValue("direccion", productor.direccion);
       setValue("cedula", productor.cedula);
       resetEditar();
@@ -75,7 +85,7 @@ const ProductorForm: React.FC<ProductorPropsInterface> = ({ productor,onSave }) 
         { id: productor.id, ...data },
         {
           onSuccess: () => {
-            queryClient.invalidateQueries(['productores']);
+            queryClient.invalidateQueries(["productores"]);
             onSave(); // Llama a onSave para actualizar la lista en el componente padre
           },
         }
@@ -83,7 +93,7 @@ const ProductorForm: React.FC<ProductorPropsInterface> = ({ productor,onSave }) 
     } else {
       crearProductor(data, {
         onSuccess: () => {
-          queryClient.invalidateQueries(['productores']);
+          queryClient.invalidateQueries(["productores"]);
           onSave(); // Llama a onSave para actualizar la lista en el componente padre
         },
       });
@@ -141,6 +151,56 @@ const ProductorForm: React.FC<ProductorPropsInterface> = ({ productor,onSave }) 
       return () => clearTimeout(timer); // Limpiar el temporizador al desmontar
     }
   }, [toast.visible]);
+
+  //Validacion para la cedula
+  const validateCedula = (value: string) => {
+    // Expresión regular para validar el formato de la cédula
+    const cedulaPattern = /^\d{3}-\d{6}-\d{4}[A-Z]$/;
+    if (!cedulaPattern.test(value)) {
+      return "La cédula debe tener el formato 123-210702-1006F";
+    }
+
+    // Extraer la parte de la fecha (segundo grupo de 6 dígitos)
+    const fechaParte = value.split("-")[1]; // Extrae "210702"
+    const dia = parseInt(fechaParte.substring(0, 2), 10); // Extrae "21"
+    const mes = parseInt(fechaParte.substring(2, 4), 10); // Extrae "09"
+    const anio = parseInt(fechaParte.substring(4, 6), 10); // Extrae "02"
+
+    // Validar el día (no puede ser mayor a 31)
+    if (dia < 1 || dia > 31) {
+      return "El día de nacimiento no es válido (debe estar entre 1 y 31)";
+    }
+
+    // Validar el mes (no puede ser mayor a 12)
+    if (mes < 1 || mes > 12) {
+      return "El mes de nacimiento no es válido (debe estar entre 1 y 12)";
+    }
+
+    // Validar meses con menos de 31 días
+    if ((mes === 4 || mes === 6 || mes === 9 || mes === 11) && dia > 30) {
+      return "El mes seleccionado no tiene 31 días";
+    }
+
+    // Validar febrero (considerando años bisiestos)
+    if (mes === 2) {
+      const esBisiesto = (anio + 2000) % 4 === 0; // Asumimos que el año es 2000 + anio
+      if (dia > 29 || (dia === 29 && !esBisiesto)) {
+        return "Febrero no tiene más de 28 días (o 29 en años bisiestos)";
+      }
+    }
+
+    // Extraer el dígito antes de la letra (cuarto dígito de la última parte)
+    const ultimaParte = value.split("-")[2]; // Extrae "1006F"
+    const digitoAntesDeLetra = parseInt(ultimaParte.charAt(3), 10); // Extrae "6"
+
+    // Validar que el dígito antes de la letra no sea 0 ni 1
+    if (digitoAntesDeLetra === 0 || digitoAntesDeLetra === 1) {
+      return "El dígito antes de la letra no puede ser 0 ni 1";
+    }
+
+    // Si todo está correcto
+    return true;
+  };
 
   return (
     <section>
@@ -239,10 +299,7 @@ const ProductorForm: React.FC<ProductorPropsInterface> = ({ productor,onSave }) 
               id="cedula"
               {...register("cedula", {
                 required: "Este campo es obligatorio",
-                minLength: {
-                  value: 10,
-                  message: "La cedula debe tener al menos 10 caracteres",
-                },
+                validate: validateCedula,
               })}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-[#016F35] block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
               placeholder="xxx-xxxxxx-xxxx"

@@ -32,7 +32,7 @@ const ProtectedRoute:React.FC<Props> = ({ element }) => {
     
       if (!isTokenReady) {
         // Mostrar un indicador de carga mientras se verifica el token
-        return <div>Loading...</div>;
+        return <div className='bg-white dark:bg-gray-800'></div>;
       }
   
    
